@@ -21,8 +21,17 @@ public class Pong_remake {
     }
 
     void loop() {
-        if () {
-            
+        if (/*a gedrückt*/true) {
+            Wall1pos -= 1;
+        }
+        if (/*d gedrückt*/true) {
+            Wall1pos += 1;
+        }
+        if (/*Pfeil rechts gedrückt*/true) {
+            Wall2pos -= 1;
+        }
+        if (/*Pfeil links gedrückt*/true) {
+            Wall2pos += 1;
         }
     }
     
