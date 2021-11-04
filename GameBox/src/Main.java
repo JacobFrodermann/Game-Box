@@ -1,4 +1,11 @@
-import java.awt.*;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -11,7 +18,7 @@ class Main {
 	public JFrame frame;
 	public Canvas canvas;
 	public BufferedImage Flappybird;
-    int scroll_y;
+	public Game currentGame;
 
 	public static void main(String[] args) throws IOException {
 		Main main = new Main();
@@ -22,12 +29,11 @@ class Main {
 	}
 
 	public void init() throws IOException {
-        scroll_y = 0;
 		frame = new JFrame();
 		frame.setTitle("GameBox");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
-        frame.setBackground(Color.WHITE);
+		frame.setBackground(Color.WHITE);
 		canvas = new Canvas();
 		frame.add(canvas);
 		canvas.setPreferredSize(new Dimension(400, 600));
@@ -35,7 +41,6 @@ class Main {
 		frame.setVisible(true);
 		canvas.createBufferStrategy(2);
 		Flappybird = ImageIO.read(new File("Flappybird.png"));
-        canvas.setBackground(Color.WHITE);
 	}
 
 	public BufferedImage draw(Dimension size) {
@@ -45,9 +50,11 @@ class Main {
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		
 		// Rendering
-        g.setColor(Color.white);
-        g.fill(new Rectangle(new Point(),size));
-		g.drawImage(Flappybird, 75, 50 - scroll_y, null);
+		if(currentGame == null) {
+			g.setColor(Color.white);
+			g.fill(new Rectangle(new Point(),size));
+			g.drawImage(Flappybird, 75, 50, null);
+		} else g.drawImage(currentGame.draw(size), 0, 0, null);
 
 		return result;
 	}
