@@ -1,9 +1,4 @@
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,6 +11,7 @@ class Main {
 	public JFrame frame;
 	public Canvas canvas;
 	public BufferedImage Flappybird;
+    int scroll_y;
 
 	public static void main(String[] args) throws IOException {
 		Main main = new Main();
@@ -26,6 +22,7 @@ class Main {
 	}
 
 	public void init() throws IOException {
+        scroll_y = 0;
 		frame = new JFrame();
 		frame.setTitle("GameBox");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,7 +47,7 @@ class Main {
 		// Rendering
         g.setColor(Color.white);
         g.fill(new Rectangle(new Point(),size));
-		g.drawImage(Flappybird, 75, 50, null);
+		g.drawImage(Flappybird, 75, 50 - scroll_y, null);
 
 		return result;
 	}
