@@ -5,14 +5,18 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 class Main {
 	public JFrame frame;
 	public Canvas canvas;
+	public BufferedImage meinbild;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		Main main = new Main();
 		main.init();
 		while(true) {
@@ -20,7 +24,7 @@ class Main {
 		}
 	}
 
-	public void init() {
+	public void init() throws IOException {
 		frame = new JFrame();
 		frame.setTitle("GameBox");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -31,6 +35,7 @@ class Main {
 		frame.pack();
 		frame.setVisible(true);
 		canvas.createBufferStrategy(2);
+		meinbild = ImageIO.read(new File("bild.png"));
 	}
 
 	public BufferedImage draw(Dimension size) {
@@ -40,7 +45,7 @@ class Main {
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		
 		// Rendering
-		g.drawString("hi jacob", size.width / 2, size.height / 2);
+		g.drawImage(meinbild, 0, 0, null);
 
 		return result;
 	}
