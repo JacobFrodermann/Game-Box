@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -38,5 +39,10 @@ public class FlappyBird implements Game {
 		g.drawImage(bird, 20, (int) Math.round(BirdY), 40, 40, null);
 
 		return result;
+	}
+
+	public void keyPressed(KeyEvent event) {
+	}
+	public void keyReleased(KeyEvent event) {
 	}
 }

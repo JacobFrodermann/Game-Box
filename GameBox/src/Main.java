@@ -3,28 +3,28 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 class Main {
+	public static Main INSTANCE;
+
 	public JFrame frame;
 	public Canvas canvas;
-	public BufferedImage Flappybird;
 	public Game currentGame;
 
-	public static void main(String[] args) throws IOException {
-		Main main = new Main();
-		main.init();
+	public static void main(String[] args) throws IOException, InterruptedException {
+		INSTANCE = new Main();
+		INSTANCE.init();
 		while(true) {
-			render(main.canvas, main.draw(main.canvas.getSize()));
+			render(INSTANCE.canvas, INSTANCE.draw(INSTANCE.canvas.getSize()));
+			Thread.sleep(1000 / 60);
 		}
 	}
 
@@ -38,9 +38,20 @@ class Main {
 		frame.add(canvas);
 		canvas.setPreferredSize(new Dimension(400, 600));
 		frame.pack();
+		canvas.addKeyListener(new KeyListener() {
+			public void keyTyped(KeyEvent e) {}
+			public void keyPressed(KeyEvent e) {
+				currentGame.keyPressed(e);
+			}
+			public void keyReleased(KeyEvent e) {
+				currentGame.keyReleased(e);
+			}
+		});
 		frame.setVisible(true);
 		canvas.createBufferStrategy(2);
-		Flappybird = ImageIO.read(new File("Flappybird.png"));
+		canvas.requestFocus();
+
+		currentGame = new GameSelectionScreen();
 	}
 
 	public BufferedImage draw(Dimension size) {
@@ -50,11 +61,7 @@ class Main {
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		
 		// Rendering
-		if(currentGame == null) {
-			g.setColor(Color.white);
-			g.fill(new Rectangle(new Point(),size));
-			g.drawImage(Flappybird, 75, 50, null);
-		} else g.drawImage(currentGame.draw(size), 0, 0, null);
+		g.drawImage(currentGame.draw(size), 0, 0, null);
 
 		return result;
 	}
