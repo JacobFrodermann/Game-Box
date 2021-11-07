@@ -42,12 +42,12 @@ public class FlappyBird implements Game {
 		g.fill(new Rectangle(new Point(), size));
 
 
-		if (BirdY > 600 || BirdY < -20 || (BirdY < pipe1Y  || BirdY > pipe1Y-100 && (Score > 80+i*2 && Score < 160+i*2))) {
+		if (BirdY > 600 || BirdY < -20 || (BirdY < pipe1Y  || BirdY > pipe1Y+100 && (Score > 280+i*2 && Score < 360+i*2))) {
 			g.setColor(Color.BLACK);
-			g.drawImage(Pipe, (100-Score/2)+i, -600 + pipe1Y, null);
+			g.drawImage(Pipe, (200-Score/2)+i, -600 + pipe1Y, null);
 			g.drawImage(dead, 50, 250, null);
 		} else {
-			g.drawImage(Pipe, (100-Score/2)+i, -600 + pipe1Y, null);
+			g.drawImage(Pipe, (200-Score/2)+i, -600 + pipe1Y, null);
 			g.drawImage(bird, 20, (int) Math.round(BirdY), 40, 40, null);
 			BirdY += VelY;
 			VelY += 0.1;
