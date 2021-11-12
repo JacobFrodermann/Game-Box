@@ -43,7 +43,7 @@ public class FlappyBird implements Game {
 		g.fill(new Rectangle(new Point(), size));
 
 		pipe1X = (200-Score/2)+i;
-		if ((BirdY > 600 || BirdY < -20) || intersects(40, BirdY, 40, 40, pipe1X, pipe1Y , 40, 600)) {
+		if ((BirdY > 600 || BirdY < -20) || intersects(40, BirdY, 40, 40, pipe1X, -600+pipe1Y , 40, 600) || intersects(40, BirdY, 40, 40, pipe1X, pipe1Y-700 , 40, 600)) {
 			g.setColor(Color.BLACK);
 			g.drawImage(Pipe, pipe1X, -600 + pipe1Y, null);
 			g.drawImage(dead, 50, 250, null);
@@ -53,6 +53,9 @@ public class FlappyBird implements Game {
 			BirdY += VelY;
 			VelY += 0.1;
 			Score += 1;
+			System.out.println(""+BirdY);
+			System.out.println("PipieX"+pipe1X);
+			System.out.println("PipieY"+pipe1Y);
 		}
 		if ((150-Score/2)+i < -50) {
 			i += 450;
@@ -71,15 +74,9 @@ public class FlappyBird implements Game {
 	public void keyReleased(KeyEvent event) {
 	}
 	public static boolean intersects(int x1, int y1, int xl1,int yl1, int x2, int y2, int xl2, int yl2) {
-		if ((x1 > x2 +xl2)/*rechts*/) {
-			if (x2 +xl2 < x1)/*links*/ {
-				if (y1 + yl1 < y2)/*darüber*/{
-					if (y2 + yl2 < y1) /*darunter*/{
-						return true;
-					}
-				}
-			}
+		if ((x1 > x2 +xl2)/*rechts*/ || (x2 +xl2 < x1)/*links*/ || (y1 + yl1 < y2)/*darüber*/ || (y2 + yl2 < y1) /*darunter*/) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 }
