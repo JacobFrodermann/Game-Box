@@ -19,16 +19,17 @@ public class FlappyBird implements Game {
 	Color sky = new Color(52, 174, 235);
 
 	Double VelY = 0.0;
-	Double BirdY = 300.0;
+	int BirdY = 300;
 	int Score = 0;
 	int pipe1Y; 
 	int i = 0;
+	int pipe1X;
 
 	public FlappyBird() throws IOException {
 		bird = ImageIO.read(new File("The Bird.png"));
 		dead = ImageIO.read(new File("Dead.png"));
 		Pipe = ImageIO.read(new File("Pipe.png"));
-		pipe1Y = new Random().nextInt(500);
+		pipe1Y = new Random().nextInt(400);
 	}
 
 	public BufferedImage draw(Dimension size) {
@@ -41,21 +42,21 @@ public class FlappyBird implements Game {
 		g.setColor(sky);
 		g.fill(new Rectangle(new Point(), size));
 
-
-		if (BirdY > 600 || BirdY < -20 || (BirdY < pipe1Y  || BirdY > pipe1Y+100 && (Score > 280+i*2 && Score < 360+i*2))) {
+		pipe1X = (200-Score/2)+i;
+		if ((BirdY > 600 || BirdY < -20) || intersects(40, BirdY, 40, 40, pipe1X, pipe1Y , 40, 600)) {
 			g.setColor(Color.BLACK);
-			g.drawImage(Pipe, (200-Score/2)+i, -600 + pipe1Y, null);
+			g.drawImage(Pipe, pipe1X, -600 + pipe1Y, null);
 			g.drawImage(dead, 50, 250, null);
 		} else {
-			g.drawImage(Pipe, (200-Score/2)+i, -600 + pipe1Y, null);
-			g.drawImage(bird, 20, (int) Math.round(BirdY), 40, 40, null);
+			g.drawImage(Pipe, pipe1X, -600 + pipe1Y, null);
+			g.drawImage(bird, 20, BirdY, 40, 40, null);
 			BirdY += VelY;
 			VelY += 0.1;
 			Score += 1;
 		}
-		if ((100-Score/2)+i < -50) {
+		if ((150-Score/2)+i < -50) {
 			i += 450;
-			pipe1Y = new Random().nextInt(500);
+			pipe1Y = new Random().nextInt(400);
 		}
 		return result;
 
@@ -68,5 +69,17 @@ public class FlappyBird implements Game {
 		}
 	}
 	public void keyReleased(KeyEvent event) {
+	}
+	public static boolean intersects(int x1, int y1, int xl1,int yl1, int x2, int y2, int xl2, int yl2) {
+		if ((x1 > x2 +xl2)/*rechts*/) {
+			if (x2 +xl2 < x1)/*links*/ {
+				if (y1 + yl1 < y2)/*darüber*/{
+					if (y2 + yl2 < y1) /*darunter*/{
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 }
