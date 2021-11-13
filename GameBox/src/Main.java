@@ -41,7 +41,11 @@ class Main {
 		canvas.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) {}
 			public void keyPressed(KeyEvent e) {
-				currentGame.keyPressed(e);
+				try {
+					currentGame.keyPressed(e);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 			public void keyReleased(KeyEvent e) {
 				currentGame.keyReleased(e);

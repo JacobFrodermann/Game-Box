@@ -23,7 +23,7 @@ public class GameSelectionScreen implements Game {
 	Color selectionColor = new Color(255, 60, 0);
 
 	public GameSelectionScreen() throws IOException {
-		gameThumbnails = new BufferedImage[] { ImageIO.read(new File("FlappyBird.png")) };
+		gameThumbnails = new BufferedImage[] { ImageIO.read(new File("FlappyBird.png")) , ImageIO.read(new File("Pong.png")) };
 		gameClasses = new Class<?>[] { FlappyBird.class };
 	}
 
