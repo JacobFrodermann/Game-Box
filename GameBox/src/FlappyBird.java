@@ -65,9 +65,9 @@ public class FlappyBird implements Game {
 			BirdY += VelY;
 			VelY += 0.1;
 			Score += 1;
-			System.out.println(""+BirdY);
+			/*System.out.println(""+BirdY);
 			System.out.println("PipieX"+pipe1X);
-			System.out.println("PipieY"+pipe1Y);
+			System.out.println("PipieY"+pipe1Y);*/
 		}
 		if ((150-Score/2)+i < -80) {
 			i += 450;

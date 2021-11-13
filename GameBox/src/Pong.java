@@ -3,12 +3,23 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.*;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class Pong implements Game {
     int Line1x;
+    int Line2x;
+    Ellipse2D Ball;
+    Rectangle Line1, Line2;
+    Pong(){
+
+    }
+    void pong() {
+        Ball = new Ellipse2D.Double(0,0,40,40);
+    }
     public BufferedImage draw(Dimension size) {
         BufferedImage result = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = (Graphics2D) result.getGraphics();
@@ -16,6 +27,8 @@ public class Pong implements Game {
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
         //rendering
+        g.setColor(Color.BLACK);
+        g.draw(Ball);
 
         return result;
     }

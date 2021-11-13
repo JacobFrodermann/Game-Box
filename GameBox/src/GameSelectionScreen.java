@@ -24,7 +24,7 @@ public class GameSelectionScreen implements Game {
 
 	public GameSelectionScreen() throws IOException {
 		gameThumbnails = new BufferedImage[] { ImageIO.read(new File("FlappyBird.png")) , ImageIO.read(new File("Pong.png")) };
-		gameClasses = new Class<?>[] { FlappyBird.class };
+		gameClasses = new Class<?>[] { FlappyBird.class , Pong.class};
 	}
 
 	public BufferedImage draw(Dimension size) {
