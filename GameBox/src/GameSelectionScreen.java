@@ -41,11 +41,12 @@ public class GameSelectionScreen implements Game {
 			if(i == selected) {
 				g.setColor(selectionColor);
 				int a = (int) Math.round(8 * Math.sin(anim));
-				g.fillPolygon(new int[] { 35 + a, 35 + a, 55 + a }, new int[] { 105 + i * 190, 135 + i * 190, 120 + i * 190 }, 3);
-				g.fillPolygon(new int[] { 400 - 35 - a, 400 - 35 - a, 400 - 55 - a }, new int[] { 105 + i * 190, 135 + i * 190, 120 + i * 190 }, 3);
+				g.fillPolygon(new int[] { 35 + a, 35 + a, 55 + a }, new int[] { (int) (105 + (i + animMovement) * 190), (int) (135 + (i + animMovement) * 190), (int) (120 + (i + animMovement) * 190) }, 3);
+				g.fillPolygon(new int[] { 400 - 35 - a, 400 - 35 - a, 400 - 55 - a }, new int[] { (int) (105 + (i + animMovement) * 190), (int) (135 + (i + animMovement) * 190), (int) (120 + (i + animMovement) * 190) }, 3);
 			}
 		}
 		anim += 0.09;
+		animMovement *= 0.9;
 
 		return result;
 	}
@@ -57,6 +58,18 @@ public class GameSelectionScreen implements Game {
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 				e.printStackTrace();
 				System.exit(1);
+			}
+		}
+		if(event.getKeyCode() == KeyEvent.VK_UP) {
+			if(selected > 0) {
+				selected--;
+				animMovement += 1;
+			}
+		}
+		if(event.getKeyCode() == KeyEvent.VK_DOWN) {
+			if(selected < gameThumbnails.length - 1) {
+				selected++;
+				animMovement -= 1;
 			}
 		}
 	}
