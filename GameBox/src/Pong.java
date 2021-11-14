@@ -14,10 +14,7 @@ public class Pong implements Game {
     int Line2x;
     Ellipse2D Ball;
     Rectangle Line1, Line2;
-    Pong(){
-
-    }
-    void pong() {
+    public Pong(){
         Ball = new Ellipse2D.Double(0,0,40,40);
     }
     public BufferedImage draw(Dimension size) {
@@ -27,7 +24,8 @@ public class Pong implements Game {
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
         //rendering
-        g.setColor(Color.BLACK);
+        g.setColor(Color.WHITE);
+        g.setColor(Color.red);
         g.draw(Ball);
 
         return result;
