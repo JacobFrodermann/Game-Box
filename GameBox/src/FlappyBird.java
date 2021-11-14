@@ -30,7 +30,7 @@ public class FlappyBird implements Game {
 	int pipe2X;
 	int VelX = 10;
 
-	Rectangle CollisonPipeUpper,CollisonPipeLower,CollisonBird;
+	Rectangle CollisionPipeUpper,CollisionPipeLower,CollisionBird;
 
 	public FlappyBird() throws IOException {
 
@@ -42,9 +42,9 @@ public class FlappyBird implements Game {
 		pipe1X = 100;
 		pipe2Y = new Random().nextInt(400);
 		pipe2X = 100;
-		CollisonBird = new Rectangle(24, BirdY-8,34,24);
-		CollisonPipeLower = new Rectangle(pipe1X, pipe1Y+100,40,600);
-		CollisonPipeUpper = new Rectangle(pipe1X, pipe1Y-600,40,600);
+		CollisionBird = new Rectangle(24, BirdY-8,34,24);
+		CollisionPipeLower = new Rectangle(pipe1X, pipe1Y+100,40,600);
+		CollisionPipeUpper = new Rectangle(pipe1X, pipe1Y-600,40,600);
 		Main.INSTANCE.frame.setIconImage(bird);
 	}
 
@@ -64,17 +64,17 @@ public class FlappyBird implements Game {
 		g.drawImage(Pipe, pipe1X, -600 + pipe1Y, 40,1300,null);
 		g.drawImage(Pipe, pipe2X, -600 + pipe2Y, 40,1300,null);
 
-		CollisonBird.setLocation(24,BirdY+8);
+		CollisionBird.setLocation(24,BirdY+8);
 
 if (pipe1X < pipe2X) {
-	CollisonPipeLower.setLocation(pipe1X,pipe1Y+100);
-	CollisonPipeUpper.setLocation(pipe1X,pipe1Y-600);
+	CollisionPipeLower.setLocation(pipe1X,pipe1Y+100);
+	CollisionPipeUpper.setLocation(pipe1X,pipe1Y-600);
 } else {
-	CollisonPipeLower.setLocation(pipe2X,pipe2Y+100);
-	CollisonPipeUpper.setLocation(pipe2X,pipe2Y-600);
+	CollisionPipeLower.setLocation(pipe2X,pipe2Y+100);
+	CollisionPipeUpper.setLocation(pipe2X,pipe2Y-600);
 }
 
-		if ((BirdY > 600 || BirdY < -20) || CollisonBird.intersects(CollisonPipeLower) || CollisonBird.intersects(CollisonPipeUpper)) {
+		if ((BirdY > 600 || BirdY < -20) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper)) {
 			g.drawImage(deadbird,20, BirdY,40,40,null);
 			g.drawImage(dead, 50, 250, null);
 		} else {
@@ -103,13 +103,13 @@ if (pipe1X < pipe2X) {
 	}
 
 	public void keyPressed(KeyEvent event) throws IOException {
-		if (event.getKeyCode() == KeyEvent.VK_ENTER && ((BirdY > 600 || BirdY < -20) || CollisonBird.intersects(CollisonPipeLower) || CollisonBird.intersects(CollisonPipeUpper))) {
+		if (event.getKeyCode() == KeyEvent.VK_ENTER && ((BirdY > 600 || BirdY < -20) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper))) {
 			Main.INSTANCE.currentGame = new GameSelectionScreen();
 		}
 		if (event.getKeyCode() == KeyEvent.VK_SPACE) {
 			VelY -= 4;
 		}
-		if (event.getKeyCode() == KeyEvent.VK_SPACE && ((BirdY > 600 || BirdY < -20) || CollisonBird.intersects(CollisonPipeLower) || CollisonBird.intersects(CollisonPipeUpper))) {
+		if (event.getKeyCode() == KeyEvent.VK_SPACE && ((BirdY > 600 || BirdY < -20) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper))) {
 			Main.INSTANCE.currentGame = new FlappyBird();
 		}
 	}
