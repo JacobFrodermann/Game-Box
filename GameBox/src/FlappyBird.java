@@ -7,12 +7,14 @@ import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
-import java.util.Random;
+
+import org.apache.commons.io.IOUtils;
 
 public class FlappyBird implements Game {
 	BufferedImage bird;
@@ -32,26 +34,11 @@ public class FlappyBird implements Game {
 	int pipe2X;
 	int VelX = 10;
 	int Highscore = 0;
-	String temp = "0";
 
 	Rectangle CollisionPipeUpper,CollisionPipeLower,CollisionBird;
 
 	public FlappyBird() throws IOException {
-		
-		FileReader reader = new FileReader("Data.txt");
-		while (!temp.endsWith("-1")) {
-			try {
-				System.out.println(temp);
-				temp = temp +  String.valueOf(reader.read());
-			} catch(IOException e1) {
-				break;
-			}
-			
-		}
-		reader.close();
-		System.out.println(temp);
-		Highscore = Integer.parseInt(temp.substring(1,2));
-		System.out.println(Highscore);
+		Highscore = Integer.parseInt(IOUtils.readLines(new FileInputStream(new File("Data.txt")), StandardCharsets.UTF_8).get(0));
 		deadbird = ImageIO.read(new File("The Bird Dead.png"));
 		bird = ImageIO.read(new File("The Bird.png"));
 		dead = ImageIO.read(new File("Dead.png"));

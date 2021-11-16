@@ -1,5 +1,9 @@
 {
     "cSpell.words": [
         "deadbird"
-    ]
+		],
+		"java.project.referencedLibraries": [
+			"lib/**/*.jar",
+			"GameBox/lib/commons-io-2.11.0.jar"
+		]
 }
