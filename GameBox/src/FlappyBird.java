@@ -8,9 +8,12 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
+import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 
@@ -39,6 +42,7 @@ public class FlappyBird implements Game {
 
 	public FlappyBird() throws IOException {
 		Highscore = Integer.parseInt(IOUtils.readLines(new FileInputStream(new File("Data.txt")), StandardCharsets.UTF_8).get(0));
+		System.out.println(Highscore);
 		deadbird = ImageIO.read(new File("The Bird Dead.png"));
 		bird = ImageIO.read(new File("The Bird.png"));
 		dead = ImageIO.read(new File("Dead.png"));
@@ -82,6 +86,14 @@ if (pipe1X < pipe2X) {
 		if ((BirdY > 600 || BirdY < -20) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper)) {
 			g.drawImage(deadbird,20, BirdY,40,40,null);
 			g.drawImage(dead, 50, 250, null);
+			if (VelX - 10 > Highscore) {
+				Highscore = VelX - 10;
+				try {
+					try {
+						IOUtils.write(String.valueOf(Highscore), new FileOutputStream(new File("Data.txt")));
+				} catch (FileNotFoundException e){}
+				} catch(IOException e1) {}
+				}
 		} else {
 
 			g.drawImage(bird, 20, BirdY, 40, 40, null);
@@ -102,6 +114,7 @@ if (pipe1X < pipe2X) {
 		}
 		g.setColor(Color.black);
 		g.drawString(String.valueOf(VelX - 10), 350, 20);
+		g.drawString("Highscore: " + String.valueOf(Highscore), 15, 20);
 
 		return result;
 
