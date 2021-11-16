@@ -7,6 +7,8 @@ import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -24,16 +26,32 @@ public class FlappyBird implements Game {
 	int Score = 0;
 	int pipe1Y; 
 	int pipe2Y; 
-	int i = 0;
+	int i = 1;
 	int l = 0;
 	int pipe1X;
 	int pipe2X;
 	int VelX = 10;
+	int Highscore = 0;
+	String temp = "0";
 
 	Rectangle CollisionPipeUpper,CollisionPipeLower,CollisionBird;
 
 	public FlappyBird() throws IOException {
-
+		
+		FileReader reader = new FileReader("Data.txt");
+		while (!temp.endsWith("-1")) {
+			try {
+				System.out.println(temp);
+				temp = temp +  String.valueOf(reader.read());
+			} catch(IOException e1) {
+				break;
+			}
+			
+		}
+		reader.close();
+		System.out.println(temp);
+		Highscore = Integer.parseInt(temp.substring(1,2));
+		System.out.println(Highscore);
 		deadbird = ImageIO.read(new File("The Bird Dead.png"));
 		bird = ImageIO.read(new File("The Bird.png"));
 		dead = ImageIO.read(new File("Dead.png"));
@@ -80,6 +98,7 @@ if (pipe1X < pipe2X) {
 		} else {
 
 			g.drawImage(bird, 20, BirdY, 40, 40, null);
+			
 			BirdY += VelY;
 			VelY += 0.125;
 			Score += VelX/10;

@@ -7,16 +7,18 @@ import java.awt.geom.*;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 public class Pong implements Game {
 
     Ellipse2D Ball;
     Rectangle Line1, Line2;
     BufferedImage Logo;
-    Double VelX = 0.0, VelY = 1.0;
+    Double VelX = new Double(new Random().nextInt(3)) - 1.5, VelY = 1.0;
     Double BallX = 190.0, BallY = 290.0;
     int P1Score = 0 , P2Score = 0;
 
@@ -53,7 +55,7 @@ public class Pong implements Game {
         if (BallY < -5) {
             BallX = 190.0;
             BallY = 290.0;
-            VelX = 0.0;
+            VelX = new Double(new Random().nextInt(3)) - 1.5;
             VelY = 1.0;
             P2Score += 1;
             System.out.println(P1Score+"/" + P2Score);
@@ -61,13 +63,13 @@ public class Pong implements Game {
         if (BallY > 605) {
             BallX = 190.0;
             BallY = 290.0;
-            VelX = 0.0;
+            VelX = new Double(new Random().nextInt(3)) - 1.5;
             VelY = -1.0;
             P1Score += 1;
             System.out.println(P1Score+"/" + P2Score);
         }
 
-        if ( P1Score > 9) {
+        if ( P1Score > 4) {
             g.drawString("Player 1 Won", 190, 295);
             try {
                 Thread.sleep(500);
@@ -83,7 +85,7 @@ public class Pong implements Game {
             }
         }
             
-        if ( P2Score > 9) {
+        if ( P2Score > 4) {
             g.drawString("Player 2 Won", 190, 295);
             try {
                 Thread.sleep(500);
@@ -99,6 +101,17 @@ public class Pong implements Game {
             }
         }
 
+
+    if (Ball.intersects(Line1)) {
+        VelY = 1.0;
+    }
+    if (Ball.intersects(Line2)) {
+        VelY = -1.0;
+
+    }
+    if (BallX <= 0 || BallX >= 380) {
+        VelX *= -1;
+    }
         return result;
     }
     public void keyPressed(KeyEvent event) {
