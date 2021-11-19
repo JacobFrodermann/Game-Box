@@ -18,7 +18,7 @@ public class Pong implements Game {
     Ellipse2D Ball;
     Rectangle Line1, Line2;
     BufferedImage Logo;
-    Double VelX = new Double(new Random().nextInt(3)) - 1.5, VelY = 1.0;
+    Double VelX = new Double(new Random().nextInt(6)) - 3.0, VelY = 2.0;
     Double BallX = 190.0, BallY = 290.0;
     int P1Score = 0 , P2Score = 0;
 
@@ -55,16 +55,16 @@ public class Pong implements Game {
         if (BallY < -5) {
             BallX = 190.0;
             BallY = 290.0;
-            VelX = new Double(new Random().nextInt(3)) - 1.5;
-            VelY = 1.0;
+            VelX = new Double(new Random().nextInt(6)) - 3.0;
+            VelY = 2.0;
             P2Score += 1;
             System.out.println(P1Score+"/" + P2Score);
         }
         if (BallY > 605) {
             BallX = 190.0;
             BallY = 290.0;
-            VelX = new Double(new Random().nextInt(3)) - 1.5;
-            VelY = -1.0;
+            VelX = new Double(new Random().nextInt(6)) - 3.0;
+            VelY = -2.0;
             P1Score += 1;
             System.out.println(P1Score+"/" + P2Score);
         }
@@ -103,10 +103,10 @@ public class Pong implements Game {
 
 
     if (Ball.intersects(Line1)) {
-        VelY = 1.0;
+        VelY = 2.0;
     }
     if (Ball.intersects(Line2)) {
-        VelY = -1.0;
+        VelY = -2.0;
 
     }
     if (BallX <= 0 || BallX >= 380) {
@@ -116,16 +116,16 @@ public class Pong implements Game {
     }
     public void keyPressed(KeyEvent event) {
 		if (event.getKeyCode() == KeyEvent.VK_A) {
-			Line1.x -= 3;
+			Line1.x -= 6;
         }
         if (event.getKeyCode() == KeyEvent.VK_D) {
-            Line1.x += 3;
+            Line1.x += 6;
         } 
         if (event.getKeyCode() == KeyEvent.VK_LEFT) {
-            Line2.x -= 3;
+            Line2.x -= 6;
         }
         if (event.getKeyCode() == KeyEvent.VK_RIGHT) {
-            Line2.x += 3;
+            Line2.x += 6;
         }
         if (event.getKeyCode() == KeyEvent.VK_ENTER) {
             try {
