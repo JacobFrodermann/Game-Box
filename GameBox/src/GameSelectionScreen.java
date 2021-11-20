@@ -25,8 +25,8 @@ public class GameSelectionScreen implements Game {
 
 	public GameSelectionScreen() throws IOException {
 		Logo = ImageIO.read(new File("Logo.png"));
-		gameThumbnails = new BufferedImage[] { ImageIO.read(new File("FlappyBird.png")) , ImageIO.read(new File("Pong.png")) };
-		gameClasses = new Class<?>[] { FlappyBird.class , Pong.class};
+		gameThumbnails = new BufferedImage[] { ImageIO.read(new File("FlappyBird.png")) , ImageIO.read(new File("Pong.png")), ImageIO.read(new File("Snake.png")) };
+		gameClasses = new Class<?>[] { FlappyBird.class , Pong.class, Snake.class};
 		Main.INSTANCE.frame.setIconImage(Logo);
 	}
 

@@ -14,9 +14,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Random;
-import java.io.OutputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+//import java.io.OutputStream;
+//import java.security.MessageDigest;
+//import java.security.NoSuchAlgorithmException;
 
 import javax.imageio.ImageIO;
 
@@ -41,24 +41,26 @@ public class FlappyBird implements Game {
 	int VelX = 10;
 	int Highscore = 0;
 	List<String> Read;
-	byte[] bytes,md5;
+	//byte[] bytes,md5;
 
 	Rectangle CollisionPipeUpper,CollisionPipeLower,CollisionBird;
 
 	public FlappyBird() throws IOException {
 		Read = IOUtils.readLines(new FileInputStream(new File("Data.txt")), StandardCharsets.UTF_8);
-		bytes = Read.get(0).getBytes("UTF-8");
+		/*bytes = Read.get(0).getBytes("UTF-8");
 		try {
 			md5 = MessageDigest.getInstance("MD5").digest(bytes);
-		} catch (NoSuchAlgorithmException e) {md5 = bytes;/*will not happen*/}
-		if(new String(md5) != Read.get(1)) {
+		} catch (NoSuchAlgorithmException e) {System.out.println("Some thing went worng");md5 = bytes;}
+		System.out.println(md5);
+		System.out.println(Read.get(1).getBytes("UTF-8"));
+		if(md5 != Read.get(1)) {
 			Highscore = 0;
 			try {
 				try {
 					IOUtils.write(String.valueOf(Highscore) + "\ncfcd208495d565ef66e7dff9f98764da", new FileOutputStream(new File("Data.txt")));
 			} catch (FileNotFoundException e){}
 			} catch(IOException e1) {}
-		}
+		}*/
 		System.out.println(Highscore);
 		deadbird = ImageIO.read(new File("The Bird Dead.png"));
 		bird = ImageIO.read(new File("The Bird.png"));
