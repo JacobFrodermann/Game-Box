@@ -11,7 +11,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.text.CollationElementIterator;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import java.util.ArrayList;
@@ -21,7 +20,8 @@ import org.apache.commons.io.IOUtils;
 public class Snake implements Game {
     List<String> Read;
     int Highscore;
-    BufferedImage DeadImage;
+    Color snake;
+    BufferedImage DeadImage, Grass, Apple;
     int i=0;
     int lx = 2;
     int ly = 2;
@@ -38,6 +38,8 @@ public class Snake implements Game {
         Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
         Highscore = Integer.valueOf(Read.get(1));
         DeadImage = ImageIO.read(new File("Dead.png"));
+        Grass = ImageIO.read(new File("Grass.png"));
+        Apple = ImageIO.read(new File("Apple.png"));
     }
 
     public BufferedImage draw(Dimension size) {
@@ -46,13 +48,18 @@ public class Snake implements Game {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        g.setColor(Color.WHITE);
+        g.drawImage(Grass, 0, 0, null);
+        g.setColor(Color.BLACK);
         g.drawString("Highscore: " + String.valueOf(Highscore), 10, 20);
-        g.setColor(Color.red);
-        part.setLocation(AppleX*20,AppleY*20);
-        g.fill(part);
-        g.setColor(Color.green);
+        g.drawImage(Apple, AppleX*20, AppleY*20, null);
+        i=0;
         while (xkords.size() > i) {
+            if (i > 12) {
+                snake = new Color(235-(i*4),219-(i*4),0);
+            } else {
+                snake = new Color(235-(i*4),219-(i*4),52-(i*4));
+            }
+            g.setColor(snake);
             part.setLocation(xkords.get(i)*20, ykords.get(i)*20);
             g.fill(part);
             i++;
@@ -65,11 +72,21 @@ public class Snake implements Game {
         try {
             Thread.sleep(60L);
         } catch (InterruptedException e) {}
-        xkords.add(xkords.get(xkords.size()-1)+xmov);
-        ykords.add(ykords.get(ykords.size()-1)+ymov);
-        ykords.remove(0);
-        xkords.remove(0);
-        Kol();
+        if (!Dead) {
+            xkords.add(xkords.get(xkords.size()-1)+xmov);
+            ykords.add(ykords.get(ykords.size()-1)+ymov);
+            ykords.remove(0);
+            xkords.remove(0);
+            Kol();
+        }
+
+        if (xkords.get(lx)<0 || xkords.get(lx)>19 || ykords.get(ly) < 0 || ykords.get(ly) > 29) {
+            Dead = true;
+            xmov = 0;
+            ymov = 0;
+        }
+
+        //länger werden
         if (ToAdd) {
             xkords.add(xkords.get(xkords.size()-1)+xmov);
             ykords.add(ykords.get(ykords.size()-1)+ymov);
@@ -86,35 +103,38 @@ public class Snake implements Game {
         return result;
     }
     public void keyPressed(KeyEvent event) throws IOException {
-        if (event.getKeyCode() == KeyEvent.VK_A && !Dead) {
+        if (!Dead) {
+        if (event.getKeyCode() == KeyEvent.VK_A) {
 			xmov = -1;
             ymov = 0;
 		}
-        if (event.getKeyCode() == KeyEvent.VK_D && !Dead) {
+        if (event.getKeyCode() == KeyEvent.VK_D) {
 			xmov = 1;
             ymov = 0;
 		}
-        if (event.getKeyCode() == KeyEvent.VK_S && !Dead) {
+        if (event.getKeyCode() == KeyEvent.VK_S) {
 			xmov = 0;
             ymov = 1;
 		}
-        if (event.getKeyCode() == KeyEvent.VK_W && !Dead) {
+        if (event.getKeyCode() == KeyEvent.VK_W) {
 			xmov = 0;
             ymov = -1;
 		}
-        if (event.getKeyCode() == KeyEvent.VK_ENTER && Dead) {
-            try {
-                Main.INSTANCE.currentGame = new GameSelectionScreen();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            if (Highscore < xkords.size()) {
+        } else {
+            if (event.getKeyCode() == KeyEvent.VK_ENTER) {
                 try {
+                    Main.INSTANCE.currentGame = new GameSelectionScreen();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                if (Highscore < xkords.size()) {
                     try {
-                        IOUtils.write(String.valueOf(Read.get(1) + "\n" + xkords.size()), new FileOutputStream(new File("Data")));
-                    } catch (FileNotFoundException e){}
-                } catch(IOException e1) {}
+                        try {
+                            IOUtils.write(String.valueOf(Read.get(1) + "\n" + xkords.size()), new FileOutputStream(new File("Data")), StandardCharsets.UTF_8);
+                        } catch (FileNotFoundException e){}
+                    } catch(IOException e1) {}
+                }
             }
         }
     }

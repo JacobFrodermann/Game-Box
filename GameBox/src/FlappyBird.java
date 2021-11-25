@@ -90,7 +90,7 @@ if (pipe1X < pipe2X) {
 				Highscore = VelX - 10;
 				try {
 					try {
-						IOUtils.write(String.valueOf(Highscore) +"\n" + Read.get(1), new FileOutputStream(new File("Data")));
+						IOUtils.write(String.valueOf(Highscore) +"\n" + Read.get(1), new FileOutputStream(new File("Data")), StandardCharsets.UTF_8);
 				} catch (FileNotFoundException e){}
 				} catch(IOException e1) {}
 				}

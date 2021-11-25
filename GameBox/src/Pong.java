@@ -1,33 +1,48 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.*;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
+import javax.crypto.Cipher;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Pong implements Game {
-
     Ellipse2D Ball;
     Rectangle Line1, Line2;
-    BufferedImage Logo;
-    Double VelX = new Double(new Random().nextInt(6)) - 3.0, VelY = 2.0;
+    BufferedImage Logo, Plate;
+    Double VelX , VelY = 2.0;
     Double BallX = 190.0, BallY = 290.0;
     int P1Score = 0 , P2Score = 0;
+    Clip Ping, Pong;
 
-    public Pong() throws IOException{
+    public Pong() throws IOException, UnsupportedAudioFileException, LineUnavailableException{
         Logo = ImageIO.read(new File("PongLogo.png"));
+        Plate = ImageIO.read(new File("Plate.png"));
         Main.INSTANCE.frame.setIconImage(Logo);
         Ball = new Ellipse2D.Double(0,0,20,20);
         Line1 = new Rectangle(180,20,40,5);
         Line2 = new Rectangle(180,575,40,5);
+        VelX = Double.valueOf(new Random().nextInt(6)) - 3.0;
+
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("Pong.wav").getAbsoluteFile());
+        Pong = AudioSystem.getClip();
+        Pong.open(audioInputStream);
+
+        audioInputStream = AudioSystem.getAudioInputStream(new File("Ping.wav").getAbsoluteFile());
+        Ping = AudioSystem.getClip();
+        Ping.open(audioInputStream);
     }
     public BufferedImage draw(Dimension size) {
         BufferedImage result = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
@@ -36,15 +51,14 @@ public class Pong implements Game {
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
         //rendering
-        g.setColor(Color.WHITE);
-        g.fill(new Rectangle(new Point(), size));
-        g.setColor(Color.red);
+        g.drawImage(Plate, 0, 0, null);
+        g.setColor(new Color(217, 222, 219));
         g.fill(Ball);
         g.setColor(Color.black);
         g.fill(Line1);
         g.fill(Line2);
 
-        g.drawString(String.valueOf(P1Score), 5, 10);
+        g.drawString(String.valueOf(P1Score), 10, 10);
         g.drawString(String.valueOf(P2Score), 380, 590);
 
         Ball.setFrame(BallX, BallY, 20, 20);
@@ -52,10 +66,19 @@ public class Pong implements Game {
         BallX += VelX;
         BallY += VelY;
 
+        if (Pong.getFramePosition() == 9216) {
+            Pong.setFramePosition(0);
+            Pong.stop();
+        }
+        if (Ping.getFramePosition() == 9216) {
+            Ping.setFramePosition(0);
+            Ping.stop();
+        }
+
         if (BallY < -5) {
             BallX = 190.0;
             BallY = 290.0;
-            VelX = new Double(new Random().nextInt(6)) - 3.0;
+            VelX = Double.valueOf(new Random().nextInt(6)) - 3.0;
             VelY = 2.0;
             P2Score += 1;
             System.out.println(P1Score+"/" + P2Score);
@@ -63,7 +86,7 @@ public class Pong implements Game {
         if (BallY > 605) {
             BallX = 190.0;
             BallY = 290.0;
-            VelX = new Double(new Random().nextInt(6)) - 3.0;
+            VelX = Double.valueOf(new Random().nextInt(6)) - 3.0;
             VelY = -2.0;
             P1Score += 1;
             System.out.println(P1Score+"/" + P2Score);
@@ -73,16 +96,10 @@ public class Pong implements Game {
             g.drawString("Player 1 Won", 190, 295);
             try {
                 Thread.sleep(500);
-            } catch (InterruptedException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
+            } catch (InterruptedException e1) {}
             try {
                 Main.INSTANCE.currentGame = new GameSelectionScreen();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            } catch (IOException e) {}
         }
             
         if ( P2Score > 4) {
@@ -94,7 +111,7 @@ public class Pong implements Game {
                 e1.printStackTrace();
             }
             try {
-                Game currentGame = new GameSelectionScreen();
+                new GameSelectionScreen();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -104,8 +121,10 @@ public class Pong implements Game {
 
     if (Ball.intersects(Line1)) {
         VelY = 2.0;
+        Pong.start();
     }
     if (Ball.intersects(Line2)) {
+        Ping.start();
         VelY = -2.0;
 
     }
