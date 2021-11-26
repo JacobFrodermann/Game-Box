@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -65,19 +66,21 @@ public class Snake implements Game {
             g.fill(part);
             i++;
         }
+        AffineTransform t = g.getTransform(); 
         if (ymov == 0) {
             if (xmov == 1){
-                g.getTransform().rotate(90);
+                t.rotate(Math.toRadians(90));
             } else {
-                g.getTransform().rotate(270);
+                t.rotate(Math.toRadians(270));
             }
         } else {
             if (ymov == -1) {
-                g.getTransform().rotate(180);
+                t.rotate(Math.toRadians(180));
             } else {
-                g.getTransform().rotate(0);
+                t.rotate(Math.toRadians(0));
             }
         }
+        g.setTransform(t);
         g.drawImage(SnakeHead, (int) part.getMinX(),(int) part.getMinY(), null);
         i=0;
         if (Dead) {
