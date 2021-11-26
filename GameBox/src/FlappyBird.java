@@ -17,6 +17,12 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import org.apache.commons.io.IOUtils;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 public class FlappyBird implements Game {
 	BufferedImage bird;
 	BufferedImage Pipe;
@@ -36,10 +42,11 @@ public class FlappyBird implements Game {
 	int VelX = 10;
 	int Highscore = 0;
 	List<String> Read;
+	Clip Pling;
 
 	Rectangle CollisionPipeUpper,CollisionPipeLower,CollisionBird;
 
-	public FlappyBird() throws IOException {
+	public FlappyBird() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
 		Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
 		Highscore = Integer.valueOf(Read.get(0));
 		System.out.println(Highscore);
@@ -55,6 +62,9 @@ public class FlappyBird implements Game {
 		CollisionPipeLower = new Rectangle(pipe1X, pipe1Y+100,40,600);
 		CollisionPipeUpper = new Rectangle(pipe1X, pipe1Y-600,40,600);
 		Main.INSTANCE.frame.setIconImage(bird);
+		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("Pling.wav").getAbsoluteFile());
+		Pling = AudioSystem.getClip();
+		Pling.open(audioInputStream);
 	}
 
 	public BufferedImage draw(Dimension size) {
@@ -75,14 +85,18 @@ public class FlappyBird implements Game {
 
 		CollisionBird.setLocation(24,BirdY+8);
 
-if (pipe1X < pipe2X) {
-	CollisionPipeLower.setLocation(pipe1X,pipe1Y+100);
-	CollisionPipeUpper.setLocation(pipe1X,pipe1Y-600);
-} else {
-	CollisionPipeLower.setLocation(pipe2X,pipe2Y+100);
-	CollisionPipeUpper.setLocation(pipe2X,pipe2Y-600);
-}
+		if (Pling.getFramePosition() == 5211) {
+			Pling.setFramePosition(0);
+			Pling.stop();
+		}
 
+		if (pipe1X < pipe2X) {
+			CollisionPipeLower.setLocation(pipe1X,pipe1Y+100);
+			CollisionPipeUpper.setLocation(pipe1X,pipe1Y-600);
+		} else {
+			CollisionPipeLower.setLocation(pipe2X,pipe2Y+100);
+			CollisionPipeUpper.setLocation(pipe2X,pipe2Y-600);
+		}
 		if ((BirdY > 600 || BirdY < -20) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper)) {
 			g.drawImage(deadbird,20, BirdY,40,40,null);
 			g.drawImage(dead, 50, 250, null);
@@ -100,17 +114,19 @@ if (pipe1X < pipe2X) {
 			
 			BirdY += VelY;
 			VelY += 0.125;
-			Score += VelX/10;
+			Score += VelX/10 + 0.5;
 		}
 		if ((150-Score/2)+i < -80 ){
 			i += 450;
 			VelX += 1;
 			pipe1Y = new Random().nextInt(400);
+			Pling.start();
 		}
 		if ((150-Score/2)+l < -280 ){
 			l += 450;
 			VelX += 1;
 			pipe2Y = new Random().nextInt(400);
+			Pling.start();
 		}
 		g.setColor(Color.black);
 		g.drawString(String.valueOf(VelX - 10), 350, 20);
@@ -129,7 +145,9 @@ if (pipe1X < pipe2X) {
 			VelY -= 4;
 		}
 		if (event.getKeyCode() == KeyEvent.VK_SPACE && ((BirdY > 600 || BirdY < -20) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper))) {
-			Main.INSTANCE.currentGame = new FlappyBird();
+			try {
+				Main.INSTANCE.currentGame = new FlappyBird();
+			} catch (UnsupportedAudioFileException | LineUnavailableException e) {}
 		}
 	}
 	public void keyReleased(KeyEvent event) {

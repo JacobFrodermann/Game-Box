@@ -6,8 +6,6 @@ import java.awt.geom.*;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-
-import javax.crypto.Cipher;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;

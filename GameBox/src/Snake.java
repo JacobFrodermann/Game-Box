@@ -21,7 +21,7 @@ public class Snake implements Game {
     List<String> Read;
     int Highscore;
     Color snake;
-    BufferedImage DeadImage, Grass, Apple;
+    BufferedImage DeadImage, Grass, Apple, SnakeHead;
     int i=0;
     int lx = 2;
     int ly = 2;
@@ -40,6 +40,7 @@ public class Snake implements Game {
         DeadImage = ImageIO.read(new File("Dead.png"));
         Grass = ImageIO.read(new File("Grass.png"));
         Apple = ImageIO.read(new File("Apple.png"));
+        SnakeHead = ImageIO.read(new File("Snake face.png"));
     }
 
     public BufferedImage draw(Dimension size) {
@@ -64,6 +65,18 @@ public class Snake implements Game {
             g.fill(part);
             i++;
         }
+        if (ymov == 0) {
+            if (xmov == 1){
+                g.getTransform().rotate(90);
+            } else {
+                g.getTransform().rotate(270);
+            }
+        } else {
+            if (ymov == -1) {
+                g.getTransform().rotate(180,part);
+            }
+        }
+        g.drawImage(SnakeHead, part.getMinX(),part.getMinY(), null);
         i=0;
         if (Dead) {
             g.drawImage(DeadImage, 50, 250, null);
