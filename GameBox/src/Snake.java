@@ -68,22 +68,23 @@ public class Snake implements Game {
         }
         AffineTransform t = g.getTransform(); 
         if (ymov == 0) {
-            if (xmov == 1){
-                t.rotate(Math.toRadians(90));
+            if (xmov == -1){
+                t.rotate(Math.toRadians(90),part.getCenterX(), part.getCenterY());
             } else {
-                t.rotate(Math.toRadians(270));
+                t.rotate(Math.toRadians(270),part.getCenterX(), part.getCenterY());
             }
         } else {
             if (ymov == -1) {
-                t.rotate(Math.toRadians(180));
+                t.rotate(Math.toRadians(180),part.getCenterX(), part.getCenterY());
             } else {
-                t.rotate(Math.toRadians(0));
+                t.rotate(Math.toRadians(0),part.getCenterX(), part.getCenterY());
             }
         }
         g.setTransform(t);
         g.drawImage(SnakeHead, (int) part.getMinX(),(int) part.getMinY(), null);
         i=0;
         if (Dead) {
+            g.setTransform(new AffineTransform());
             g.drawImage(DeadImage, 50, 250, null);
         }
 
@@ -122,19 +123,19 @@ public class Snake implements Game {
     }
     public void keyPressed(KeyEvent event) throws IOException {
         if (!Dead) {
-        if (event.getKeyCode() == KeyEvent.VK_A && xmov != 1) {
+        if (event.getKeyCode() == KeyEvent.VK_A) {
 			xmov = -1;
             ymov = 0;
 		}
-        if (event.getKeyCode() == KeyEvent.VK_D && xmov != -1) {
+        if (event.getKeyCode() == KeyEvent.VK_D) {
 			xmov = 1;
             ymov = 0;
 		}
-        if (event.getKeyCode() == KeyEvent.VK_S && xmov != -1) {
+        if (event.getKeyCode() == KeyEvent.VK_S) {
 			xmov = 0;
             ymov = 1;
 		}
-        if (event.getKeyCode() == KeyEvent.VK_W && xmov != 1) {
+        if (event.getKeyCode() == KeyEvent.VK_W) {
 			xmov = 0;
             ymov = -1;
 		}

@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import org.apache.commons.io.IOUtils;
-
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import java.awt.geom.AffineTransform;
 
 public class FlappyBird implements Game {
 	BufferedImage bird;
@@ -43,6 +43,7 @@ public class FlappyBird implements Game {
 	int Highscore = 0;
 	List<String> Read;
 	Clip Pling;
+	AffineTransform t;
 
 	Rectangle CollisionPipeUpper,CollisionPipeLower,CollisionBird;
 
@@ -109,8 +110,11 @@ public class FlappyBird implements Game {
 				} catch(IOException e1) {}
 				}
 		} else {
-
+			t = g.getTransform();
+			t.rotate(Math.toRadians(VelY*10), CollisionBird.getCenterX(), CollisionBird.getCenterY());
+			g.setTransform(t);
 			g.drawImage(bird, 20, BirdY, 40, 40, null);
+			g.setTransform(new AffineTransform());
 			
 			BirdY += VelY;
 			VelY += 0.125;
