@@ -73,10 +73,12 @@ public class Snake implements Game {
             }
         } else {
             if (ymov == -1) {
-                g.getTransform().rotate(180,part);
+                g.getTransform().rotate(180);
+            } else {
+                g.getTransform().rotate(0);
             }
         }
-        g.drawImage(SnakeHead, part.getMinX(),part.getMinY(), null);
+        g.drawImage(SnakeHead, (int) part.getMinX(),(int) part.getMinY(), null);
         i=0;
         if (Dead) {
             g.drawImage(DeadImage, 50, 250, null);
@@ -117,19 +119,19 @@ public class Snake implements Game {
     }
     public void keyPressed(KeyEvent event) throws IOException {
         if (!Dead) {
-        if (event.getKeyCode() == KeyEvent.VK_A) {
+        if (event.getKeyCode() == KeyEvent.VK_A && xmov != 1) {
 			xmov = -1;
             ymov = 0;
 		}
-        if (event.getKeyCode() == KeyEvent.VK_D) {
+        if (event.getKeyCode() == KeyEvent.VK_D && xmov != -1) {
 			xmov = 1;
             ymov = 0;
 		}
-        if (event.getKeyCode() == KeyEvent.VK_S) {
+        if (event.getKeyCode() == KeyEvent.VK_S && xmov != -1) {
 			xmov = 0;
             ymov = 1;
 		}
-        if (event.getKeyCode() == KeyEvent.VK_W) {
+        if (event.getKeyCode() == KeyEvent.VK_W && xmov != 1) {
 			xmov = 0;
             ymov = -1;
 		}
