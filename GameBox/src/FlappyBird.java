@@ -66,6 +66,7 @@ public class FlappyBird implements Game {
 		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("Pling.wav").getAbsoluteFile());
 		Pling = AudioSystem.getClip();
 		Pling.open(audioInputStream);
+		Main.INSTANCE.frame.setBounds(646,219,400,600);
 	}
 
 	public BufferedImage draw(Dimension size) {

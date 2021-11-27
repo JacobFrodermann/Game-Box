@@ -28,6 +28,7 @@ public class GameSelectionScreen implements Game {
 		gameThumbnails = new BufferedImage[] { ImageIO.read(new File("FlappyBird.png")) , ImageIO.read(new File("Pong.png")), ImageIO.read(new File("Snake.png")) };
 		gameClasses = new Class<?>[] { FlappyBird.class , Pong.class, Snake.class};
 		Main.INSTANCE.frame.setIconImage(Logo);
+		Main.INSTANCE.frame.setBounds(646,219,400,700);
 	}
 
 	public BufferedImage draw(Dimension size) {

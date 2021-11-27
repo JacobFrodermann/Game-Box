@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -35,6 +36,7 @@ class Main {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setBackground(Color.WHITE);
+		frame.setBounds(new Rectangle(646,219,400,600));
 		canvas = new Canvas();
 		frame.add(canvas);
 		canvas.setPreferredSize(new Dimension(400, 600));

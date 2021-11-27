@@ -28,7 +28,10 @@ public class Pong implements Game {
     public Pong() throws IOException, UnsupportedAudioFileException, LineUnavailableException{
         Logo = ImageIO.read(new File("PongLogo.png"));
         Plate = ImageIO.read(new File("Plate.png"));
+
         Main.INSTANCE.frame.setIconImage(Logo);
+        Main.INSTANCE.frame.setBounds(646,219,415,640);
+
         Ball = new Ellipse2D.Double(0,0,20,20);
         Line1 = new Rectangle(180,20,40,5);
         Line2 = new Rectangle(180,575,40,5);
@@ -50,8 +53,10 @@ public class Pong implements Game {
 
         //rendering
         g.drawImage(Plate, 0, 0, null);
+
         g.setColor(new Color(217, 222, 219));
         g.fill(Ball);
+
         g.setColor(Color.black);
         g.fill(Line1);
         g.fill(Line2);
