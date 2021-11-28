@@ -28,8 +28,8 @@ public class Pong implements Game {
     Clip Ping, Pong;
 
     public Pong() throws IOException, UnsupportedAudioFileException, LineUnavailableException{
-        Logo = ImageIO.read(Pong.class.getResourceAsStream("PongLogo.png"));
-        Plate = ImageIO.read(Pong.class.getResourceAsStream("Plate.png"));
+        Logo = ImageIO.read(Pong.class.getClassLoader().getResourceAsStream("PongLogo.PNG"));
+        Plate = ImageIO.read(Pong.class.getClassLoader().getResourceAsStream("Plate.PNG"));
 
         Main.INSTANCE.frame.setIconImage(Logo);
         Main.INSTANCE.frame.setBounds(646,219,415,640);
@@ -39,11 +39,11 @@ public class Pong implements Game {
         Line2 = new Rectangle(180,575,40,5);
         VelX = Double.valueOf(new Random().nextInt(6)) - 3.0;
 
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Pong.class.getResourceAsStream("Pong.wav"));
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Pong.class.getClassLoader().getResourceAsStream("Pong.wav"));
         Pong = AudioSystem.getClip();
         Pong.open(audioInputStream);
 
-        audioInputStream = AudioSystem.getAudioInputStream(Pong.class.getResourceAsStream("Ping.wav"));
+        audioInputStream = AudioSystem.getAudioInputStream(Pong.class.getClassLoader().getResourceAsStream("Ping.wav"));
         Ping = AudioSystem.getClip();
         Ping.open(audioInputStream);
     }

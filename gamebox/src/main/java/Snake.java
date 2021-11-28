@@ -47,17 +47,17 @@ public class Snake implements Game {
     public Snake() throws IOException, LineUnavailableException, UnsupportedAudioFileException{
         Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
         Highscore = Integer.valueOf(Read.get(1));
-        DeadImage = ImageIO.read(Snake.class.getResourceAsStream("Dead.png"));
-        Grass = ImageIO.read(Snake.class.getResourceAsStream("Grass.png"));
-        Apple = ImageIO.read(Snake.class.getResourceAsStream("Apple.png"));
-        SnakeHead = ImageIO.read(Snake.class.getResourceAsStream("Snake face.png"));
-        TreeGround = ImageIO.read(Snake.class.getResourceAsStream("Tree Ground.png"));
-        Tree1 = ImageIO.read(Snake.class.getResourceAsStream("Tree1.png"));
-        Tree2 = ImageIO.read(Snake.class.getResourceAsStream("Tree2.png"));
-        Tree3 = ImageIO.read(Snake.class.getResourceAsStream("Tree3.png"));
-        Lake = ImageIO.read(Snake.class.getResourceAsStream("Lake.png"));
-        Main.INSTANCE.frame.setIconImage(ImageIO.read(Snake.class.getResourceAsStream("Snake Logo.png")));
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Snake.class.getResourceAsStream("Eat.wav"));
+        DeadImage = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Dead.png"));
+        Grass = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Grass.png"));
+        Apple = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Apple.png"));
+        SnakeHead = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Snake face.png"));
+        TreeGround = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Tree Ground.png"));
+        Tree1 = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Tree1.png"));
+        Tree2 = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Tree2.png"));
+        Tree3 = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Tree3.png"));
+        Lake = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Lake.png"));
+        Main.INSTANCE.frame.setIconImage(ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Snake Logo.png")));
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Snake.class.getClassLoader().getResourceAsStream("Eat.wav"));
         eat = AudioSystem.getClip();
         eat.open(audioInputStream);
         Main.INSTANCE.frame.setBounds(new Rectangle(150,50,996,999));
