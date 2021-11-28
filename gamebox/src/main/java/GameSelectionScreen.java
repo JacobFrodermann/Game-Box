@@ -8,10 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-
 import javax.imageio.ImageIO;
-
-import org.apache.isis.core.commons.lang.IoUtils;
 
 public class GameSelectionScreen implements Game {
 	BufferedImage[] gameThumbnails;
@@ -25,7 +22,7 @@ public class GameSelectionScreen implements Game {
 	BufferedImage Logo;
 
 	public GameSelectionScreen() throws IOException {
-		Logo = ImageIO.read(IoUtils.class.getResourceAsStream("Logo.png"));
+		Logo = ImageIO.read(GameSelectionScreen.class.getResourceAsStream("Logo.png"));
 		gameThumbnails = new BufferedImage[] { ImageIO.read(GameSelectionScreen.class.getResourceAsStream("FlappyBird.png")) , ImageIO.read(GameSelectionScreen.class.getResourceAsStream("Pong.png")), ImageIO.read(GameSelectionScreen.class.getResourceAsStream("Snake.png")) };
 		gameClasses = new Class<?>[] { FlappyBird.class , Pong.class, Snake.class};
 		Main.INSTANCE.frame.setIconImage(Logo);

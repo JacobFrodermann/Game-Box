@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Random;
@@ -51,13 +52,13 @@ public class FlappyBird implements Game {
 	Rectangle CollisionPipeUpper,CollisionPipeLower,CollisionBird;
 
 	public FlappyBird() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
-		Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
+        Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
 		Highscore = Integer.valueOf(Read.get(0));
 		System.out.println(Highscore);
-		deadbird = ImageIO.read(IoUtils.class.getResourceAsStream("The Bird Dead.png"));
-		bird = ImageIO.read(IoUtils.class.getResourceAsStream("The Bird.png"));
-		dead = ImageIO.read(IoUtils.class.getResourceAsStream("Dead.png"));
-		Pipe = ImageIO.read(IoUtils.class.getResourceAsStream("Pipe.png"));
+		deadbird = ImageIO.read(FlappyBird.class.getResourceAsStream("The Bird Dead.png"));
+		bird = ImageIO.read(FlappyBird.class.getResourceAsStream("The Bird.png"));
+		dead = ImageIO.read(FlappyBird.class.getResourceAsStream("Dead.png"));
+		Pipe = ImageIO.read(FlappyBird.class.getResourceAsStream("Pipe.png"));
 		pipe1Y = new Random().nextInt(400);
 		pipe1X = 100;
 		pipe2Y = new Random().nextInt(400);
@@ -66,7 +67,7 @@ public class FlappyBird implements Game {
 		CollisionPipeLower = new Rectangle(pipe1X, pipe1Y+100,40,600);
 		CollisionPipeUpper = new Rectangle(pipe1X, pipe1Y-600,40,600);
 		Main.INSTANCE.frame.setIconImage(bird);
-		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(IoUtils.class.getResourceAsStream("Pling.wav"));
+		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(FlappyBird.class.getResourceAsStream("Pling.wav"));
 		Pling = AudioSystem.getClip();
 		Pling.open(audioInputStream);
 		Main.INSTANCE.frame.setBounds(646,219,400,600);
