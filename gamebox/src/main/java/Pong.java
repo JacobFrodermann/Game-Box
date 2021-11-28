@@ -16,6 +16,8 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import org.apache.isis.core.commons.lang.IoUtils;
+
 public class Pong implements Game {
     Ellipse2D Ball;
     Rectangle Line1, Line2;
@@ -27,7 +29,7 @@ public class Pong implements Game {
 
     public Pong() throws IOException, UnsupportedAudioFileException, LineUnavailableException{
         Logo = ImageIO.read(new File("PongLogo.png"));
-        Plate = ImageIO.read(new File("Plate.png"));
+        Plate = ImageIO.read(IoUtils.class.getResourceAsStream("Plate.png"));
 
         Main.INSTANCE.frame.setIconImage(Logo);
         Main.INSTANCE.frame.setBounds(646,219,415,640);
