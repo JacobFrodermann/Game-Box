@@ -54,10 +54,10 @@ public class FlappyBird implements Game {
 		Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
 		Highscore = Integer.valueOf(Read.get(0));
 		System.out.println(Highscore);
-		deadbird = ImageIO.read(new File("The Bird Dead.png"));
-		bird = ImageIO.read(new File("The Bird.png"));
-		dead = ImageIO.read(new File("Dead.png"));
-		Pipe = ImageIO.read(new File("Pipe.png"));
+		deadbird = ImageIO.read(IoUtils.class.getResourceAsStream("The Bird Dead.png"));
+		bird = ImageIO.read(IoUtils.class.getResourceAsStream("The Bird.png"));
+		dead = ImageIO.read(IoUtils.class.getResourceAsStream("Dead.png"));
+		Pipe = ImageIO.read(IoUtils.class.getResourceAsStream("Pipe.png"));
 		pipe1Y = new Random().nextInt(400);
 		pipe1X = 100;
 		pipe2Y = new Random().nextInt(400);
@@ -66,7 +66,7 @@ public class FlappyBird implements Game {
 		CollisionPipeLower = new Rectangle(pipe1X, pipe1Y+100,40,600);
 		CollisionPipeUpper = new Rectangle(pipe1X, pipe1Y-600,40,600);
 		Main.INSTANCE.frame.setIconImage(bird);
-		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("Pling.wav").getAbsoluteFile());
+		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(IoUtils.class.getResourceAsStream("Pling.wav"));
 		Pling = AudioSystem.getClip();
 		Pling.open(audioInputStream);
 		Main.INSTANCE.frame.setBounds(646,219,400,600);

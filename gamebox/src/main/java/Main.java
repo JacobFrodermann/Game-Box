@@ -46,9 +46,7 @@ class Main {
 			public void keyPressed(KeyEvent e) {
 				try {
 					currentGame.keyPressed(e);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				} catch (IOException e1) {}
 			}
 			public void keyReleased(KeyEvent e) {
 				currentGame.keyReleased(e);

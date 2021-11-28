@@ -28,7 +28,7 @@ public class Pong implements Game {
     Clip Ping, Pong;
 
     public Pong() throws IOException, UnsupportedAudioFileException, LineUnavailableException{
-        Logo = ImageIO.read(new File("PongLogo.png"));
+        Logo = ImageIO.read(IoUtils.class.getResourceAsStream("PongLogo.png"));
         Plate = ImageIO.read(IoUtils.class.getResourceAsStream("Plate.png"));
 
         Main.INSTANCE.frame.setIconImage(Logo);
@@ -39,11 +39,11 @@ public class Pong implements Game {
         Line2 = new Rectangle(180,575,40,5);
         VelX = Double.valueOf(new Random().nextInt(6)) - 3.0;
 
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("Pong.wav").getAbsoluteFile());
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(IoUtils.class.getResourceAsStream("Pong.wav"));
         Pong = AudioSystem.getClip();
         Pong.open(audioInputStream);
 
-        audioInputStream = AudioSystem.getAudioInputStream(new File("Ping.wav").getAbsoluteFile());
+        audioInputStream = AudioSystem.getAudioInputStream(IoUtils.class.getResourceAsStream("Pling.wav"));
         Ping = AudioSystem.getClip();
         Ping.open(audioInputStream);
     }
@@ -111,16 +111,10 @@ public class Pong implements Game {
             g.drawString("Player 2 Won", 190, 295);
             try {
                 Thread.sleep(500);
-            } catch (InterruptedException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
+            } catch (InterruptedException e1) {}
             try {
                 new GameSelectionScreen();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            } catch (IOException e) {}
         }
 
 
@@ -154,10 +148,7 @@ public class Pong implements Game {
         if (event.getKeyCode() == KeyEvent.VK_ENTER) {
             try {
                 Main.INSTANCE.currentGame = new GameSelectionScreen();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            } catch (IOException e) {}
         }
     }
     public void keyReleased(KeyEvent Event) {
