@@ -9,7 +9,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.swing.JFrame;
 
@@ -28,6 +30,10 @@ class Main {
 			render(INSTANCE.canvas, INSTANCE.draw(INSTANCE.canvas.getSize()));
 			Thread.sleep(1000 / 60);
 		}
+	}
+
+	public static InputStream baInputStream(InputStream in) throws IOException {
+		return new ByteArrayInputStream(in.readAllBytes());
 	}
 
 	public void init() throws IOException {

@@ -2,21 +2,19 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.geom.*;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import java.io.File;
 import java.io.IOException;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-
-import org.apache.isis.core.commons.lang.IoUtils;
 
 public class Pong implements Game {
     Ellipse2D Ball;
@@ -28,8 +26,8 @@ public class Pong implements Game {
     Clip Ping, Pong;
 
     public Pong() throws IOException, UnsupportedAudioFileException, LineUnavailableException{
-        Logo = ImageIO.read(Pong.class.getClassLoader().getResourceAsStream("PongLogo.PNG"));
-        Plate = ImageIO.read(Pong.class.getClassLoader().getResourceAsStream("Plate.PNG"));
+        Logo = ImageIO.read(Pong.class.getClassLoader().getResourceAsStream("pongLogo.png"));
+        Plate = ImageIO.read(Pong.class.getClassLoader().getResourceAsStream("Plate.png"));
 
         Main.INSTANCE.frame.setIconImage(Logo);
         Main.INSTANCE.frame.setBounds(646,219,415,640);
@@ -39,11 +37,11 @@ public class Pong implements Game {
         Line2 = new Rectangle(180,575,40,5);
         VelX = Double.valueOf(new Random().nextInt(6)) - 3.0;
 
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Pong.class.getClassLoader().getResourceAsStream("Pong.wav"));
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Main.baInputStream(Pong.class.getClassLoader().getResourceAsStream("Pong.wav")));
         Pong = AudioSystem.getClip();
         Pong.open(audioInputStream);
 
-        audioInputStream = AudioSystem.getAudioInputStream(Pong.class.getClassLoader().getResourceAsStream("Ping.wav"));
+        audioInputStream = AudioSystem.getAudioInputStream(Main.baInputStream(Pong.class.getClassLoader().getResourceAsStream("Ping.wav")));
         Ping = AudioSystem.getClip();
         Ping.open(audioInputStream);
     }

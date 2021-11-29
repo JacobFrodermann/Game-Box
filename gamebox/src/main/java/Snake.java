@@ -12,18 +12,18 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Random;
-import javax.imageio.ImageIO;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.io.IOUtils;
-import org.apache.isis.core.commons.lang.IoUtils;
+import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+
+import org.apache.commons.io.IOUtils;
 
 public class Snake implements Game {
     Clip eat;
@@ -57,7 +57,7 @@ public class Snake implements Game {
         Tree3 = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Tree3.png"));
         Lake = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Lake.png"));
         Main.INSTANCE.frame.setIconImage(ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Snake Logo.png")));
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Snake.class.getClassLoader().getResourceAsStream("Eat.wav"));
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Main.baInputStream(Snake.class.getClassLoader().getResourceAsStream("Eat.wav")));
         eat = AudioSystem.getClip();
         eat.open(audioInputStream);
         Main.INSTANCE.frame.setBounds(new Rectangle(150,50,996,999));

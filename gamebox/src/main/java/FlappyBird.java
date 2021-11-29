@@ -5,16 +5,17 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Random;
+
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -23,9 +24,6 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.isis.core.commons.lang.IoUtils;
-
-import java.awt.geom.AffineTransform;
 
 public class FlappyBird implements Game {
 	BufferedImage bird;
@@ -67,7 +65,7 @@ public class FlappyBird implements Game {
 		CollisionPipeLower = new Rectangle(pipe1X, pipe1Y+100,40,600);
 		CollisionPipeUpper = new Rectangle(pipe1X, pipe1Y-600,40,600);
 		Main.INSTANCE.frame.setIconImage(bird);
-		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(FlappyBird.class.getClassLoader().getResourceAsStream("Pling.wav"));
+		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Main.baInputStream(FlappyBird.class.getClassLoader().getResourceAsStream("Pling.wav")));
 		Pling = AudioSystem.getClip();
 		Pling.open(audioInputStream);
 		Main.INSTANCE.frame.setBounds(646,219,400,600);
