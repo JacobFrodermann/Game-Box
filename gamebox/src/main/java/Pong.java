@@ -24,8 +24,15 @@ public class Pong implements Game {
     Double BallX = 190.0, BallY = 290.0;
     int P1Score = 0 , P2Score = 0;
     Clip Ping, Pong;
+    int Xamp, Yamp, Linespeed;
 
     public Pong() throws IOException, UnsupportedAudioFileException, LineUnavailableException{
+        try {
+            Xamp = Integer.valueOf(Main.INSTANCE.Read.get(5).substring(9));
+            Yamp = Integer.valueOf(Main.INSTANCE.Read.get(6).substring(9));
+            Linespeed = Integer.valueOf(Main.INSTANCE.Read.get(7).substring(14));
+        } catch (java.lang.StringIndexOutOfBoundsException | java.lang.NumberFormatException e1) {Main.INSTANCE.reset();}
+
         Logo = ImageIO.read(Pong.class.getClassLoader().getResourceAsStream("pongLogo.png"));
         Plate = ImageIO.read(Pong.class.getClassLoader().getResourceAsStream("Plate.png"));
 
@@ -89,8 +96,8 @@ public class Pong implements Game {
         if (BallY > 605) {
             BallX = 190.0;
             BallY = 290.0;
-            VelX = Double.valueOf(new Random().nextInt(6)) - 3.0;
-            VelY = -2.0;
+            VelX = Double.valueOf((new Random().nextInt(6)) - 3.0)*Xamp;
+            VelY = -2.0*Yamp;
             P1Score += 1;
             System.out.println(P1Score+"/" + P2Score);
         }
@@ -132,16 +139,16 @@ public class Pong implements Game {
     }
     public void keyPressed(KeyEvent event) {
 		if (event.getKeyCode() == KeyEvent.VK_A) {
-			Line1.x -= 6;
+			Line1.x -= Linespeed;
         }
         if (event.getKeyCode() == KeyEvent.VK_D) {
-            Line1.x += 6;
+            Line1.x += Linespeed;
         } 
         if (event.getKeyCode() == KeyEvent.VK_LEFT) {
-            Line2.x -= 6;
+            Line2.x -= Linespeed;
         }
         if (event.getKeyCode() == KeyEvent.VK_RIGHT) {
-            Line2.x += 6;
+            Line2.x += Linespeed;
         }
         if (event.getKeyCode() == KeyEvent.VK_ENTER) {
             try {

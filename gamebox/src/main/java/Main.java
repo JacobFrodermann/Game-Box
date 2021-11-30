@@ -10,10 +10,18 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import javax.swing.JFrame;
+
+import org.apache.commons.io.IOUtils;
 
 class Main {
 	public static Main INSTANCE;
@@ -21,7 +29,7 @@ class Main {
 	public JFrame frame;
 	public Canvas canvas;
 	public Game currentGame;
-
+	public List<String> Read;
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		INSTANCE = new Main();
@@ -62,6 +70,17 @@ class Main {
 		canvas.createBufferStrategy(2);
 		canvas.requestFocus();
 
+		if (new File("Settings.txt").exists()) {
+            Read = IOUtils.readLines(new FileInputStream(new File("Settings.txt")),StandardCharsets.UTF_8);
+            } else {
+                reset();
+            }
+		if (Read.size() != 12) {
+			System.out.println("reseted");
+			System.out.println(Read.size());
+			reset();
+		}
+
 		currentGame = new GameSelectionScreen();
 	}
 
@@ -83,5 +102,9 @@ class Main {
 		g.drawImage(img, 0, 0, img.getWidth(), img.getHeight(), null);
 		g.dispose();
 		bs.show();
+	}
+
+	public void reset() throws FileNotFoundException, IOException {
+		IOUtils.write("FlappyBird:\n    Gravity=0.125\n    RotationFaktor=1\n    JumpHeight=4\nPong:\n    Xamp=1\n    Yamp=1\n    Linespeed=6\nSnake:\n    help=false\n    DeadlyLake=true\n    ticktime=60", new FileOutputStream(new File("Settings.txt")), StandardCharsets.UTF_8);
 	}
 }

@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Random;
-
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -47,10 +46,22 @@ public class FlappyBird implements Game {
 	Clip Pling;
 	AffineTransform t;
 
+	Double Gravity, RotationFaktor, JumpHeight;
+
 	Rectangle CollisionPipeUpper,CollisionPipeLower,CollisionBird;
 
-	public FlappyBird() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
-        Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
+	public FlappyBird() throws IOException, UnsupportedAudioFileException, LineUnavailableException  {
+		try {
+			Gravity = Double.valueOf(Main.INSTANCE.Read.get(1).substring(12));
+			RotationFaktor = Double.valueOf(Main.INSTANCE.Read.get(2).substring(19));
+			JumpHeight = Double.valueOf(Main.INSTANCE.Read.get(3).substring(15));
+		} catch (java.lang.StringIndexOutOfBoundsException | java.lang.NumberFormatException e1) {Main.INSTANCE.reset();}
+
+		if (new File("Data").exists()) {
+			Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
+		}else {
+			IOUtils.write("0\n3", new FileOutputStream(new File("Data")), StandardCharsets.UTF_8);
+		}
 		Highscore = Integer.valueOf(Read.get(0));
 		System.out.println(Highscore);
 		deadbird = ImageIO.read(FlappyBird.class.getClassLoader().getResourceAsStream("The Bird Dead.png"));
@@ -114,13 +125,13 @@ public class FlappyBird implements Game {
 				}
 		} else {
 			t = g.getTransform();
-			t.rotate(Math.toRadians(VelY*10), CollisionBird.getCenterX(), CollisionBird.getCenterY());
+			t.rotate(Math.toRadians(VelY*10*RotationFaktor), CollisionBird.getCenterX(), CollisionBird.getCenterY());
 			g.setTransform(t);
 			g.drawImage(bird, 20, BirdY, 40, 40, null);
 			g.setTransform(new AffineTransform());
 			
 			BirdY += VelY;
-			VelY += 0.125;
+			VelY += Gravity;
 			Score += VelX/10 + 0.5;
 		}
 		if ((150-Score/2)+i < -80 ){
@@ -149,7 +160,7 @@ public class FlappyBird implements Game {
 			Main.INSTANCE.currentGame = new GameSelectionScreen();
 		}
 		if (event.getKeyCode() == KeyEvent.VK_SPACE) {
-			VelY -= 4;
+			VelY -= JumpHeight;
 		}
 		if (event.getKeyCode() == KeyEvent.VK_SPACE && ((BirdY > 600 || BirdY < -20) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper))) {
 			try {

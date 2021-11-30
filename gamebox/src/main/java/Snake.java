@@ -37,15 +37,33 @@ public class Snake implements Game {
     Boolean Dead = false;
     List<Integer> xkords = new ArrayList<Integer>(){{add(9);add(9);add(9);}};
     List<Integer> ykords = new ArrayList<Integer>(){{add(14);add(13);add(12);}};
-    int xmov=0,ymov=1;
+    int xmov=0,ymov=1, ticktime, helptime;
     int AppleX, AppleY;
     Rectangle part = new Rectangle(0,0,20,20), TreeGroundKol = new Rectangle(320,200,120,20);
     Rectangle Tree1Kol = new Rectangle(700,700,20,20),Tree2kol = new Rectangle(500,500,20,20);
     Rectangle LakeKol = new Rectangle(80,600,280,360), Tree3kol = new Rectangle(80,140,20,20);
     boolean ToAdd;
 
+    Boolean help, DeadlyLake;
+
     public Snake() throws IOException, LineUnavailableException, UnsupportedAudioFileException{
-        Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
+        if (new File("Data").exists()) {
+			Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
+		}else {
+			IOUtils.write("0\n3", new FileOutputStream(new File("Data")), StandardCharsets.UTF_8);
+		}
+        try {
+            help = Boolean.valueOf(Main.INSTANCE.Read.get(9).substring(9));
+            DeadlyLake = Boolean.valueOf(Main.INSTANCE.Read.get(10).substring(15));
+            ticktime  = Integer.valueOf(Main.INSTANCE.Read.get(11).substring(13));
+        } catch (java.lang.StringIndexOutOfBoundsException | java.lang.NumberFormatException e1) {Main.INSTANCE.reset();}
+
+        System.out.println(DeadlyLake);
+
+        if (!DeadlyLake) {
+            LakeKol.setLocation(10000, 0);
+        }
+
         Highscore = Integer.valueOf(Read.get(1));
         DeadImage = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Dead.png"));
         Grass = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Grass.png"));
@@ -78,11 +96,10 @@ public class Snake implements Game {
         g.setColor(Color.BLACK);
         g.drawString("Highscore: " + String.valueOf(Highscore), 10, 20);
         g.drawString(String.valueOf(xkords.size()), 100,20);
-        g.drawImage(Apple, AppleX*20-20, AppleY*20-20, null);
-        i=0;
-
         g.drawImage(Lake, 80,600, null);
+        g.drawImage(Apple, AppleX*20-20, AppleY*20-20, null);
 
+        i=0;
         while (xkords.size() > i) {
                 snake = new Color(Color.HSBtoRGB((float) (55.0+i * 2)/100,(float)82.0/100,(float)56.0/100));
             g.setColor(snake);
@@ -121,13 +138,22 @@ public class Snake implements Game {
         g.drawImage(Tree3, 45, 28, null);
         
 
+        if (helptime > 0 && help) {
+            helptime --;
+            part.setBounds(AppleX*20-20,AppleY*20-20, 20, 20);
+            g.setColor(Color.RED);
+            g.fill(part);
+            System.out.println("helped");
+        }
+        System.out.println(helptime);
+
         if (Dead) {
             g.setTransform(new AffineTransform());
             g.drawImage(DeadImage, 350, 350, null);
         }
 
         try {
-            Thread.sleep(60L);
+            Thread.sleep(ticktime);
         } catch (InterruptedException e) {}
         if (!Dead) {
             xkords.add(xkords.get(xkords.size()-1)+xmov);
@@ -160,8 +186,7 @@ public class Snake implements Game {
         if (xkords.get(lx-1) == AppleX && ykords.get(ly-1) == AppleY) {
             ToAdd = true;
             eat.start();
-            AppleX = new Random().nextInt(47)+1;
-            AppleY = new Random().nextInt(47)+1;
+            GenApplePos();
         }
         return result;
     }
@@ -217,13 +242,17 @@ public class Snake implements Game {
     }
 
     private void GenApplePos() {
+        System.out.println("why");
+        helptime = 5;
         AppleX = new Random().nextInt(48)+1;
         AppleY = new Random().nextInt(48)+1;
         int tempx = (int) part.getLocation().getX(),tempy = (int) part.getLocation().getY();
         part.setLocation(AppleX*20-20, AppleY*20-20);
         if (part.intersects(TreeGroundKol) || part.intersects(Tree1Kol) || part.intersects(Tree2kol) || part.intersects(Tree3kol) || part.intersects(LakeKol)) {
+            System.out.print("kl");
             part.setLocation(tempx,tempy);
             GenApplePos();
         }
+
     }
 }
