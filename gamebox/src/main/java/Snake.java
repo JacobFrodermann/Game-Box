@@ -50,7 +50,9 @@ public class Snake implements Game {
         if (new File("Data").exists()) {
 			Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
 		}else {
+
 			IOUtils.write("0\n3", new FileOutputStream(new File("Data")), StandardCharsets.UTF_8);
+            Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
 		}
         try {
             help = Boolean.valueOf(Main.INSTANCE.Read.get(9).substring(9));
@@ -143,9 +145,7 @@ public class Snake implements Game {
             part.setBounds(AppleX*20-20,AppleY*20-20, 20, 20);
             g.setColor(Color.RED);
             g.fill(part);
-            System.out.println("helped");
         }
-        System.out.println(helptime);
 
         if (Dead) {
             g.setTransform(new AffineTransform());
@@ -242,7 +242,6 @@ public class Snake implements Game {
     }
 
     private void GenApplePos() {
-        System.out.println("why");
         helptime = 5;
         AppleX = new Random().nextInt(48)+1;
         AppleY = new Random().nextInt(48)+1;

@@ -61,6 +61,7 @@ public class FlappyBird implements Game {
 			Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
 		}else {
 			IOUtils.write("0\n3", new FileOutputStream(new File("Data")), StandardCharsets.UTF_8);
+			Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
 		}
 		Highscore = Integer.valueOf(Read.get(0));
 		System.out.println(Highscore);

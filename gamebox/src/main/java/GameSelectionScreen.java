@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import javax.imageio.ImageIO;
 
+import org.hamcrest.text.X;
+
 public class GameSelectionScreen implements Game {
 	BufferedImage[] gameThumbnails;
 	Class<?>[] gameClasses;
@@ -20,13 +22,18 @@ public class GameSelectionScreen implements Game {
 	Color sky = new Color(52, 174, 235);
 	Color selectionColor = new Color(255, 60, 0);
 	BufferedImage Logo;
+	int i = 0, XRow = 0;
 
 	public GameSelectionScreen() throws IOException {
-		Logo = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Logo.png"));
-		gameThumbnails = new BufferedImage[] { ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Flappybird.png")) , ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Pong.PNG")), ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Snake.png")) };
-		gameClasses = new Class<?>[] { FlappyBird.class , Pong.class, Snake.class};
+		try {
+			Logo = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Logo.png"));
+			gameThumbnails = new BufferedImage[] { ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Flappy.png")) , ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Pong.png")), ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Snake.png")), ImageIO.read(GameSelectionScreen.class.getResourceAsStream("Space.png")) };
+			gameClasses = new Class<?>[] { FlappyBird.class , Pong.class, Snake.class, SpaceDestroyer.class};
+		} catch (IOException | java.lang.IllegalArgumentException e) {
+			System.out.println("Data Error");
+		}
 		Main.INSTANCE.frame.setIconImage(Logo);
-		Main.INSTANCE.frame.setBounds(646,219,400,700);
+		Main.INSTANCE.frame.setBounds(646,219,800,680);
 	}
 
 	public BufferedImage draw(Dimension size) {
@@ -38,14 +45,18 @@ public class GameSelectionScreen implements Game {
 		// Rendering
 		g.setColor(sky);
 		g.fill(new Rectangle(new Point(), size));
-		for(int i = 0; i < gameThumbnails.length; i++) {
-			g.drawImage(gameThumbnails[i], 75, 50 + i * 190, 250, 140, null);
+		i = 0;
+		
+		while (i<4) {
+			XRow = ((int) Math.floor((i+1)/4))*300;
+			g.drawImage(gameThumbnails[i], 75 + XRow, 50 + i * 190 - XRow * 2, 250, 140, null);
 			if(i == selected) {
 				g.setColor(selectionColor);
 				int a = (int) Math.round(8 * Math.sin(anim));
-				g.fillPolygon(new int[] { 35 + a, 35 + a, 55 + a }, new int[] { (int) (105 + (i + animMovement) * 190), (int) (135 + (i + animMovement) * 190), (int) (120 + (i + animMovement) * 190) }, 3);
-				g.fillPolygon(new int[] { 400 - 35 - a, 400 - 35 - a, 400 - 55 - a }, new int[] { (int) (105 + (i + animMovement) * 190), (int) (135 + (i + animMovement) * 190), (int) (120 + (i + animMovement) * 190) }, 3);
+				g.fillPolygon(new int[] { 35 + a + XRow, 35 + a + XRow , 55 + a + XRow }, new int[] { (int) (105 + (i + animMovement) * 190) - XRow*2, (int) (135 + (i + animMovement) * 190) - XRow*2, (int) (120 + (i + animMovement) * 190 - XRow*2) }, 3);
+				g.fillPolygon(new int[] { 400 - 35 - a + XRow, 400 - 35 - a + XRow, 400 - 55 - a + XRow}, new int[] { (int) (105 + (i + animMovement) * 190) - XRow*2, (int) (135 + (i + animMovement) * 190) - XRow*2, (int) (120 + (i + animMovement) * 190) - XRow*2 }, 3);
 			}
+			i++;
 		}
 		anim += 0.09;
 		animMovement *= 0.9;

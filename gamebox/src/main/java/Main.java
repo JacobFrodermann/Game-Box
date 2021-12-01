@@ -22,6 +22,7 @@ import java.util.List;
 import javax.swing.JFrame;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.isis.core.commons.lang.IoUtils;
 
 class Main {
 	public static Main INSTANCE;
@@ -106,5 +107,12 @@ class Main {
 
 	public void reset() throws FileNotFoundException, IOException {
 		IOUtils.write("FlappyBird:\n    Gravity=0.125\n    RotationFaktor=1\n    JumpHeight=4\nPong:\n    Xamp=1\n    Yamp=1\n    Linespeed=6\nSnake:\n    help=false\n    DeadlyLake=true\n    ticktime=60", new FileOutputStream(new File("Settings.txt")), StandardCharsets.UTF_8);
+		try {
+			Read = IOUtils.readLines(new FileInputStream(new File("Settings.txt")),StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			System.out.println("Read ater Write Failed\nManual input");
+			IOUtils.close();
+			Read = IOUtils.readLines(new FileInputStream(new File("Settings.txt")),StandardCharsets.UTF_8);
+		}
 	}
 }
