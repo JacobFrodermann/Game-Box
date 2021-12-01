@@ -9,6 +9,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.hamcrest.text.X;
 
@@ -67,8 +69,20 @@ public class GameSelectionScreen implements Game {
 	public void keyPressed(KeyEvent event) {
 		if(event.getKeyCode() == KeyEvent.VK_ENTER) {
 			try {
-				Main.INSTANCE.currentGame = (Game) gameClasses[selected].getConstructor().newInstance();
-			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				if (selected == 0) {
+					Main.INSTANCE.currentGame = new FlappyBird();
+				}
+				if (selected == 1) {
+					Main.INSTANCE.currentGame = new Pong();
+				}
+				if (selected == 2) {
+					Main.INSTANCE.currentGame = new Snake();
+				}
+				if (selected == 3) {
+					Main.INSTANCE.currentGame = new SpaceDestroyer();
+				}
+				//Main.INSTANCE.currentGame = (Game) gameClasses[selected].getConstructor().newInstance();
+			} catch (IOException | IllegalArgumentException/* | InvocationTargetException | NoSuchMethodException | SecurityException*/ | UnsupportedAudioFileException | LineUnavailableException e) {
 				e.printStackTrace();
 				System.exit(1);
 			}
