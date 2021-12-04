@@ -192,19 +192,19 @@ public class Snake implements Game {
     }
     public void keyPressed(KeyEvent event) throws IOException {
         if (!Dead) {
-        if (event.getKeyCode() == KeyEvent.VK_A) {
+        if (event.getKeyCode() == KeyEvent.VK_A || event.getKeyCode() == KeyEvent.VK_LEFT) {
 			xmov = -1;
             ymov = 0;
 		}
-        if (event.getKeyCode() == KeyEvent.VK_D) {
+        if (event.getKeyCode() == KeyEvent.VK_D || event.getKeyCode() == KeyEvent.VK_RIGHT) {
 			xmov = 1;
             ymov = 0;
 		}
-        if (event.getKeyCode() == KeyEvent.VK_S) {
+        if (event.getKeyCode() == KeyEvent.VK_S || event.getKeyCode() == KeyEvent.VK_DOWN) {
 			xmov = 0;
             ymov = 1;
 		}
-        if (event.getKeyCode() == KeyEvent.VK_W) {
+        if (event.getKeyCode() == KeyEvent.VK_W || event.getKeyCode() == KeyEvent.VK_UP) {
 			xmov = 0;
             ymov = -1;
 		}

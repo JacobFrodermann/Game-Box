@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -29,23 +30,28 @@ public class SpaceDestroyer implements Game {
     List<Integer> keys;
     Boolean Dead = false;
     BufferedImage Ship, opponent, Space, dead, Victory;
-    Clip Pew,Pew2;
     Rectangle ShipCol = new Rectangle(180,500,40,32);
     int tick = 0;
     List<double[]> Projektiles, Opponents;
     int Coldown = 0;
     double[] temp;
+    Clip Pew, Boom;
     
 
-    SpaceDestroyer() throws IOException {
+    SpaceDestroyer() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
         keys = new ArrayList<Integer>();
         Projektiles = new ArrayList<double[]>();
         Opponents = new ArrayList<double[]>();
         Main.INSTANCE.frame.setBounds(646,219,400,600);        
         Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship.png"));
         dead = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Dead.png"));
-        Victory = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Victory.png")); 
-
+        Victory = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Victory.png"));
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Main.baInputStream(SpaceDestroyer.class.getClassLoader().getResourceAsStream("Pew.wav")));
+        Pew = AudioSystem.getClip();
+        Pew.open(audioInputStream);
+        audioInputStream = AudioSystem.getAudioInputStream(Main.baInputStream(SpaceDestroyer.class.getClassLoader().getResourceAsStream("Boom.wav")));
+        Boom = AudioSystem.getClip();
+        Boom.open(audioInputStream);
         for (int i = 0; i<2; i++) {
             for (int l = 0; l<7; l++) {
                 temp = new double[] {10+50*l,100+80*i,10};
@@ -111,6 +117,7 @@ public class SpaceDestroyer implements Game {
                 } else {
                     if (ShipCol.intersects(new Rectangle((int) Projektiles.get(i)[0],(int) Projektiles.get(i)[1],10,10))) {
                         Dead = true;
+                        Boom.start();
                     }
                 }
             }
@@ -119,7 +126,12 @@ public class SpaceDestroyer implements Game {
             if (Opponents.get(i)[2] == 0) {
                 Opponents.remove(i);
                 i--;
+                Boom.start();
             }
+        }
+        if (Boom.getFramePosition() == 44100) {
+            Boom.setFramePosition(0);
+            Boom.stop();
         }
 
         if (Opponents.size() == 0){
@@ -137,20 +149,24 @@ public class SpaceDestroyer implements Game {
                 Projektiles.add(temp);
             }
         }
+        if (Pew.getFramePosition() == 10584) {
+            Pew.setFramePosition(0);
+            Pew.stop();
+        }
         if (Dead) {
             g.drawImage(dead, 50 , 250, null);
         }
         if(!Dead) {
-            if (keys.contains(KeyEvent.VK_A)) {
+            if (keys.contains(KeyEvent.VK_A) || keys.contains(KeyEvent.VK_LEFT)) {
                 ShipCol.setLocation((int) ShipCol.getMinX()-5,(int) ShipCol.getMinY());
             }
-            if (keys.contains(KeyEvent.VK_D)) {
+            if (keys.contains(KeyEvent.VK_D) || keys.contains(KeyEvent.VK_RIGHT)) {
                 ShipCol.setLocation((int) ShipCol.getMinX()+5,(int) ShipCol.getMinY());
             }
-            if (keys.contains(KeyEvent.VK_W)) {
+            if (keys.contains(KeyEvent.VK_W) || keys.contains(KeyEvent.VK_UP)) {
                 ShipCol.setLocation((int) ShipCol.getMinX(),(int) ShipCol.getMinY()-5);
             }
-            if (keys.contains(KeyEvent.VK_S)) {
+            if (keys.contains(KeyEvent.VK_S) || keys.contains(KeyEvent.VK_DOWN)) {
                 ShipCol.setLocation((int) ShipCol.getMinX(),(int) ShipCol.getMinY()+5);
             }
             //Ship shoot
@@ -158,7 +174,8 @@ public class SpaceDestroyer implements Game {
                 if (Coldown<0) {
                     double[] temp  = {ShipCol.getCenterX(),ShipCol.getMinY(),-5.0,1.0};
                     Projektiles.add(temp);
-                    Coldown = 10;
+                    Coldown = 15;
+                    Pew.start();
                 }
             }
         }

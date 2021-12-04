@@ -46,7 +46,7 @@ public class Pong implements Game {
         Ball = new Ellipse2D.Double(0,0,20,20);
         Line1 = new Rectangle(180,20,40,5);
         Line2 = new Rectangle(180,575,40,5);
-        GenVelX;
+        GenVelX();
 
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Main.baInputStream(Pong.class.getClassLoader().getResourceAsStream("Pong.wav")));
         Pong = AudioSystem.getClip();
