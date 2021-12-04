@@ -7,12 +7,9 @@ import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-
-import org.hamcrest.text.X;
 
 public class GameSelectionScreen implements Game {
 	BufferedImage[] gameThumbnails;
@@ -29,7 +26,7 @@ public class GameSelectionScreen implements Game {
 	public GameSelectionScreen() throws IOException {
 		try {
 			Logo = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Logo.png"));
-			gameThumbnails = new BufferedImage[] { ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Flappy.png")) , ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Pong.png")), ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Snake.png")), ImageIO.read(GameSelectionScreen.class.getResourceAsStream("Space.png")) };
+			gameThumbnails = new BufferedImage[] { ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Flappy.png")) , ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Pong.png")), ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Snake.png")), ImageIO.read(GameSelectionScreen.class.getResourceAsStream("SpaceDestroyer.png")) };
 			gameClasses = new Class<?>[] { FlappyBird.class , Pong.class, Snake.class, SpaceDestroyer.class};
 		} catch (IOException | java.lang.IllegalArgumentException e) {
 			System.out.println("Data Error");

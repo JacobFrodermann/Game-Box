@@ -7,6 +7,8 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -25,8 +27,10 @@ public class Pong implements Game {
     int P1Score = 0 , P2Score = 0;
     Clip Ping, Pong;
     int Xamp, Yamp, Linespeed;
+    List<Integer> keys;
 
     public Pong() throws IOException, UnsupportedAudioFileException, LineUnavailableException{
+        keys = new ArrayList<Integer>();
         try {
             Xamp = Integer.valueOf(Main.INSTANCE.Read.get(5).substring(9));
             Yamp = Integer.valueOf(Main.INSTANCE.Read.get(6).substring(9));
@@ -42,7 +46,7 @@ public class Pong implements Game {
         Ball = new Ellipse2D.Double(0,0,20,20);
         Line1 = new Rectangle(180,20,40,5);
         Line2 = new Rectangle(180,575,40,5);
-        VelX = Double.valueOf(new Random().nextInt(6)) - 3.0;
+        GenVelX;
 
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Main.baInputStream(Pong.class.getClassLoader().getResourceAsStream("Pong.wav")));
         Pong = AudioSystem.getClip();
@@ -88,7 +92,7 @@ public class Pong implements Game {
         if (BallY < -5) {
             BallX = 190.0;
             BallY = 290.0;
-            VelX = Double.valueOf(new Random().nextInt(6)) - 3.0;
+            GenVelX();
             VelY = 2.0;
             P2Score += 1;
             System.out.println(P1Score+"/" + P2Score);
@@ -96,7 +100,7 @@ public class Pong implements Game {
         if (BallY > 605) {
             BallX = 190.0;
             BallY = 290.0;
-            VelX = Double.valueOf((new Random().nextInt(6)) - 3.0)*Xamp;
+            GenVelX();
             VelY = -2.0*Yamp;
             P1Score += 1;
             System.out.println(P1Score+"/" + P2Score);
@@ -135,28 +139,40 @@ public class Pong implements Game {
     if (BallX <= 0 || BallX >= 380) {
         VelX *= -1;
     }
+
+    if (keys.contains(KeyEvent.VK_A)) {
+        Line1.setLocation((int) Line1.getMinX()-4, 20);
+    }
+    if (keys.contains(KeyEvent.VK_D)) {
+        Line1.setLocation((int) Line1.getMinX()+4, 20);
+    }
+    if (keys.contains(KeyEvent.VK_LEFT)) {
+        Line2.setLocation((int) Line2.getMinX()-4, 575);
+    }
+    if (keys.contains(KeyEvent.VK_RIGHT)) {
+        Line2.setLocation((int) Line2.getMinX()+4, 575);
+    }
+
         return result;
     }
-    public void keyPressed(KeyEvent event) {
-		if (event.getKeyCode() == KeyEvent.VK_A) {
-			Line1.x -= Linespeed;
+    public void keyPressed(KeyEvent e) throws IOException {
+        if (!keys.contains(e.getKeyCode())) {
+            keys.add(e.getKeyCode());
         }
-        if (event.getKeyCode() == KeyEvent.VK_D) {
-            Line1.x += Linespeed;
-        } 
-        if (event.getKeyCode() == KeyEvent.VK_LEFT) {
-            Line2.x -= Linespeed;
-        }
-        if (event.getKeyCode() == KeyEvent.VK_RIGHT) {
-            Line2.x += Linespeed;
-        }
-        if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             try {
                 Main.INSTANCE.currentGame = new GameSelectionScreen();
-            } catch (IOException e) {}
+            } catch (IOException f) {}
         }
     }
-    public void keyReleased(KeyEvent Event) {
-
+    public void keyReleased(KeyEvent e) {
+        if (keys.contains(e.getKeyCode())) {
+        keys.remove(keys.indexOf(e.getKeyCode()));
+        }
+    }
+    public void GenVelX(){
+        VelX = Double.valueOf(new Random().nextInt(6)) - 3.0;
+        if (VelX == 0) {GenVelX();}
     }
 }

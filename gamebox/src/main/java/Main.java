@@ -18,11 +18,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-
 import javax.swing.JFrame;
-
 import org.apache.commons.io.IOUtils;
-import org.apache.isis.core.commons.lang.IoUtils;
 
 class Main {
 	public static Main INSTANCE;
