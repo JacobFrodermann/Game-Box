@@ -69,6 +69,7 @@ public class FlappyBird implements Game {
 		bird = ImageIO.read(FlappyBird.class.getClassLoader().getResourceAsStream("The Bird.png"));
 		dead = ImageIO.read(FlappyBird.class.getClassLoader().getResourceAsStream("Dead.png"));
 		Pipe = ImageIO.read(FlappyBird.class.getClassLoader().getResourceAsStream("Pipe.png"));
+		
 		pipe1Y = new Random().nextInt(400);
 		pipe1X = 100;
 		pipe2Y = new Random().nextInt(400);
