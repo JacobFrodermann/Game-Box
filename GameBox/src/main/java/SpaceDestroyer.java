@@ -108,8 +108,13 @@ public class SpaceDestroyer implements Game {
                 i--;
             }
         }
+        g.setColor(Color.red);
         for (int i = 0; i < Opponents.size(); i++) {
             g.drawImage(opponent,(int) Opponents.get(i)[0],(int) Opponents.get(i)[1],40,38,null);
+            if (Opponents.get(i)[2] != 10){
+                g.drawRect((int) Opponents.get(i)[0],(int) Opponents.get(i)[1]-12, 38, 8);
+                g.fillRect((int) Opponents.get(i)[0],(int) Opponents.get(i)[1]-12, 38-(int) (3.8*(10-Opponents.get(i)[2])), 8);
+            }
         }
 
         MoveProjektiles();
