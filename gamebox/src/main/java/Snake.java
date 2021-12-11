@@ -217,7 +217,7 @@ public class Snake implements Game {
                 if (Highscore < xkords.size()) {
                     try {
                         try {
-                            IOUtils.write(String.valueOf(Read.get(1) + "\n" + xkords.size()), new FileOutputStream(new File("Data")), StandardCharsets.UTF_8);
+                            IOUtils.write(String.valueOf(Read.get(0) + "\n" + xkords.size()), new FileOutputStream(new File("Data")), StandardCharsets.UTF_8);
                         } catch (FileNotFoundException e){}
                     } catch(IOException e1) {}
                 }

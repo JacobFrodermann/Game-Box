@@ -27,7 +27,7 @@ public class SpaceDestroyer implements Game {
     List<Integer> keys;
     Boolean Dead = false;
     BufferedImage Ship, opponent, Space, dead, Victory, EnemyShot, FriendlyShot, PowerUp;
-    Rectangle ShipCol = new Rectangle(180,500,40,32);
+    Rectangle ShipCol = new Rectangle(180,500,30,30);
     int tick = 0;
     List<double[]> Projektiles, Opponents;
     int Coldown = 0, PowerState = 1;
@@ -41,7 +41,7 @@ public class SpaceDestroyer implements Game {
         Opponents = new ArrayList<double[]>();
         Main.INSTANCE.frame.setBounds(646,219,400,600);       
         PowerUp = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("PowerUp.png"));
-        Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship.png"));
+        Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship1.png"));
         dead = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Dead.png"));
         Victory = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Victory.png"));
         EnemyShot = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("EnemyShot.png"));
@@ -82,10 +82,10 @@ public class SpaceDestroyer implements Game {
                 tick = -75;
             }
             tick ++;
-        } catch (IOException e) {}
+        } catch (IOException e) {/*won't happen*/}
         g.drawImage(Space, 0, 0,400,600, null);
 
-        g.drawImage(Ship,(int) ShipCol.getMinX(), (int) ShipCol.getMinY(), 40,32, null);
+        g.drawImage(Ship,(int) ShipCol.getMinX(), (int) ShipCol.getMinY(), null);
         
         //render
         for (int i = 0; i < Projektiles.size(); i++) {
@@ -123,9 +123,8 @@ public class SpaceDestroyer implements Game {
                     case 1: for(int l=0;l < Opponents.size();l++) {
                                 opponentcol.setLocation((int) Opponents.get(l)[0]+2,(int) Opponents.get(l)[1]);
                                 if (opponentcol.intersects(new Rectangle((int) x[0],(int) x[1],10,10))) {
-                                    double[] temp = new double[] {Opponents.get(l)[0], Opponents.get(l)[1],Opponents.get(l)[2]-1};
                                     Projektiles.remove(i);
-                                    Opponents.set(l, temp);
+                                    Opponents.set(l, new double[] {Opponents.get(l)[0], Opponents.get(l)[1],Opponents.get(l)[2]-1});
                                 }
                             }//Colision
                             break;
@@ -134,22 +133,25 @@ public class SpaceDestroyer implements Game {
                                 try {
                                     Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship" + String.valueOf(PowerState) + ".png"));
                                 } catch (IOException | IllegalArgumentException e) {
-                                    Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship1"));
+                                    Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship1.png"));
                                 }
-                                ShipCol.grow(5, 5);
+                                ShipCol.grow(-5, -5);
                                 if (PowerState == 0) {
                                     Dead = true;
                                 }
+                                Projektiles.remove(i);
                                 Boom.start();
                             }
                             break;
                     case 2: if (ShipCol.intersects(new Rectangle((int) x[0],(int) x[1],20,10))) {
-                                if (PowerState != 6){
+                                if (PowerState != 5){
                                     PowerState++;
                                     Projektiles.remove(i);
+                                    ShipCol.grow(5, 5);
                                     try {
                                         Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship" + String.valueOf(PowerState) + ".png"));
                                     } catch (IOException | IllegalArgumentException e) {
+                                        e.printStackTrace();
                                         Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship1"));
                                     }
                                 }
@@ -211,16 +213,16 @@ public class SpaceDestroyer implements Game {
                     Coldown = 15;
                     switch (PowerState) {
                         
-                        case 1: Projektiles.add(new double[] {ShipCol.getCenterX()-2.5,ShipCol.getMinY()-25,-8.0,0,1.0});
+                        case 1: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,-8.0,0,1.0});
                                 break;
                         case 2: Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-25,-6.0,0,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX()-4,ShipCol.getMinY()-25,-6.0,0,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,-6.0,0,1.0});
                                 break;
-                        case 3: Projektiles.add(new double[] {ShipCol.getCenterX()-2.5,ShipCol.getMinY()-25,-8.0,0,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-25,-6.0,-0.25,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX()-4,ShipCol.getMinY()-25,-6.0,0.25,1.0});
+                        case 3: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,-8.0,0,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-15,-6.0,-0.25,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-15,-6.0, 0.25,1.0});
                                 break;
-                        case 4: Projektiles.add(new double[] {ShipCol.getCenterX()-2.5,ShipCol.getMinY()-25,-8.0,0,1.0});
+                        case 4: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,-8.0,0,1.0});
 
                                 Projektiles.add(new double[] {ShipCol.getMinX()+4,ShipCol.getMinY()-25,-7.0,-0.15,1.0});
                                 Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,-7.0,0.15,1.0});
@@ -228,16 +230,16 @@ public class SpaceDestroyer implements Game {
                                 Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-25,-6.0,-0.5,1.0});
                                 Projektiles.add(new double[] {ShipCol.getMaxX()-4,ShipCol.getMinY()-25,-6.0,0.5,1.0});
                                 break;
-                        case 5: Projektiles.add(new double[] {ShipCol.getCenterX()-2.5,ShipCol.getMinY()-25,-8.0,0,1.0});
+                        case 5: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,-8.0,0,1.0});
 
                                 Projektiles.add(new double[] {ShipCol.getMinX()+4,ShipCol.getMinY()-25,-7.0,-0.15,1.0});
                                 Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,-7.0,0.15,1.0});
 
-                                Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-25,-6.0,-0.5,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX()-4,ShipCol.getMinY()-25,-6.0,0.5,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-15,-6.0,-0.5,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMaxX()-4,ShipCol.getMinY()-15,-6.0,0.5,1.0});
 
-                                Projektiles.add(new double[] {ShipCol.getMinX()-4,ShipCol.getMinY()-25,-6.0,-0.65,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX(),ShipCol.getMinY()-25,-6.0,0.65,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMinX()-4,ShipCol.getMinY()-5,-6.0,-0.65,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMaxX(),ShipCol.getMinY()-5,-6.0,0.65,1.0});
                                 break;
                         case 6: Projektiles.add(new double[] {ShipCol.getCenterX()-2.5,ShipCol.getMinY()-25,-15.0,0,1.0});
                                 Coldown = 2;
@@ -251,6 +253,8 @@ public class SpaceDestroyer implements Game {
                 Main.INSTANCE.currentGame = new GameSelectionScreen();
             } catch (IOException f) {}
         }
+        //g.setColor(Color.red);
+        //g.draw(ShipCol);
         return result;
     }
 
