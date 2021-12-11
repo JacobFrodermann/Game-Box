@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import javax.imageio.ImageIO;
+import javax.persistence.criteria.CriteriaBuilder.Case;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -49,9 +50,9 @@ public class SpaceDestroyer implements Game {
         Boom = AudioSystem.getClip();
         Boom.open(audioInputStream);
         //opponent creating
-        for (int i = 0; i<2; i++) {
+        for (int i = 0; i<3; i++) {
             for (int l = 0; l<6; l++) {
-                temp = new double[] {10+70*l,100+80*i,10};
+                temp = new double[] {5+70*l,10+60*i,10};
                 Opponents.add(temp);
             }
         }
@@ -85,6 +86,7 @@ public class SpaceDestroyer implements Game {
         g.drawImage(Space, 0, 0,400,600, null);
 
         g.drawImage(Ship,(int) ShipCol.getMinX(), (int) ShipCol.getMinY(), 40,32, null);
+        
         //render
         for (int i = 0; i < Projektiles.size(); i++) {
             switch ((int) Projektiles.get(i)[4]) {
@@ -128,24 +130,38 @@ public class SpaceDestroyer implements Game {
                             }//Colision
                             break;
                     case 0: if (ShipCol.intersects(new Rectangle((int) x[0],(int) x[1],10,10))) {
-                                Dead = true;
+                                PowerState --;
+                                try {
+                                    Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship" + String.valueOf(PowerState) + ".png"));
+                                } catch (IOException | IllegalArgumentException e) {
+                                    Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship1"));
+                                }
+                                ShipCol.grow(5, 5);
+                                if (PowerState == 0) {
+                                    Dead = true;
+                                }
                                 Boom.start();
                             }
                             break;
                     case 2: if (ShipCol.intersects(new Rectangle((int) x[0],(int) x[1],20,10))) {
-                                if (PowerState != 4){
+                                if (PowerState != 6){
                                     PowerState++;
                                     Projektiles.remove(i);
+                                    try {
+                                        Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship" + String.valueOf(PowerState) + ".png"));
+                                    } catch (IOException | IllegalArgumentException e) {
+                                        Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship1"));
+                                    }
                                 }
                             }
                     break;
                 }
             }
-        } catch (IndexOutOfBoundsException e){e.printStackTrace();}
+        } catch (IndexOutOfBoundsException | IOException e){e.printStackTrace();}
         for (int i=0;i<Opponents.size();i++) {
             if (Opponents.get(i)[2] <= 0) {
                 if (new Random().nextInt(3) == 2) {
-                    Projektiles.add(new double[] {Opponents.get(i)[0]+10, Opponents.get(i)[1],4.0, 0,2});
+                    Projektiles.add(new double[] {Opponents.get(i)[0]+10, Opponents.get(i)[1],2.0, 0,2});
                 }
                 Opponents.remove(i);
                 i--;
@@ -192,7 +208,9 @@ public class SpaceDestroyer implements Game {
             //Ship shoot
             if (keys.contains(KeyEvent.VK_SPACE)) {
                 if (Coldown<0) {
+                    Coldown = 15;
                     switch (PowerState) {
+                        
                         case 1: Projektiles.add(new double[] {ShipCol.getCenterX()-2.5,ShipCol.getMinY()-25,-8.0,0,1.0});
                                 break;
                         case 2: Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-25,-6.0,0,1.0});
@@ -208,10 +226,23 @@ public class SpaceDestroyer implements Game {
                                 Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,-7.0,0.15,1.0});
 
                                 Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-25,-6.0,-0.5,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX()-4,ShipCol.getMinY()-25,-6.0,0.5,1.0});                                break;
+                                Projektiles.add(new double[] {ShipCol.getMaxX()-4,ShipCol.getMinY()-25,-6.0,0.5,1.0});
+                                break;
+                        case 5: Projektiles.add(new double[] {ShipCol.getCenterX()-2.5,ShipCol.getMinY()-25,-8.0,0,1.0});
+
+                                Projektiles.add(new double[] {ShipCol.getMinX()+4,ShipCol.getMinY()-25,-7.0,-0.15,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,-7.0,0.15,1.0});
+
+                                Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-25,-6.0,-0.5,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMaxX()-4,ShipCol.getMinY()-25,-6.0,0.5,1.0});
+
+                                Projektiles.add(new double[] {ShipCol.getMinX()-4,ShipCol.getMinY()-25,-6.0,-0.65,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMaxX(),ShipCol.getMinY()-25,-6.0,0.65,1.0});
+                                break;
+                        case 6: Projektiles.add(new double[] {ShipCol.getCenterX()-2.5,ShipCol.getMinY()-25,-15.0,0,1.0});
+                                Coldown = 2;
+                                break;
                     }
-                    
-                    Coldown = 15;
                 }
             }
         }
@@ -247,6 +278,7 @@ public class SpaceDestroyer implements Game {
             }
         }
     }
+
     void MoveProjektiles() {
         for (int i = 0;i < Projektiles.size();i++) {
             double Y = Projektiles.get(i)[1];
