@@ -83,11 +83,11 @@ public class SpaceDestroyer implements Game {
         
         //render
         for (int i = 0; i < Projektiles.size(); i++) {
-            switch ((int) Projektiles.get(i)[4]) {
-		AffineTransform t;
-                t = g.getTransform();
-                t.rotate(Math.toRadians(5*(Projektiles.get(i)[3]*4)) ,Projektiles.get(i)[0]+4, Projektiles.get(i)[1]+16);
-                g.setTransform(t);                    
+        AffineTransform t;
+        t = g.getTransform();        
+        t.rotate(Math.toRadians(5*(Projektiles.get(i)[3]*4)) ,Projektiles.get(i)[0]+4, Projektiles.get(i)[1]+16);
+        g.setTransform(t);                    
+        switch ((int) Projektiles.get(i)[4]) {
                 case 0: g.drawImage(EnemyShot, (int) Projektiles.get(i)[0],(int) Projektiles.get(i)[1], null);
                         break;
                 case 1: g.drawImage(FriendlyShot,(int) Projektiles.get(i)[0],(int) Projektiles.get(i)[1], null);
@@ -186,13 +186,13 @@ public class SpaceDestroyer implements Game {
         for (int i = 0; i<Opponents.size(); i++) {
 		
             if (new Random().nextInt(360) == 0 && !Dead) {
-		double x = ShipCol.getCenterX - Opponents.get(i)[0];
-		double y = shipCol.getMinY - Opponents.get(i)[1];
+		double x = ShipCol.getCenterX() - Opponents.get(i)[0];
+		double y = ShipCol.getMinY() - Opponents.get(i)[1];
 		double Distance = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
 		x = x/(4/Distance);
 		y = y/(4/Distance);
                 double[] temp = new double[] {Opponents.get(i)[0]+20, Opponents.get(i)[1],4.0, 0,0.0};
-                Projektiles.add(new double[] {Opponents.get(i)[0]+20, Opponents.get(i)[1],x,y,0};
+                Projektiles.add(new double[] {Opponents.get(i)[0]+20, Opponents.get(i)[1],x,y,0});
             }
         }
         if (Dead) {
@@ -224,7 +224,7 @@ public class SpaceDestroyer implements Game {
                                 break;
                         case 3: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,0,-8,1.0});
                                 Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-15,-0,25,-6.0,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-15,0.25,-6.0,,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-15,0.25,-6.0,1.0});
                                 break;
                         case 4: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,0,-8,1.0});
 

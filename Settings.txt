@@ -1,0 +1,12 @@
+FlappyBird:
+    Gravity=0.125
+    RotationFaktor=1
+    JumpHeight=4
+Pong:
+    Xamp=1
+    Yamp=1
+    Linespeed=6
+Snake:
+    help=false
+    DeadlyLake=true
+    ticktime=60
