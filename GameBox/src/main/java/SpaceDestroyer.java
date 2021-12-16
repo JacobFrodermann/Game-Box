@@ -84,19 +84,18 @@ public class SpaceDestroyer implements Game {
         //render
         for (int i = 0; i < Projektiles.size(); i++) {
             switch ((int) Projektiles.get(i)[4]) {
+		AffineTransform t;
+                t = g.getTransform();
+                t.rotate(Math.toRadians(5*(Projektiles.get(i)[3]*4)) ,Projektiles.get(i)[0]+4, Projektiles.get(i)[1]+16);
+                g.setTransform(t);                    
                 case 0: g.drawImage(EnemyShot, (int) Projektiles.get(i)[0],(int) Projektiles.get(i)[1], null);
                         break;
-                case 1: AffineTransform t;
-                        t = g.getTransform();
-                        t.rotate(Math.toRadians(5*(Projektiles.get(i)[3]*4)) ,Projektiles.get(i)[0]+4, Projektiles.get(i)[1]+16);
-                        g.setTransform(t);
-                        g.drawImage(FriendlyShot,(int) Projektiles.get(i)[0],(int) Projektiles.get(i)[1], null);
-                        g.setTransform(new AffineTransform());
+                case 1: g.drawImage(FriendlyShot,(int) Projektiles.get(i)[0],(int) Projektiles.get(i)[1], null);
                         break;
                 case 2: g.drawImage(PowerUp, (int) Projektiles.get(i)[0],(int) Projektiles.get(i)[1], null);
                         break;
                 }
-                
+		g.setTransform(new AffineTransform());
             if (Projektiles.get(i)[1] > 600 || Projektiles.get(i)[1] < -10) {
                 Projektiles.remove(i);
                 i--;
@@ -185,9 +184,15 @@ public class SpaceDestroyer implements Game {
 
         //Op shoot
         for (int i = 0; i<Opponents.size(); i++) {
+		
             if (new Random().nextInt(360) == 0 && !Dead) {
+		double x = ShipCol.getCenterX - Opponents.get(i)[0];
+		double y = shipCol.getMinY - Opponents.get(i)[1];
+		double Distance = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+		x = x/(4/Distance);
+		y = y/(4/Distance);
                 double[] temp = new double[] {Opponents.get(i)[0]+20, Opponents.get(i)[1],4.0, 0,0.0};
-                Projektiles.add(temp);
+                Projektiles.add(new double[] {Opponents.get(i)[0]+20, Opponents.get(i)[1],x,y,0};
             }
         }
         if (Dead) {
@@ -212,35 +217,35 @@ public class SpaceDestroyer implements Game {
                     Coldown = 15;
                     switch (PowerState) {
                         
-                        case 1: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,-8.0,0,1.0});
+                        case 1: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,0,-8,1.0});
                                 break;
-                        case 2: Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-25,-6.0,0,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,-6.0,0,1.0});
+                        case 2: Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-25,0,-6,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,0,-6,1.0});
                                 break;
-                        case 3: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,-8.0,0,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-15,-6.0,-0.25,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-15,-6.0, 0.25,1.0});
+                        case 3: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,0,-8,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-15,-0,25,-6.0,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-15,0.25,-6.0,,1.0});
                                 break;
-                        case 4: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,-8.0,0,1.0});
+                        case 4: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,0,-8,1.0});
 
-                                Projektiles.add(new double[] {ShipCol.getMinX()+4,ShipCol.getMinY()-25,-7.0,-0.15,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,-7.0,0.15,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMinX()+4,ShipCol.getMinY()-25,-0.15,-7.0,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,0.15,-7.0,1.0});
 
-                                Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-25,-6.0,-0.5,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX()-4,ShipCol.getMinY()-25,-6.0,0.5,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-25,-0.5,-6.0,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMaxX()-4,ShipCol.getMinY()-25,0.5,-6.0,1.0});
                                 break;
-                        case 5: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,-8.0,0,1.0});
+                        case 5: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,0,-8.0,1.0});
 
-                                Projektiles.add(new double[] {ShipCol.getMinX()+4,ShipCol.getMinY()-25,-7.0,-0.15,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,-7.0,0.15,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMinX()+4,ShipCol.getMinY()-25,-0,15,-7.0,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,-0,15,-7.0,1.0});
 
-                                Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-15,-6.0,-0.5,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX()-4,ShipCol.getMinY()-15,-6.0,0.5,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-15,-0.5,-6.0,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMaxX()-4,ShipCol.getMinY()-15,0.5,-6.0,1.0});
 
-                                Projektiles.add(new double[] {ShipCol.getMinX()-4,ShipCol.getMinY()-5,-6.0,-0.65,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX(),ShipCol.getMinY()-5,-6.0,0.65,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMinX()-4,ShipCol.getMinY()-5,-0.65,-6.0,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMaxX(),ShipCol.getMinY()-5,-0.65,-6.0,1.0});
                                 break;
-                        case 6: Projektiles.add(new double[] {ShipCol.getCenterX()-2.5,ShipCol.getMinY()-25,-15.0,0,1.0});
+                        case 6: Projektiles.add(new double[] {ShipCol.getCenterX()-2.5,ShipCol.getMinY()-25,0,-12,1.0});
                                 Coldown = 2;
                                 break;
                     }
@@ -285,9 +290,9 @@ public class SpaceDestroyer implements Game {
     void MoveProjektiles() {
         for (int i = 0;i < Projektiles.size();i++) {
             double Y = Projektiles.get(i)[1];
-            double VelY = Projektiles.get(i)[2];
+            double VelY = Projektiles.get(i)[3];
             double X = Projektiles.get(i)[0];
-            double XVel = Projektiles.get(i)[3];
+            double XVel = Projektiles.get(i)[2];
 
             Projektiles.set(i, new double[] {X+XVel, Y + VelY, VelY,XVel, Projektiles.get(i)[4]});
         }
