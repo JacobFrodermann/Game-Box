@@ -24,7 +24,7 @@ public class SpaceDestroyer implements Game {
     Rectangle ShipCol = new Rectangle(180,500,30,30);
     int tick = 0;
     List<double[]> Projektiles, Opponents;
-    int Coldown = 0, PowerState = 1;
+    int Coldown = 0, PowerState = 3;
     double[] temp;
     Clip Boom;
     
@@ -82,20 +82,27 @@ public class SpaceDestroyer implements Game {
         g.drawImage(Ship,(int) ShipCol.getMinX(), (int) ShipCol.getMinY(), null);
         
         //render
+        
         for (int i = 0; i < Projektiles.size(); i++) {
-        AffineTransform t;
-        t = g.getTransform();        
-        t.rotate(Math.toRadians(5*(Projektiles.get(i)[3]*4)) ,Projektiles.get(i)[0]+4, Projektiles.get(i)[1]+16);
-        g.setTransform(t);                    
         switch ((int) Projektiles.get(i)[4]) {
-                case 0: g.drawImage(EnemyShot, (int) Projektiles.get(i)[0],(int) Projektiles.get(i)[1], null);
+                case 0: AffineTransform t;
+                        t = g.getTransform();        
+                        t.rotate(Math.toRadians(5*(Projektiles.get(i)[2]*4)) ,Projektiles.get(i)[0]+4, Projektiles.get(i)[1]+16);
+                        g.setTransform(t);  
+                        g.drawImage(EnemyShot, (int) Projektiles.get(i)[0],(int) Projektiles.get(i)[1], null);
+                        g.setTransform(new AffineTransform());
                         break;
-                case 1: g.drawImage(FriendlyShot,(int) Projektiles.get(i)[0],(int) Projektiles.get(i)[1], null);
+                case 1: AffineTransform T;
+                        T = g.getTransform();        
+                        T.rotate(Math.toRadians(5*(Projektiles.get(i)[2]*4)) ,Projektiles.get(i)[0]+4, Projektiles.get(i)[1]+16);
+                        g.setTransform(T);         
+                        g.drawImage(FriendlyShot,(int) Projektiles.get(i)[0],(int) Projektiles.get(i)[1], null);
+                        g.setTransform(new AffineTransform());
                         break;
                 case 2: g.drawImage(PowerUp, (int) Projektiles.get(i)[0],(int) Projektiles.get(i)[1], null);
                         break;
                 }
-		g.setTransform(new AffineTransform());
+		
             if (Projektiles.get(i)[1] > 600 || Projektiles.get(i)[1] < -10) {
                 Projektiles.remove(i);
                 i--;
@@ -161,7 +168,7 @@ public class SpaceDestroyer implements Game {
         for (int i=0;i<Opponents.size();i++) {
             if (Opponents.get(i)[2] <= 0) {
                 if (new Random().nextInt(3) == 2) {
-                    Projektiles.add(new double[] {Opponents.get(i)[0]+10, Opponents.get(i)[1],2.0, 0,2});
+                    Projektiles.add(new double[] {Opponents.get(i)[0]+10, Opponents.get(i)[1],0, 2,2});
                 }
                 Opponents.remove(i);
                 i--;
@@ -184,6 +191,7 @@ public class SpaceDestroyer implements Game {
 
         //Op shoot
         for (int i = 0; i<Opponents.size(); i++) {
+<<<<<<< Updated upstream
 		
             if (new Random().nextInt(360) == 0 && !Dead) {
 		double x = ShipCol.getCenterX() - Opponents.get(i)[0];
@@ -194,6 +202,16 @@ public class SpaceDestroyer implements Game {
                 double[] temp = new double[] {Opponents.get(i)[0]+20, Opponents.get(i)[1],4.0, 0,0.0};
                 Projektiles.add(new double[] {Opponents.get(i)[0]+20, Opponents.get(i)[1],x,y,0});
             }
+=======
+        if (new Random().nextInt(360) == 0 && !Dead) {
+            double x = ShipCol.getCenterX() - Opponents.get(i)[0];
+            double y = ShipCol.getMinY() - Opponents.get(i)[1];
+            double Distance = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+            x = x/(4/Distance);
+            y = y/(4/Distance);
+            Projektiles.add(new double[] {Opponents.get(i)[0]+20, Opponents.get(i)[1],x,y,0});
+        }
+>>>>>>> Stashed changes
         }
         if (Dead) {
             g.drawImage(dead, 50 , 250, null);
@@ -223,7 +241,7 @@ public class SpaceDestroyer implements Game {
                                 Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,0,-6,1.0});
                                 break;
                         case 3: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,0,-8,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-15,-0,25,-6.0,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-15,-0.25,-6.0,1.0});
                                 Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-15,0.25,-6.0,1.0});
                                 break;
                         case 4: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,0,-8,1.0});
@@ -242,7 +260,7 @@ public class SpaceDestroyer implements Game {
                                 Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-15,-0.5,-6.0,1.0});
                                 Projektiles.add(new double[] {ShipCol.getMaxX()-4,ShipCol.getMinY()-15,0.5,-6.0,1.0});
 
-                                Projektiles.add(new double[] {ShipCol.getMinX()-4,ShipCol.getMinY()-5,-0.65,-6.0,1.0});
+                                Projektiles.add(new double[] {ShipCol.getMinX()-4,ShipCol.getMinY()-5,0.65,-6.0,1.0});
                                 Projektiles.add(new double[] {ShipCol.getMaxX(),ShipCol.getMinY()-5,-0.65,-6.0,1.0});
                                 break;
                         case 6: Projektiles.add(new double[] {ShipCol.getCenterX()-2.5,ShipCol.getMinY()-25,0,-12,1.0});
@@ -292,9 +310,9 @@ public class SpaceDestroyer implements Game {
             double Y = Projektiles.get(i)[1];
             double VelY = Projektiles.get(i)[3];
             double X = Projektiles.get(i)[0];
-            double XVel = Projektiles.get(i)[2];
+            double VelX = Projektiles.get(i)[2];
 
-            Projektiles.set(i, new double[] {X+XVel, Y + VelY, VelY,XVel, Projektiles.get(i)[4]});
+            Projektiles.set(i, new double[] {X+VelX, Y + VelY, VelX,VelY, Projektiles.get(i)[4]});
         }
     }
 } 
