@@ -189,8 +189,8 @@ public class SpaceDestroyer implements Game {
 		double x = ShipCol.getCenterX() - Opponents.get(i)[0];
 		double y = ShipCol.getMinY() - Opponents.get(i)[1];
 		double Distance = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
-		x = x/(4/Distance);
-		y = y/(4/Distance);
+		x = x*(4/Distance);
+		y = y*(4/Distance);
                 double[] temp = new double[] {Opponents.get(i)[0]+20, Opponents.get(i)[1],4.0, 0,0.0};
                 Projektiles.add(new double[] {Opponents.get(i)[0]+20, Opponents.get(i)[1],x,y,0});
             }
