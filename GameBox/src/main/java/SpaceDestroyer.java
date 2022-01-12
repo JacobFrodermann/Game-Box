@@ -24,7 +24,7 @@ public class SpaceDestroyer implements Game {
     Rectangle ShipCol = new Rectangle(180,500,30,30);
     int tick = 0;
     List<double[]> Projektiles, Opponents;
-    int Coldown = 0, PowerState = 3;
+    int Coldown = 0, PowerState = 1;
     double[] temp;
     Clip Boom;
     
@@ -87,7 +87,7 @@ public class SpaceDestroyer implements Game {
         switch ((int) Projektiles.get(i)[4]) {
                 case 0: AffineTransform t;
                         t = g.getTransform();        
-                        t.rotate(Math.toRadians(5*(Projektiles.get(i)[2]*4)) ,Projektiles.get(i)[0]+4, Projektiles.get(i)[1]+16);
+                        t.rotate(Math.atan(Projektiles.get(i)[3]/Projektiles.get(i)[2])+Math.PI/2,Projektiles.get(i)[0]+4, Projektiles.get(i)[1]+16);
                         g.setTransform(t);  
                         g.drawImage(EnemyShot, (int) Projektiles.get(i)[0],(int) Projektiles.get(i)[1], null);
                         g.setTransform(new AffineTransform());
@@ -191,10 +191,9 @@ public class SpaceDestroyer implements Game {
 
         //Op shoot
         for (int i = 0; i<Opponents.size(); i++) {
-<<<<<<< Updated upstream
 		
             if (new Random().nextInt(360) == 0 && !Dead) {
-		double x = ShipCol.getCenterX() - Opponents.get(i)[0];
+		double x = ShipCol.getCenterX()-5 - Opponents.get(i)[0];
 		double y = ShipCol.getMinY() - Opponents.get(i)[1];
 		double Distance = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
 		x = x*(4/Distance);
@@ -202,16 +201,6 @@ public class SpaceDestroyer implements Game {
                 double[] temp = new double[] {Opponents.get(i)[0]+20, Opponents.get(i)[1],4.0, 0,0.0};
                 Projektiles.add(new double[] {Opponents.get(i)[0]+20, Opponents.get(i)[1],x,y,0});
             }
-=======
-        if (new Random().nextInt(360) == 0 && !Dead) {
-            double x = ShipCol.getCenterX() - Opponents.get(i)[0];
-            double y = ShipCol.getMinY() - Opponents.get(i)[1];
-            double Distance = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
-            x = x/(4/Distance);
-            y = y/(4/Distance);
-            Projektiles.add(new double[] {Opponents.get(i)[0]+20, Opponents.get(i)[1],x,y,0});
-        }
->>>>>>> Stashed changes
         }
         if (Dead) {
             g.drawImage(dead, 50 , 250, null);
@@ -270,16 +259,24 @@ public class SpaceDestroyer implements Game {
                 }
             }
         }
-        if (ShipCol.getY()<-30){
+        if (ShipCol.getY()<-30 && Opponents.size() == 0){
             try {
                 Main.INSTANCE.currentGame = new GameSelectionScreen();
             } catch (IOException f) {}
+        }
+        if (ShipCol.x<0) {
+            ShipCol.setLocation(0, ShipCol.y);
+        }
+        if (ShipCol.getMaxX()>380) {
+            ShipCol.setLocation(380-ShipCol.width, ShipCol.y);
+        }
+        if (ShipCol.getMinY()>570-ShipCol.height) {
+            ShipCol.setLocation(ShipCol.x,570-ShipCol.height);
         }
         //g.setColor(Color.red);
         //g.draw(ShipCol);
         return result;
     }
-
 
 
 

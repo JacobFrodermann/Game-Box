@@ -29,6 +29,7 @@ public class FlappyBird implements Game {
 	BufferedImage Pipe;
 	BufferedImage dead;
 	BufferedImage deadbird;
+	BufferedImage Clouds;
 	Color sky = new Color(52, 174, 235);
 
 	Double VelY = 0.0;
@@ -42,6 +43,7 @@ public class FlappyBird implements Game {
 	int pipe2X;
 	int VelX = 10;
 	int Highscore = 0;
+	double CloudX=-1000;
 	List<String> Read;
 	Clip Pling;
 	AffineTransform t;
@@ -64,11 +66,12 @@ public class FlappyBird implements Game {
 			Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
 		}
 		Highscore = Integer.valueOf(Read.get(0));
-		System.out.println(Highscore);
+		System.out.println("Highscore: "+Highscore);
 		deadbird = ImageIO.read(FlappyBird.class.getClassLoader().getResourceAsStream("The Bird Dead.png"));
 		bird = ImageIO.read(FlappyBird.class.getClassLoader().getResourceAsStream("The Bird.png"));
 		dead = ImageIO.read(FlappyBird.class.getClassLoader().getResourceAsStream("Dead.png"));
 		Pipe = ImageIO.read(FlappyBird.class.getClassLoader().getResourceAsStream("Pipe.png"));
+		Clouds = ImageIO.read(FlappyBird.class.getClassLoader().getResourceAsStream("Clouds.png"));
 		
 		pipe1Y = new Random().nextInt(400);
 		pipe1X = 100;
@@ -93,7 +96,9 @@ public class FlappyBird implements Game {
 		// Rendering
 		g.setColor(sky);
 		g.fill(new Rectangle(new Point(), size));
-
+		g.drawImage(Clouds, (int) CloudX, 510, null);
+		CloudX += 0.25;
+		if (CloudX==100) {CloudX=-1000;}
 		pipe1X = (200-Score/2)+i;
 		pipe2X = (400-Score/2)+l;
 

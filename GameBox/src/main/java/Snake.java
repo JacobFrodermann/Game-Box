@@ -60,7 +60,7 @@ public class Snake implements Game {
             ticktime  = Integer.valueOf(Main.INSTANCE.Read.get(11).substring(13));
         } catch (java.lang.StringIndexOutOfBoundsException | java.lang.NumberFormatException e1) {Main.INSTANCE.reset();}
 
-        System.out.println(DeadlyLake);
+        System.out.println("Deadly Lake = " + DeadlyLake);
 
         if (!DeadlyLake) {
             LakeKol.setLocation(10000, 0);
@@ -248,7 +248,6 @@ public class Snake implements Game {
         int tempx = (int) part.getLocation().getX(),tempy = (int) part.getLocation().getY();
         part.setLocation(AppleX*20-20, AppleY*20-20);
         if (part.intersects(TreeGroundKol) || part.intersects(Tree1Kol) || part.intersects(Tree2kol) || part.intersects(Tree3kol) || part.intersects(LakeKol)) {
-            System.out.print("kl");
             part.setLocation(tempx,tempy);
             GenApplePos();
         }
