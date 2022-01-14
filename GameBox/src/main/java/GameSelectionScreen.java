@@ -26,7 +26,7 @@ public class GameSelectionScreen implements Game {
 	public GameSelectionScreen() throws IOException {
 		try {
 			Logo = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Logo.png"));
-			gameThumbnails = new BufferedImage[] { ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Flappy.png")) , ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Pong.png")), ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Snake.png")), ImageIO.read(GameSelectionScreen.class.getResourceAsStream("SpaceDestroyer.png")) };
+			gameThumbnails = new BufferedImage[] { ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Flappy.png")) , ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Pong.png")), ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Snake.png")), ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("SpaceDestroyer.png")) };
 			gameClasses = new Class<?>[] { FlappyBird.class , Pong.class, Snake.class, SpaceDestroyer.class};
 		} catch (IOException | java.lang.IllegalArgumentException e) {
 			System.out.println("Data Error");
