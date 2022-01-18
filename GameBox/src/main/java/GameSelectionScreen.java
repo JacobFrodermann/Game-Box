@@ -10,6 +10,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import java.awt.Toolkit;
 
 public class GameSelectionScreen implements Game {
 	BufferedImage[] gameThumbnails;
@@ -34,6 +35,11 @@ public class GameSelectionScreen implements Game {
 		}
 		Main.INSTANCE.frame.setIconImage(Logo);
 		Main.INSTANCE.frame.setBounds(646,219,800,680);
+		if (Toolkit.getDefaultToolkit().getScreenSize().height < 680) {
+            Main.INSTANCE.frame.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width/2-400,0,800,680);
+        } else {
+            Main.INSTANCE.frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-400,(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-340,800,680);
+        }
 	}
 
 	public BufferedImage draw(Dimension size) {

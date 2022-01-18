@@ -3,6 +3,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -80,7 +81,11 @@ public class Snake implements Game {
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Main.baInputStream(Snake.class.getClassLoader().getResourceAsStream("Eat.wav")));
         eat = AudioSystem.getClip();
         eat.open(audioInputStream);
-        Main.INSTANCE.frame.setBounds(new Rectangle(150,50,996,999));
+        if (Toolkit.getDefaultToolkit().getScreenSize().height < 1000) {
+            Main.INSTANCE.frame.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width/2-450,0,996,999);
+        } else {
+            Main.INSTANCE.frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-450,(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-450,996,999);
+        }
         GenApplePos();
     }
 

@@ -3,7 +3,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -20,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import javax.swing.JFrame;
 import org.apache.commons.io.IOUtils;
+import java.awt.Toolkit;
 
 class Main {
 	public static Main INSTANCE;
@@ -48,7 +48,7 @@ class Main {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setBackground(Color.WHITE);
-		frame.setBounds(new Rectangle(646,219,400,600));
+		frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-200,Toolkit.getDefaultToolkit().getScreenSize().height/2-300,400,600);
 		canvas = new Canvas();
 		frame.add(canvas);
 		canvas.setPreferredSize(new Dimension(400, 600));

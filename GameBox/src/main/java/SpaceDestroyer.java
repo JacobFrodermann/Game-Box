@@ -3,6 +3,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -27,19 +28,23 @@ public class SpaceDestroyer implements Game {
     int Coldown = 0, PowerState = 1;
     double[] temp;
     Clip Boom;
+    List<Rectangle> Particles;
+    List<Color> Colors;
     
 
     SpaceDestroyer() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+        Main.INSTANCE.frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-200,Toolkit.getDefaultToolkit().getScreenSize().height/2-300,400,600);
         keys = new ArrayList<Integer>();
         Projektiles = new ArrayList<double[]>();
-        Opponents = new ArrayList<double[]>();
-        Main.INSTANCE.frame.setBounds(646,219,400,600);       
+        Opponents = new ArrayList<double[]>();       
         PowerUp = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("PowerUp.png"));
         Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship1.png"));
         dead = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Dead.png"));
         Victory = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Victory.png"));
         EnemyShot = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("EnemyShot.png"));
         FriendlyShot = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("FriendlyShot.png"));
+        Particles = new ArrayList<Rectangle>();
+        Particles.add(new Rectangle(0,0,0,0));
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Main.baInputStream(SpaceDestroyer.class.getClassLoader().getResourceAsStream("Boom.wav")));
         Boom = AudioSystem.getClip();
         Boom.open(audioInputStream);
@@ -198,7 +203,6 @@ public class SpaceDestroyer implements Game {
 		double Distance = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
 		x = x*(4/Distance);
 		y = y*(4/Distance);
-                double[] temp = new double[] {Opponents.get(i)[0]+20, Opponents.get(i)[1],4.0, 0,0.0};
                 Projektiles.add(new double[] {Opponents.get(i)[0]+20, Opponents.get(i)[1],x,y,0});
             }
         }
@@ -213,7 +217,8 @@ public class SpaceDestroyer implements Game {
                 ShipCol.setLocation((int) ShipCol.getMinX()+5,(int) ShipCol.getMinY());
             }
             if (keys.contains(KeyEvent.VK_W) || keys.contains(KeyEvent.VK_UP)) {
-                ShipCol.setLocation((int) ShipCol.getMinX(),(int) ShipCol.getMinY()-5);
+                ShipCol.setLocation(ShipCol.x,ShipCol.y-5);
+                GenParticles();
             }
             if (keys.contains(KeyEvent.VK_S) || keys.contains(KeyEvent.VK_DOWN)) {
                 ShipCol.setLocation((int) ShipCol.getMinX(),(int) ShipCol.getMinY()+5);
@@ -258,6 +263,16 @@ public class SpaceDestroyer implements Game {
                     }
                 }
             }
+        }
+        //Particles
+        if (Particles.size() != 1) {
+            for (int i = 1; i != Particles.size();i++) {
+                g.setColor(Colors.get(i));
+                g.fill(Particles.get(i));
+            }   
+        
+            Particles.remove(0);
+            Colors.remove(0);
         }
         if (ShipCol.getY()<-30 && Opponents.size() == 0){
             try {
@@ -310,6 +325,13 @@ public class SpaceDestroyer implements Game {
             double VelX = Projektiles.get(i)[2];
 
             Projektiles.set(i, new double[] {X+VelX, Y + VelY, VelX,VelY, Projektiles.get(i)[4]});
+        }
+    }
+    
+    void GenParticles() {
+        for (int i = new Random().nextInt(4);i!=0;i--) {
+            Particles.add(new Rectangle((int)ShipCol.getCenterX()+new Random().nextInt(10)-5,(int)ShipCol.getMaxY(),10,10));
+ !!!           Colors.add(new Color(Color.HSBtoRGB(14, new Random().nextInt(100) , new Random().nextInt(100))));
         }
     }
 } 

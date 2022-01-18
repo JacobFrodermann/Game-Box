@@ -17,6 +17,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import java.awt.Toolkit;
 
 public class Pong implements Game {
     Ellipse2D Ball;
@@ -30,6 +31,7 @@ public class Pong implements Game {
     List<Integer> keys;
 
     public Pong() throws IOException, UnsupportedAudioFileException, LineUnavailableException{
+        Main.INSTANCE.frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-207,Toolkit.getDefaultToolkit().getScreenSize().height/2-320,415,640);
         keys = new ArrayList<Integer>();
         try {
             Xamp = Integer.valueOf(Main.INSTANCE.Read.get(5).substring(9));
@@ -41,7 +43,6 @@ public class Pong implements Game {
         Plate = ImageIO.read(Pong.class.getClassLoader().getResourceAsStream("Plate.png"));
 
         Main.INSTANCE.frame.setIconImage(Logo);
-        Main.INSTANCE.frame.setBounds(646,219,415,640);
 
         Ball = new Ellipse2D.Double(0,0,20,20);
         Line1 = new Rectangle(180,20,40,5);

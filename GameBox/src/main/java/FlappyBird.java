@@ -21,6 +21,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import java.awt.Toolkit;
 
 import org.apache.commons.io.IOUtils;
 
@@ -53,6 +54,7 @@ public class FlappyBird implements Game {
 	Rectangle CollisionPipeUpper,CollisionPipeLower,CollisionBird;
 
 	public FlappyBird() throws IOException, UnsupportedAudioFileException, LineUnavailableException  {
+		Main.INSTANCE.frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-200,Toolkit.getDefaultToolkit().getScreenSize().height/2-300,400,600);
 		try {
 			Gravity = Double.valueOf(Main.INSTANCE.Read.get(1).substring(12));
 			RotationFaktor = Double.valueOf(Main.INSTANCE.Read.get(2).substring(19));
@@ -84,7 +86,6 @@ public class FlappyBird implements Game {
 		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Main.baInputStream(FlappyBird.class.getClassLoader().getResourceAsStream("Pling.wav")));
 		Pling = AudioSystem.getClip();
 		Pling.open(audioInputStream);
-		Main.INSTANCE.frame.setBounds(646,219,400,600);
 	}
 
 	public BufferedImage draw(Dimension size) {
