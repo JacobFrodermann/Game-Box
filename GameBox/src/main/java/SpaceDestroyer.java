@@ -142,6 +142,7 @@ public class SpaceDestroyer implements Game {
                                 opponentcol.setLocation((int) Opponents.get(l)[0]+2,(int) Opponents.get(l)[1]);
                                 if (opponentcol.intersects(new Rectangle((int) x[0],(int) x[1],10,10))) {
                                     Projektiles.remove(i);
+                                    GenParticles((int)x[0]+5,(int) x[1],3);
                                     Opponents.set(l, new double[] {Opponents.get(l)[0], Opponents.get(l)[1],Opponents.get(l)[2]-1});
                                 }
                             }//Colision
@@ -186,6 +187,11 @@ public class SpaceDestroyer implements Game {
             if (Opponents.get(i)[2] <= 0) {
                 if (new Random().nextInt(3) == 2) {
                     Projektiles.add(new double[] {Opponents.get(i)[0]+10, Opponents.get(i)[1],0, 2,2});
+                }
+                for (int j = 0;j<5;j++){
+                    for (int l = 0;l<5;l++) {
+                        GenParticles((int)Opponents.get(i)[0]+j*5,(int)Opponents.get(i)[1]+l*5,5);
+                    }
                 }
                 Opponents.remove(i);
                 i--;
@@ -245,7 +251,7 @@ public class SpaceDestroyer implements Game {
                 }
             }
         }
-        GenParticles();
+        GenParticles((int) ShipCol.getCenterX(),(int) ShipCol.getMaxY(),0);
         //Particles
         if (Particles.size() != 0) {
             for (int i = 1; i != Particles.size();i++) {
@@ -315,10 +321,10 @@ public class SpaceDestroyer implements Game {
         }
     }
     
-    void GenParticles() {
-        for (int i = new Random().nextInt(4);i>0;i--) {
-            Particles.add(new Rectangle((int)ShipCol.getCenterX()+new Random().nextInt(10)-5,(int)ShipCol.getMaxY()-new Random().nextInt(12)-5,5,5));
-            Color temp = new Color(Color.HSBtoRGB(14, new Random().nextInt(100) , new Random().nextInt(100)));
+    void GenParticles(int x ,int y, int rolls) {
+        for (int i = new Random().nextInt(4)+rolls;i>0;i--) {
+            Particles.add(new Rectangle(x+new Random().nextInt(10)-5,y-new Random().nextInt(12)-5,5,5));
+            Color temp = new Color(Color.HSBtoRGB(14, new Random().nextInt(120) , new Random().nextInt(900)));
             Colors.add(new Color(temp.getRed(),temp.getGreen(),temp.getBlue(),90));
         }
     }
