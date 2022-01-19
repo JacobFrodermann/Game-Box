@@ -17,6 +17,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+
 public class SpaceDestroyer implements Game {
     //Deklaration
     List<Integer> keys;
@@ -26,11 +27,12 @@ public class SpaceDestroyer implements Game {
     int tick = 0;
     List<double[]> Projektiles, Opponents;
     int Coldown = 0, PowerState = 1;
-    double[] temp;
     Clip Boom;
     List<Rectangle> Particles;
     List<Color> Colors;
-    
+    int EnemyHP;
+	Boolean Homing;
+	Boolean InstantDeath;
 
     SpaceDestroyer() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
         Main.INSTANCE.frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-200,Toolkit.getDefaultToolkit().getScreenSize().height/2-300,400,600);
@@ -48,11 +50,19 @@ public class SpaceDestroyer implements Game {
         Boom = AudioSystem.getClip();
         Boom.open(audioInputStream);
         Colors = new ArrayList<Color>();
+        //reading settings
+        try {
+			EnemyHP = Integer.valueOf(Main.INSTANCE.Read.get(13).substring(12));
+			Homing = Boolean.valueOf(Main.INSTANCE.Read.get(14).substring(11));
+			InstantDeath = Boolean.valueOf(Main.INSTANCE.Read.get(15).substring(17));
+		} catch (java.lang.StringIndexOutOfBoundsException | java.lang.NumberFormatException e1) {Main.INSTANCE.reset();}
+        if (EnemyHP < 1) {
+            EnemyHP = 10;
+        }
         //opponent creating
         for (int i = 0; i<3; i++) {
             for (int l = 0; l<6; l++) {
-                temp = new double[] {5+70*l,10+60*i,10};
-                Opponents.add(temp);
+                Opponents.add(new double[] {5+70*l,10+60*i,EnemyHP});
             }
         }
     }
@@ -83,8 +93,6 @@ public class SpaceDestroyer implements Game {
             tick ++;
         } catch (IOException e) {/*won't happen*/}
         g.drawImage(Space, 0, 0,400,600, null);
-
-        g.drawImage(Ship,(int) ShipCol.getMinX(), (int) ShipCol.getMinY(), null);
         
         //render
         
@@ -116,9 +124,9 @@ public class SpaceDestroyer implements Game {
         g.setColor(Color.red);
         for (int i = 0; i < Opponents.size(); i++) {
             g.drawImage(opponent,(int) Opponents.get(i)[0],(int) Opponents.get(i)[1],40,38,null);
-            if (Opponents.get(i)[2] != 10){
+            if (Opponents.get(i)[2] != EnemyHP){
                 g.drawRect((int) Opponents.get(i)[0],(int) Opponents.get(i)[1]-12, 38, 8);
-                g.fillRect((int) Opponents.get(i)[0],(int) Opponents.get(i)[1]-12, 38-(int) (3.8*(10-Opponents.get(i)[2])), 8);
+                g.fillRect((int) Opponents.get(i)[0],(int) Opponents.get(i)[1]-12, 38-(int) ((38/EnemyHP)*(EnemyHP-Opponents.get(i)[2])), 8);
             }
         }
 
@@ -139,15 +147,19 @@ public class SpaceDestroyer implements Game {
                             }//Colision
                             break;
                     case 0: if (ShipCol.intersects(new Rectangle((int) x[0],(int) x[1],10,10))) {
-                                PowerState --;
-                                try {
-                                    Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship" + String.valueOf(PowerState) + ".png"));
-                                } catch (IOException | IllegalArgumentException e) {
-                                    Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship1.png"));
-                                }
-                                ShipCol.grow(-5, -5);
-                                if (PowerState == 0) {
+                                if(InstantDeath) {
                                     Dead = true;
+                                } else {
+                                    PowerState --;
+                                    try {
+                                        Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship" + String.valueOf(PowerState) + ".png"));
+                                    } catch (IOException | IllegalArgumentException e) {
+                                        Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship1.png"));
+                                    }
+                                    ShipCol.grow(-5, -5);
+                                    if (PowerState == 0) {
+                                        Dead = true;
+                                    }
                                 }
                                 Projektiles.remove(i);
                                 Boom.start();
@@ -196,103 +208,70 @@ public class SpaceDestroyer implements Game {
 
         //Op shoot
         for (int i = 0; i<Opponents.size(); i++) {
-		
             if (new Random().nextInt(360) == 0 && !Dead) {
-		double x = ShipCol.getCenterX()-5 - Opponents.get(i)[0];
-		double y = ShipCol.getMinY() - Opponents.get(i)[1];
-		double Distance = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
-		x = x*(4/Distance);
-		y = y*(4/Distance);
+                double x;
+                double y;
+                if (Homing) {
+                    x = ShipCol.getCenterX()-5 - Opponents.get(i)[0];
+                    y = ShipCol.getCenterY() - Opponents.get(i)[1];
+                    double Distance = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+                    x = x*(4/Distance);
+                    y = y*(4/Distance);
+                } else {
+                    x = 0;
+                    y = 4;
+                }
                 Projektiles.add(new double[] {Opponents.get(i)[0]+20, Opponents.get(i)[1],x,y,0});
             }
-        }
-        if (Dead) {
-            g.drawImage(dead, 50 , 250, null);
         }
         if(!Dead) {
             if (keys.contains(KeyEvent.VK_A) || keys.contains(KeyEvent.VK_LEFT)) {
                 ShipCol.setLocation((int) ShipCol.getMinX()-5,(int) ShipCol.getMinY());
-                GenParticles();
             }
             if (keys.contains(KeyEvent.VK_D) || keys.contains(KeyEvent.VK_RIGHT)) {
                 ShipCol.setLocation((int) ShipCol.getMinX()+5,(int) ShipCol.getMinY());
-                GenParticles();
             }
             if (keys.contains(KeyEvent.VK_W) || keys.contains(KeyEvent.VK_UP)) {
                 ShipCol.setLocation(ShipCol.x,ShipCol.y-5);
-                GenParticles();
             }
             if (keys.contains(KeyEvent.VK_S) || keys.contains(KeyEvent.VK_DOWN)) {
-                ShipCol.setLocation((int) ShipCol.getMinX(),(int) ShipCol.getMinY()+5);
-                GenParticles();
+                ShipCol.setLocation((int) ShipCol.getMinX(),(int) ShipCol.getMinY()+5); 
             }
             //Ship shoot
             if (keys.contains(KeyEvent.VK_SPACE)) {
                 if (Coldown<0) {
                     Coldown = 15;
-                    switch (PowerState) {
-                        
-                        case 1: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,0,-8,1.0});
-                                break;
-                        case 2: Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-25,0,-6,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,0,-6,1.0});
-                                break;
-                        case 3: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,0,-8,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-15,-0.25,-6.0,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-15,0.25,-6.0,1.0});
-                                break;
-                        case 4: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,0,-8,1.0});
-
-                                Projektiles.add(new double[] {ShipCol.getMinX()+4,ShipCol.getMinY()-25,-0.15,-7.0,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,0.15,-7.0,1.0});
-
-                                Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-25,-0.5,-6.0,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX()-4,ShipCol.getMinY()-25,0.5,-6.0,1.0});
-                                break;
-                        case 5: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,0,-8.0,1.0});
-
-                                Projektiles.add(new double[] {ShipCol.getMinX()+4,ShipCol.getMinY()-25,-0,15,-7.0,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,-0,15,-7.0,1.0});
-
-                                Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-15,-0.5,-6.0,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX()-4,ShipCol.getMinY()-15,0.5,-6.0,1.0});
-
-                                Projektiles.add(new double[] {ShipCol.getMinX()-4,ShipCol.getMinY()-5,0.65,-6.0,1.0});
-                                Projektiles.add(new double[] {ShipCol.getMaxX(),ShipCol.getMinY()-5,-0.65,-6.0,1.0});
-                                break;
-                        case 6: Projektiles.add(new double[] {ShipCol.getCenterX()-2.5,ShipCol.getMinY()-25,0,-12,1.0});
-                                Coldown = 2;
-                                break;
-                    }
+                    shoot(PowerState);
                 }
             }
         }
+        GenParticles();
         //Particles
         if (Particles.size() != 0) {
             for (int i = 1; i != Particles.size();i++) {
                 g.setColor(Colors.get(i));
                 g.fill(Particles.get(i));
+                if (Colors.get(i).getAlpha()==0) {
+                    Colors.remove(i);
+                    Particles.remove(i);
+                    i--;
+                } else {
+                    Colors.set(i,new Color(Colors.get(i).getRed(),Colors.get(i).getGreen(),Colors.get(i).getBlue(),Colors.get(i).getAlpha()-2));
+                }
             }   
-        
-            Particles.remove(0);
-            Colors.remove(0);
         }
         if (ShipCol.getY()<-30 && Opponents.size() == 0){
             try {
                 Main.INSTANCE.currentGame = new GameSelectionScreen();
             } catch (IOException f) {}
         }
-        if (ShipCol.x<0) {
-            ShipCol.setLocation(0, ShipCol.y);
-        }
-        if (ShipCol.getMaxX()>380) {
-            ShipCol.setLocation(380-ShipCol.width, ShipCol.y);
-        }
-        if (ShipCol.getMinY()>570-ShipCol.height) {
-            ShipCol.setLocation(ShipCol.x,570-ShipCol.height);
-        }
+        ScreenColison();
         //g.setColor(Color.red);
         //g.draw(ShipCol);
+        g.drawImage(Ship,ShipCol.x, ShipCol.y, null);
+        if (Dead) {
+            g.drawImage(dead, 50 , 250, null);
+        }
         return result;
     }
 
@@ -309,6 +288,11 @@ public class SpaceDestroyer implements Game {
                 try {
                     Main.INSTANCE.currentGame = new GameSelectionScreen();
                 } catch (IOException f) {}
+            }
+            if (e.getKeyCode() == KeyEvent.VK_SPACE || ShipCol.getCenterY()<-30) {
+                try {
+                    Main.INSTANCE.currentGame = new SpaceDestroyer();
+                } catch (IOException | UnsupportedAudioFileException | LineUnavailableException f) {}
             }
         }
     }
@@ -333,8 +317,59 @@ public class SpaceDestroyer implements Game {
     
     void GenParticles() {
         for (int i = new Random().nextInt(4);i>0;i--) {
-            Particles.add(new Rectangle((int)ShipCol.getCenterX()+new Random().nextInt(10)-5,(int)ShipCol.getMaxY(),5,5));
-            Colors.add(new Color((Color.HSBtoRGB(14, new Random().nextInt(100) , new Random().nextInt(100)) & 0xffffff) | (90 << 24)));
+            Particles.add(new Rectangle((int)ShipCol.getCenterX()+new Random().nextInt(10)-5,(int)ShipCol.getMaxY()-new Random().nextInt(12)-5,5,5));
+            Color temp = new Color(Color.HSBtoRGB(14, new Random().nextInt(100) , new Random().nextInt(100)));
+            Colors.add(new Color(temp.getRed(),temp.getGreen(),temp.getBlue(),90));
+        }
+    }
+    void print(Object obj) {
+        System.out.println(obj);
+    }
+    void shoot(int Tier) {
+        switch (Tier) {
+                        
+            case 1: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,0,-8,1.0});
+                    break;
+            case 2: Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-25,0,-6,1.0});
+                    Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,0,-6,1.0});
+                    break;
+            case 3: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,0,-8,1.0});
+                    Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-15,-0.25,-6.0,1.0});
+                    Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-15,0.25,-6.0,1.0});
+                    break;
+            case 4: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,0,-8,1.0});
+
+                    Projektiles.add(new double[] {ShipCol.getMinX()+4,ShipCol.getMinY()-25,-0.15,-7.0,1.0});
+                    Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,0.15,-7.0,1.0});
+
+                    Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-25,-0.5,-6.0,1.0});
+                    Projektiles.add(new double[] {ShipCol.getMaxX()-4,ShipCol.getMinY()-25,0.5,-6.0,1.0});
+                    break;
+            case 5: Projektiles.add(new double[] {ShipCol.getCenterX()-4,ShipCol.getMinY()-25,0,-8.0,1.0});
+
+                    Projektiles.add(new double[] {ShipCol.getMinX()+4,ShipCol.getMinY()-25,-0,15,-7.0,1.0});
+                    Projektiles.add(new double[] {ShipCol.getMaxX()-8,ShipCol.getMinY()-25,-0,15,-7.0,1.0});
+
+                    Projektiles.add(new double[] {ShipCol.getMinX(),ShipCol.getMinY()-15,-0.5,-6.0,1.0});
+                    Projektiles.add(new double[] {ShipCol.getMaxX()-4,ShipCol.getMinY()-15,0.5,-6.0,1.0});
+
+                    Projektiles.add(new double[] {ShipCol.getMinX()-4,ShipCol.getMinY()-5,0.65,-6.0,1.0});
+                    Projektiles.add(new double[] {ShipCol.getMaxX(),ShipCol.getMinY()-5,-0.65,-6.0,1.0});
+                    break;
+            case 6: Projektiles.add(new double[] {ShipCol.getCenterX()-2.5,ShipCol.getMinY()-25,0,-12,1.0});
+                    Coldown = 2;
+                    break;
+        }
+    }
+    void ScreenColison() {
+        if (ShipCol.x<0) {
+            ShipCol.setLocation(0, ShipCol.y);
+        }
+        if (ShipCol.getMaxX()>380) {
+            ShipCol.setLocation(380-ShipCol.width, ShipCol.y);
+        }
+        if (ShipCol.getMinY()>570-ShipCol.height) {
+            ShipCol.setLocation(ShipCol.x,570-ShipCol.height);
         }
     }
 } 

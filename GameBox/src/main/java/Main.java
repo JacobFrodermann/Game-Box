@@ -73,8 +73,8 @@ class Main {
             } else {
                 reset();
             }
-		if (Read.size() != 12) {
-			System.out.println("reseted");
+		if (Read.size() != 16) {
+			System.out.println("Settings reseted");
 			System.out.println(Read.size());
 			reset();
 		}
@@ -103,7 +103,7 @@ class Main {
 	}
 
 	public void reset() throws FileNotFoundException, IOException {
-		IOUtils.write("FlappyBird:\n    Gravity=0.125\n    RotationFaktor=1\n    JumpHeight=4\nPong:\n    Xamp=1\n    Yamp=1\n    Linespeed=6\nSnake:\n    help=false\n    DeadlyLake=true\n    ticktime=60", new FileOutputStream(new File("Settings.txt")), StandardCharsets.UTF_8);
+		IOUtils.write("FlappyBird:\n    Gravity=0.125\n    RotationFaktor=1\n    JumpHeight=4\nPong:\n    Xamp=1\n    Yamp=1\n    Linespeed=6\nSnake:\n    help=false\n    DeadlyLake=true\n    ticktime=60\nSpace Destroyer:\n    EnemyHP:10\n    Homing:true\n    InstantDeath:false", new FileOutputStream(new File("Settings.txt")), StandardCharsets.UTF_8);
 		try {
 			Read = IOUtils.readLines(new FileInputStream(new File("Settings.txt")),StandardCharsets.UTF_8);
 		} catch (IOException e) {

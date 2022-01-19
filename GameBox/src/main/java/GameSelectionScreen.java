@@ -23,6 +23,9 @@ public class GameSelectionScreen implements Game {
 	Color selectionColor = new Color(255, 60, 0);
 	BufferedImage Logo;
 	int i = 0, XRow = 0;
+	int EnemyHP;
+	Boolean Homing;
+	Boolean InstantDeath;
 
 	public GameSelectionScreen() throws IOException {
 		try {
