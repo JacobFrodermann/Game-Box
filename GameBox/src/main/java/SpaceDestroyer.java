@@ -44,10 +44,10 @@ public class SpaceDestroyer implements Game {
         EnemyShot = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("EnemyShot.png"));
         FriendlyShot = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("FriendlyShot.png"));
         Particles = new ArrayList<Rectangle>();
-        Particles.add(new Rectangle(0,0,0,0));
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Main.baInputStream(SpaceDestroyer.class.getClassLoader().getResourceAsStream("Boom.wav")));
         Boom = AudioSystem.getClip();
         Boom.open(audioInputStream);
+        Colors = new ArrayList<Color>();
         //opponent creating
         for (int i = 0; i<3; i++) {
             for (int l = 0; l<6; l++) {
@@ -212,9 +212,11 @@ public class SpaceDestroyer implements Game {
         if(!Dead) {
             if (keys.contains(KeyEvent.VK_A) || keys.contains(KeyEvent.VK_LEFT)) {
                 ShipCol.setLocation((int) ShipCol.getMinX()-5,(int) ShipCol.getMinY());
+                GenParticles();
             }
             if (keys.contains(KeyEvent.VK_D) || keys.contains(KeyEvent.VK_RIGHT)) {
                 ShipCol.setLocation((int) ShipCol.getMinX()+5,(int) ShipCol.getMinY());
+                GenParticles();
             }
             if (keys.contains(KeyEvent.VK_W) || keys.contains(KeyEvent.VK_UP)) {
                 ShipCol.setLocation(ShipCol.x,ShipCol.y-5);
@@ -222,6 +224,7 @@ public class SpaceDestroyer implements Game {
             }
             if (keys.contains(KeyEvent.VK_S) || keys.contains(KeyEvent.VK_DOWN)) {
                 ShipCol.setLocation((int) ShipCol.getMinX(),(int) ShipCol.getMinY()+5);
+                GenParticles();
             }
             //Ship shoot
             if (keys.contains(KeyEvent.VK_SPACE)) {
@@ -265,7 +268,7 @@ public class SpaceDestroyer implements Game {
             }
         }
         //Particles
-        if (Particles.size() != 1) {
+        if (Particles.size() != 0) {
             for (int i = 1; i != Particles.size();i++) {
                 g.setColor(Colors.get(i));
                 g.fill(Particles.get(i));
@@ -329,9 +332,9 @@ public class SpaceDestroyer implements Game {
     }
     
     void GenParticles() {
-        for (int i = new Random().nextInt(4);i!=0;i--) {
-            Particles.add(new Rectangle((int)ShipCol.getCenterX()+new Random().nextInt(10)-5,(int)ShipCol.getMaxY(),10,10));
- !!!           Colors.add(new Color(Color.HSBtoRGB(14, new Random().nextInt(100) , new Random().nextInt(100))));
+        for (int i = new Random().nextInt(4);i>0;i--) {
+            Particles.add(new Rectangle((int)ShipCol.getCenterX()+new Random().nextInt(10)-5,(int)ShipCol.getMaxY(),5,5));
+            Colors.add(new Color((Color.HSBtoRGB(14, new Random().nextInt(100) , new Random().nextInt(100)) & 0xffffff) | (90 << 24)));
         }
     }
 } 
