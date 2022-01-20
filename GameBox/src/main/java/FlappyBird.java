@@ -48,6 +48,7 @@ public class FlappyBird implements Game {
 	List<String> Read;
 	Clip Pling;
 	AffineTransform t;
+	Boolean Jumped;
 
 	Double Gravity, RotationFaktor, JumpHeight;
 
@@ -120,7 +121,7 @@ public class FlappyBird implements Game {
 			CollisionPipeLower.setLocation(pipe2X,pipe2Y+100);
 			CollisionPipeUpper.setLocation(pipe2X,pipe2Y-600);
 		}
-		if ((BirdY > 600 || BirdY < -20) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper)) {
+		if ((BirdY > 600 || BirdY < -60) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper)) {
 			g.drawImage(deadbird,20, BirdY,40,40,null);
 			g.drawImage(dead, 50, 250, null);
 			if (VelX - 10 > Highscore) {
@@ -168,7 +169,10 @@ public class FlappyBird implements Game {
 			Main.INSTANCE.currentGame = new GameSelectionScreen();
 		}
 		if (event.getKeyCode() == KeyEvent.VK_SPACE) {
-			VelY -= JumpHeight;
+			if (!Jumped) {
+				VelY -= JumpHeight;
+				Jumped = true;
+			}
 		}
 		if (event.getKeyCode() == KeyEvent.VK_SPACE && ((BirdY > 600 || BirdY < -20) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper))) {
 			try {
@@ -177,5 +181,8 @@ public class FlappyBird implements Game {
 		}
 	}
 	public void keyReleased(KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.VK_SPACE) {
+			Jumped = false;
+		}
 	}
 }

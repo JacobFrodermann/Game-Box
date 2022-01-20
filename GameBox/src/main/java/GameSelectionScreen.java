@@ -7,13 +7,14 @@ import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.Toolkit;
 
 public class GameSelectionScreen implements Game {
-	BufferedImage[] gameThumbnails;
+	BufferedImage[] gameThumbnails = new BufferedImage[5];
 	Class<?>[] gameClasses;
 	int selected = 0;
 	double scroll = 0;
@@ -28,12 +29,17 @@ public class GameSelectionScreen implements Game {
 	Boolean InstantDeath;
 
 	public GameSelectionScreen() throws IOException {
+		int i = 0;
+		String[] GameThumbnails = {"Flappy.png", "Pong.PNG", "Snake.png","Space Destroyer.png","Atari Breakout.png"};
 		try {
 			Logo = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Logo.png"));
-			gameThumbnails = new BufferedImage[] { ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Flappy.png")) , ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Pong.png")), ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Snake.png")), ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("SpaceDestroyer.png")) };
-			gameClasses = new Class<?>[] { FlappyBird.class , Pong.class, Snake.class, SpaceDestroyer.class};
+			
+			for (i = 0; i<GameThumbnails.length;i++) {
+				gameThumbnails[i] = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream(GameThumbnails[i]));
+			}
+			gameClasses = new Class<?>[] { FlappyBird.class , Pong.class, Snake.class, SpaceDestroyer.class,AtariBreakout.class};
 		} catch (IOException | java.lang.IllegalArgumentException e) {
-			System.out.println("Data Error");
+			System.out.println("Failed Loading "+i);
 			e.printStackTrace();
 		}
 		Main.INSTANCE.frame.setIconImage(Logo);
@@ -87,6 +93,9 @@ public class GameSelectionScreen implements Game {
 				}
 				if (selected == 3) {
 					Main.INSTANCE.currentGame = new SpaceDestroyer();
+				}
+				if (selected == 4) {
+					Main.INSTANCE.currentGame = new AtariBreakout();
 				}
 				//Main.INSTANCE.currentGame = (Game) gameClasses[selected].getConstructor().newInstance();
 			} catch (IOException | IllegalArgumentException/* | InvocationTargetException | NoSuchMethodException | SecurityException*/ | UnsupportedAudioFileException | LineUnavailableException e) {

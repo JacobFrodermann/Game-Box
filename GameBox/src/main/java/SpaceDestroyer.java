@@ -158,14 +158,20 @@ public class SpaceDestroyer implements Game {
                                         Ship = ImageIO.read(SpaceDestroyer.class.getResourceAsStream("Ship1.png"));
                                     }
                                     ShipCol.grow(-5, -5);
+                                    for (int j = 0;j<6;j++){
+                                        for (int l = 0;l<6;l++) {
+                                            GenParticles(ShipCol.x+j*5,ShipCol.y+l*5,5);
+                                        }
                                     if (PowerState == 0) {
                                         Dead = true;
                                     }
                                 }
                                 Projektiles.remove(i);
                                 Boom.start();
+                                
                             }
-                            break;
+                        break;
+                    }
                     case 2: if (ShipCol.intersects(new Rectangle((int) x[0],(int) x[1],20,10))) {
                                 if (PowerState != 5){
                                     PowerState++;
@@ -188,8 +194,8 @@ public class SpaceDestroyer implements Game {
                 if (new Random().nextInt(3) == 2) {
                     Projektiles.add(new double[] {Opponents.get(i)[0]+10, Opponents.get(i)[1],0, 2,2});
                 }
-                for (int j = 0;j<5;j++){
-                    for (int l = 0;l<5;l++) {
+                for (int j = 0;j<6;j++){
+                    for (int l = 0;l<6;l++) {
                         GenParticles((int)Opponents.get(i)[0]+j*5,(int)Opponents.get(i)[1]+l*5,5);
                     }
                 }
@@ -377,5 +383,8 @@ public class SpaceDestroyer implements Game {
         if (ShipCol.getMinY()>570-ShipCol.height) {
             ShipCol.setLocation(ShipCol.x,570-ShipCol.height);
         }
+    }
+    void Explode(int x,int y) {
+
     }
 } 
