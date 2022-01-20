@@ -30,7 +30,7 @@ public class GameSelectionScreen implements Game {
 
 	public GameSelectionScreen() throws IOException {
 		int i = 0;
-		String[] GameThumbnails = {"Flappy.png", "Pong.PNG", "Snake.png","Space Destroyer.png","Atari Breakout.png"};
+		String[] GameThumbnails = {"Flappy.png", "Pong.png", "Snake.png","Space Destroyer.png","Atari Breakout.png"};
 		try {
 			Logo = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Logo.png"));
 			

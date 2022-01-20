@@ -12,18 +12,20 @@ import java.util.Random;
 
 
 public class AtariBreakout implements Game{
-
+    //1366,768
     Rectangle[][] Blocks= new Rectangle[3][10];
-    Ellipse2D Ball = new Ellipse2D.Double(Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-5,Toolkit.getDefaultToolkit().getScreenSize().height*0.8,10.0,10.0);
+    int X = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),Y = Toolkit.getDefaultToolkit().getScreenSize().height;
+    Ellipse2D Ball = new Ellipse2D.Double(X/2-5,Y*0.7,10.0,10.0);
     double xv=0,yv = -5,Speed = 5;
+    Rectangle Line = new Rectangle((int)(X*0.425),(int)(Y*0.9),(int)(X*0.15),(int)(Y*0.025));
 
     AtariBreakout() {
-        Main.INSTANCE.frame.setBounds(0,0,Toolkit.getDefaultToolkit().getScreenSize().width,Toolkit.getDefaultToolkit().getScreenSize().height);
-        int xF = (int) (Toolkit.getDefaultToolkit().getScreenSize().width/9.5);
+        Main.INSTANCE.frame.setBounds(0,0,X,Y);
+        int xF = (int) (X/9.5);
         for (int i = 0;i<3;i++) {
             int x = 0;
             for (int j = 0 ; j<10;j++) {
-                Blocks[i][j] = new Rectangle(x,50+i*50,new Random().nextInt(30)+xF,49);
+                Blocks[i][j] = new Rectangle(x,50+i*50,new Random().nextInt(60)+xF,49);
                 x += Blocks[i][j].getMaxX()+1-x;
             }
         }
@@ -36,20 +38,31 @@ public class AtariBreakout implements Game{
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         
         g.setColor(new Color(16, 15, 28));
-        g.fill(new  Rectangle(0,0,result.getWidth(),result.getHeight()));
+        g.fill(new  Rectangle(0,0,X,Y));
 
-        g.setColor(new Color(14,0,181));
+        g.setColor(new Color(14,200,181));
         for (int i = 0;i<3;i++) {
             for (int j = 0 ; j<10;j++) {
                 g.fill(Blocks[i][j]);
             }
         }
-
+        for (int i = 0; i<3;i++){
+            for (int j = 0; j<10;j++) {
+                if (Blocks[i][j].intersects(Ball.getFrame())) {
+                    yv *= -1;
+                }
+            }
+        }
+        if (Ball.intersects(Line)) {
+            double x = Ball.getCenterX() - Line.getCenterX();
+        }
         g.setColor(Color.CYAN);
         g.fill(Ball);
 
         Ball.setFrame(Ball.getX()+xv,Ball.getY()+yv,10,10);
 
+        g.setColor(Color.BLUE);
+        g.fill(Line);
         return result;
     }
 
@@ -60,11 +73,14 @@ public class AtariBreakout implements Game{
    
     public void keyPressed(KeyEvent event) throws IOException {
         if (event.getKeyCode() == KeyEvent.VK_A) {
-
+            Line.x -= 8;
         }  
         if (event.getKeyCode() == KeyEvent.VK_D) {
-
-        }       
+            Line.x += 8;
+        } 
+        if (event.getKeyCode() == KeyEvent.VK_SPACE) {
+            Main.INSTANCE.currentGame = new GameSelectionScreen();
+        }     
     }
 
     
