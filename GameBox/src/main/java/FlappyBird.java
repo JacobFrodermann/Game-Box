@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -33,7 +34,7 @@ public class FlappyBird implements Game {
 	BufferedImage Clouds;
 	Color sky = new Color(52, 174, 235);
 
-	Double VelY = 0.0;
+	double VelY = 0.0;
 	int BirdY = 300;
 	int Score = 0;
 	int pipe1Y; 
@@ -48,7 +49,7 @@ public class FlappyBird implements Game {
 	List<String> Read;
 	Clip Pling;
 	AffineTransform t;
-	Boolean Jumped;
+	boolean Jumped;
 
 	Double Gravity, RotationFaktor, JumpHeight;
 
@@ -184,5 +185,17 @@ public class FlappyBird implements Game {
 		if (event.getKeyCode() == KeyEvent.VK_SPACE) {
 			Jumped = false;
 		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		VelY -= JumpHeight;
+		Jumped = true;
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

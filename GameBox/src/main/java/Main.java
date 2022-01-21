@@ -4,8 +4,12 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -17,9 +21,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
 import javax.swing.JFrame;
 import org.apache.commons.io.IOUtils;
-import java.awt.Toolkit;
 
 class Main {
 	public static Main INSTANCE;
@@ -64,6 +68,49 @@ class Main {
 				currentGame.keyReleased(e);
 			}
 		});
+		canvas.addMouseMotionListener(new MouseMotionListener() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				currentGame.mouseMoved(e);
+			}
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		canvas.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				currentGame.mouseClicked(e);
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		currentGame = new GameSelectionScreen();
 		frame.setVisible(true);
 		canvas.createBufferStrategy(2);
 		canvas.requestFocus();
@@ -79,7 +126,6 @@ class Main {
 			reset();
 		}
 
-		currentGame = new GameSelectionScreen();
 	}
 
 	public BufferedImage draw(Dimension size) {

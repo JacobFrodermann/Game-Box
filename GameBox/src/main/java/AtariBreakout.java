@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.awt.Graphics2D;
@@ -50,16 +51,19 @@ public class AtariBreakout implements Game{
             for (int j = 0; j<10;j++) {
                 if (Blocks[i][j].intersects(Ball.getFrame())) {
                     yv *= -1;
+                    Blocks[i][j] = null;
                 }
             }
-        }
-        if (Ball.intersects(Line)) {
-            double x = Ball.getCenterX() - Line.getCenterX();
         }
         g.setColor(Color.CYAN);
         g.fill(Ball);
 
         Ball.setFrame(Ball.getX()+xv,Ball.getY()+yv,10,10);
+
+        if (Ball.intersects(Line)) {
+            xv = (Line.getCenterX()-Ball.getCenterX())/Line.width*-3;
+            yv = -1*Math.sqrt(Math.pow(Speed, 2)-Math.pow(xv,2));
+        }
 
         g.setColor(Color.BLUE);
         g.fill(Line);
@@ -86,6 +90,17 @@ public class AtariBreakout implements Game{
     
     public void keyReleased(KeyEvent event) {
         
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        Line.x=e.getX()-Line.width/2;
     }
 
 }
