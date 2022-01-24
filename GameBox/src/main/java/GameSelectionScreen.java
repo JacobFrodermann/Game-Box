@@ -30,7 +30,6 @@ public class GameSelectionScreen implements Game {
 	Boolean InstantDeath;
 
 	public GameSelectionScreen() throws IOException {
-		System.out.println(Main.INSTANCE.Settings);
 		int i = 0;
 		String[] GameThumbnails = {"Flappy.png", "Pong.png", "Snake.png","Space Destroyer.png","Atari Breakout.png"};
 		try {

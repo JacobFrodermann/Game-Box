@@ -58,9 +58,9 @@ public class FlappyBird implements Game {
 	public FlappyBird() throws IOException, UnsupportedAudioFileException, LineUnavailableException  {
 		Main.INSTANCE.frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-200,Toolkit.getDefaultToolkit().getScreenSize().height/2-300,400,600);
 		try {
-			Gravity = Double.valueOf(Main.INSTANCE.Read.get(1).substring(12));
-			RotationFaktor = Double.valueOf(Main.INSTANCE.Read.get(2).substring(19));
-			JumpHeight = Double.valueOf(Main.INSTANCE.Read.get(3).substring(15));
+			Gravity = Double.parseDouble(Main.INSTANCE.Settings.get("Gravity"));
+			RotationFaktor = Double.parseDouble(Main.INSTANCE.Settings.get("RotationFaktor"));
+			JumpHeight = Double.parseDouble(Main.INSTANCE.Settings.get("JumpHeight"));
 		} catch (java.lang.StringIndexOutOfBoundsException | java.lang.NumberFormatException e1) {Main.INSTANCE.reset();}
 
 		if (new File("Data").exists()) {

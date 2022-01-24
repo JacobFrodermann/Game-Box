@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ class Main {
 	public Canvas canvas;
 	public Game currentGame;
 	public List<String> Read;
-	public Map Settings;
+	public Map<String,String> Settings = new HashMap<String,String>();
 	public static void main(String[] args) throws IOException, InterruptedException {
 		INSTANCE = new Main();
 		INSTANCE.init();

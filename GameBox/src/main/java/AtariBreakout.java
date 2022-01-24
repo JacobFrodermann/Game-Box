@@ -16,12 +16,12 @@ import javax.imageio.ImageIO;
 
 public class AtariBreakout implements Game{
     //1366,768
-    Rectangle[][] Blocks= new Rectangle[3][10];
+    Rectangle[][] Blocks= new Rectangle[3][9];
     int X = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),Y = Toolkit.getDefaultToolkit().getScreenSize().height;
     Ellipse2D Ball = new Ellipse2D.Double(X/2-5,Y*0.7,10.0,10.0);
     double xv=0,yv = -5,Speed = X/400,inc=Speed/5;
     Rectangle Line = new Rectangle((int)(X*0.425),(int)(Y*0.9),(int)(X*0.15),(int)(Y*0.025));
-    Color[][] Colors = new Color[3][10];
+    Color[][] Colors = new Color[3][9];
     float LineColor = 1f; 
     BufferedImage Victory;
     AtariBreakout() {
@@ -30,7 +30,7 @@ public class AtariBreakout implements Game{
         int xF = (int) (X/9.5);
         for (int i = 0;i<3;i++) {
             int x = 0;
-            for (int j = 0 ; j<10;j++) {
+            for (int j = 0 ; j<9;j++) {
                 Colors[i][j] = new Color(Color.HSBtoRGB(new Random().nextFloat(), 0.8F, 0.99F));
                 Blocks[i][j] = new Rectangle(x,50+i*50,new Random().nextInt(60)+xF,49);
                 x += Blocks[i][j].getMaxX()+1-x;
@@ -60,7 +60,7 @@ public class AtariBreakout implements Game{
         }
 
         for (int i = 0;i<3;i++) {
-            for (int j = 0 ; j<10;j++) {
+            for (int j = 0 ; j<9;j++) {
                 g.setColor(Colors[i][j]);
                 g.fill(Blocks[i][j]);
                 if (Blocks[i][j].intersects(Ball.getFrame())) {
@@ -103,7 +103,7 @@ public class AtariBreakout implements Game{
         g.setColor(new Color(Color.HSBtoRGB(LineColor, 1, 0.95f)));
         g.fill(Line);
 
-        if (Speed == 35.0) {
+        if (Speed == 32.0) {
             g.drawImage(Victory, X-100, Y-25, null);
             print("drew");
         }

@@ -35,10 +35,10 @@ public class Pong implements Game {
         Main.INSTANCE.frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-207,Toolkit.getDefaultToolkit().getScreenSize().height/2-320,415,640);
         keys = new ArrayList<Integer>();
         try {
-            Xamp = Integer.valueOf(Main.INSTANCE.Read.get(5).substring(9));
-            Yamp = Integer.valueOf(Main.INSTANCE.Read.get(6).substring(9));
-            Linespeed = Integer.valueOf(Main.INSTANCE.Read.get(7).substring(14));
-        } catch (java.lang.StringIndexOutOfBoundsException | java.lang.NumberFormatException e1) {Main.INSTANCE.reset();}
+            Xamp = Integer.valueOf(Main.INSTANCE.Settings.get("Xamp"));
+            Yamp = Integer.valueOf(Main.INSTANCE.Settings.get("Yamp"));
+            Linespeed = Integer.valueOf(Main.INSTANCE.Settings.get("Linespeed"));
+        } catch (java.lang.NumberFormatException e1) {Main.INSTANCE.reset();}
 
         Logo = ImageIO.read(Pong.class.getClassLoader().getResourceAsStream("pongLogo.png"));
         Plate = ImageIO.read(Pong.class.getClassLoader().getResourceAsStream("Plate.png"));

@@ -1,7 +1,7 @@
 FlappyBird:
-    Gravity=0.125
+    Gravity=-0.125
     RotationFaktor=1
-    JumpHeight=4
+    JumpHeight=-4
 Pong:
     Xamp=1
     Yamp=1
@@ -11,6 +11,6 @@ Snake:
     DeadlyLake=true
     ticktime=60
 Space Destroyer:
-    EnemyHP:10
-    Homing:true
-    InstantDeath:false
+    EnemyHP=10
+    Homing=true
+    InstantDeath=false

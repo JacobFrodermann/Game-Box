@@ -57,10 +57,10 @@ public class Snake implements Game {
             Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
 		}
         try {
-            help = Boolean.valueOf(Main.INSTANCE.Read.get(9).substring(9));
-            DeadlyLake = Boolean.valueOf(Main.INSTANCE.Read.get(10).substring(15));
-            ticktime  = Integer.valueOf(Main.INSTANCE.Read.get(11).substring(13));
-        } catch (java.lang.StringIndexOutOfBoundsException | java.lang.NumberFormatException e1) {Main.INSTANCE.reset();}
+            help = Boolean.valueOf(Main.INSTANCE.Settings.get("help"));
+            DeadlyLake = Boolean.valueOf(Main.INSTANCE.Settings.get("DeadlyLake"));
+            ticktime  = Integer.valueOf(Main.INSTANCE.Settings.get("ticktime"));
+        } catch (java.lang.NumberFormatException e1) {Main.INSTANCE.reset();}
 
         System.out.println("Deadly Lake = " + DeadlyLake);
 

@@ -16,14 +16,15 @@ public class ReadSettings extends Thread{
         
         if (new File("Settings.txt").exists()) {
             List<String> Read = new ArrayList<String>();
+            Map<String,String> Settings = new HashMap<String, String>();
             try {
                 Read = IOUtils.readLines(new FileInputStream(new File("Settings.txt")),StandardCharsets.UTF_8);
-                Map<String,String> Settings = new HashMap<String, String>();
                 Read.forEach(x -> {
-                    if (x.contains(":")){
+                    if (x.contains("=")){
                         x = x.replace(" ", "");
-                        String[]VK = x.split(":");
-                        Map.entry(VK[0],VK[1]);
+                        String[]VK = x.split("=");
+                        System.out.println(VK[0]);
+                        Settings.put(VK[0],VK[1]);
                     } 
             });
             Main.INSTANCE.Settings = Settings;
