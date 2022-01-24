@@ -120,13 +120,42 @@ public class GameSelectionScreen implements Game {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		for (int i = 0; i<Math.floor(gameThumbnails.length*3);i++){
+			for (int j = 0;j<3;j++){
+				if (new Rectangle(3+300*i,3+190*j,250,140).contains(e.getPoint())) {
+					selected = i*3+j;
+					start();
+				}
+			}
+		}
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	void start(){
+		try {
+			if (selected == 0) {
+				Main.INSTANCE.currentGame = new FlappyBird();
+			}
+			if (selected == 1) {
+				Main.INSTANCE.currentGame = new Pong();
+			}
+			if (selected == 2) {
+				Main.INSTANCE.currentGame = new Snake();
+			}
+			if (selected == 3) {
+				Main.INSTANCE.currentGame = new SpaceDestroyer();
+			}
+			if (selected == 4) {
+				Main.INSTANCE.currentGame = new AtariBreakout();
+			}
+			//Main.INSTANCE.currentGame = (Game) gameClasses[selected].getConstructor().newInstance();
+		} catch (IOException | IllegalArgumentException/* | InvocationTargetException | NoSuchMethodException | SecurityException*/ | UnsupportedAudioFileException | LineUnavailableException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 }

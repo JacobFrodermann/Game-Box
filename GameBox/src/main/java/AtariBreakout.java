@@ -19,7 +19,7 @@ public class AtariBreakout implements Game{
     Rectangle[][] Blocks= new Rectangle[3][10];
     int X = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),Y = Toolkit.getDefaultToolkit().getScreenSize().height;
     Ellipse2D Ball = new Ellipse2D.Double(X/2-5,Y*0.7,10.0,10.0);
-    double xv=0,yv = -5,Speed = 5;
+    double xv=0,yv = -5,Speed = X/400,inc=Speed/5;
     Rectangle Line = new Rectangle((int)(X*0.425),(int)(Y*0.9),(int)(X*0.15),(int)(Y*0.025));
     Color[][] Colors = new Color[3][10];
     float LineColor = 1f; 
@@ -63,9 +63,11 @@ public class AtariBreakout implements Game{
         for (int i = 0; i<3;i++){
             for (int j = 0; j<10;j++) {
                 if (Blocks[i][j].intersects(Ball.getFrame())) {
-                    yv *= -1;
-                    Speed += 1;
+                    if (Ball.getX()<Blocks[i][j].getMaxX()||Ball.getMaxX()<Blocks[i][j].x) {
+                        yv *= -1;
+                    } else{xv *= -1;}
                     Blocks[i][j].height = 0;
+                    Speed +=inc;
                 }
             }
         }
@@ -91,7 +93,17 @@ public class AtariBreakout implements Game{
             try {
                 Main.INSTANCE.currentGame = new GameSelectionScreen();
             } catch (IOException e) {print("Error" + e.getCause());}
+        if (Ball.intersects(Line)) {
+            xv = (Line.getCenterX()-Ball.getCenterX())/Line.width*-3*inc;
+            yv = -1*Math.sqrt(Math.pow(Speed, 2)-Math.pow(xv,2));
         }
+        if (Ball.getX()>X||Ball.getMaxX()<0) {
+            xv*=-1;
+        }
+        if (Ball.getMinY()<0){
+            yv*=-1;
+        }
+        if (Ball.getY()>Y){try {Main.INSTANCE.currentGame = new GameSelectionScreen();} catch (IOException e) {}}
 
         Ball.setFrame(Ball.getX()+xv,Ball.getY()+yv,X*0.015,X*0.015);
 
