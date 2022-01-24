@@ -238,6 +238,7 @@ public class SpaceDestroyer implements Game {
             }
         }
         if(!Dead) {
+            GenParticles((int) ShipCol.getCenterX(),(int) ShipCol.getMaxY(),0);
             if (keys.contains(KeyEvent.VK_A) || keys.contains(KeyEvent.VK_LEFT)) {
                 ShipCol.setLocation((int) ShipCol.getMinX()-5,(int) ShipCol.getMinY());
             }
@@ -258,7 +259,7 @@ public class SpaceDestroyer implements Game {
                 }
             }
         }
-        GenParticles((int) ShipCol.getCenterX(),(int) ShipCol.getMaxY(),0);
+        
         //Particles
         if (Particles.size() != 0) {
             for (int i = 1; i != Particles.size();i++) {

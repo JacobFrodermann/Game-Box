@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import org.apache.commons.io.IOUtils;
@@ -32,7 +33,7 @@ class Main {
 	public Canvas canvas;
 	public Game currentGame;
 	public List<String> Read;
-
+	public Map Settings;
 	public static void main(String[] args) throws IOException, InterruptedException {
 		INSTANCE = new Main();
 		INSTANCE.init();
@@ -47,6 +48,8 @@ class Main {
 	}
 
 	public void init() throws IOException {
+		ReadSettings ReadSet = new ReadSettings();
+		ReadSet.start();
 		frame = new JFrame();
 		frame.setTitle("GameBox");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

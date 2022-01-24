@@ -53,15 +53,16 @@ public class AtariBreakout implements Game{
         g.fill(new  Rectangle(0,0,X,Y));
         g.setColor(new Color(14,200,181));
 
+        if (Ball.getBounds().intersects(Line)) {
+            double x = Ball.getCenterX() - Line.getCenterX();
+            xv = x/Line.width*8;
+            yv = Math.sqrt(Math.pow(Speed,2)-Math.pow(xv,2))*-1;
+        }
+
         for (int i = 0;i<3;i++) {
             for (int j = 0 ; j<10;j++) {
                 g.setColor(Colors[i][j]);
                 g.fill(Blocks[i][j]);
-            }
-        }
-
-        for (int i = 0; i<3;i++){
-            for (int j = 0; j<10;j++) {
                 if (Blocks[i][j].intersects(Ball.getFrame())) {
                     if (Ball.getX()<Blocks[i][j].getMaxX()||Ball.getMaxX()<Blocks[i][j].x) {
                         yv *= -1;
@@ -70,13 +71,6 @@ public class AtariBreakout implements Game{
                     Speed +=inc;
                 }
             }
-        }
-
-        if (Ball.getBounds().intersects(Line)) {
-            double x = Ball.getCenterX() - Line.getCenterX();
-            xv = x/Line.width*8;
-            yv = Math.sqrt(Math.pow(Speed,2)-Math.pow(xv,2))*-1;
-            print(Speed);
         }
 
         g.setColor(Color.CYAN);
@@ -92,7 +86,7 @@ public class AtariBreakout implements Game{
         if(Ball.getY()>Y){
             try {
                 Main.INSTANCE.currentGame = new GameSelectionScreen();
-            } catch (IOException e) {print("Error" + e.getCause());}
+            } catch (IOException e) {print("Error" + e.getCause());}}
         if (Ball.intersects(Line)) {
             xv = (Line.getCenterX()-Ball.getCenterX())/Line.width*-3*inc;
             yv = -1*Math.sqrt(Math.pow(Speed, 2)-Math.pow(xv,2));
@@ -100,9 +94,7 @@ public class AtariBreakout implements Game{
         if (Ball.getX()>X||Ball.getMaxX()<0) {
             xv*=-1;
         }
-        if (Ball.getMinY()<0){
-            yv*=-1;
-        }
+        
         if (Ball.getY()>Y){try {Main.INSTANCE.currentGame = new GameSelectionScreen();} catch (IOException e) {}}
 
         Ball.setFrame(Ball.getX()+xv,Ball.getY()+yv,X*0.015,X*0.015);
@@ -115,7 +107,7 @@ public class AtariBreakout implements Game{
             g.drawImage(Victory, X-100, Y-25, null);
             print("drew");
         }
-        return result;
+    return result;
     }
     
     void print(Object obj) {
