@@ -11,6 +11,6 @@ Snake:
     DeadlyLake=true
     ticktime=60
 Space Destroyer:
-    EnemyHP:5
-    Homing:false
+    EnemyHP:10
+    Homing:true
     InstantDeath:false

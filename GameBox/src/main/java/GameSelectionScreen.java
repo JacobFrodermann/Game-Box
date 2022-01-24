@@ -61,9 +61,8 @@ public class GameSelectionScreen implements Game {
 		// Rendering
 		g.setColor(sky);
 		g.fill(new Rectangle(new Point(), size));
-		i = 0;
-		
-		while (i<4) {
+
+		for (int i= 0;i<5;i++) {
 			XRow = ((int) Math.floor((i+1)/4))*300;
 			g.drawImage(gameThumbnails[i], 75 + XRow, 50 + i * 190 - XRow * 2, 250, 140, null);
 			if(i == selected) {
@@ -72,7 +71,6 @@ public class GameSelectionScreen implements Game {
 				g.fillPolygon(new int[] { 35 + a + XRow, 35 + a + XRow , 55 + a + XRow }, new int[] { (int) (105 + (i + animMovement) * 190) - XRow*2, (int) (135 + (i + animMovement) * 190) - XRow*2, (int) (120 + (i + animMovement) * 190 - XRow*2) }, 3);
 				g.fillPolygon(new int[] { 400 - 35 - a + XRow, 400 - 35 - a + XRow, 400 - 55 - a + XRow}, new int[] { (int) (105 + (i + animMovement) * 190) - XRow*2, (int) (135 + (i + animMovement) * 190) - XRow*2, (int) (120 + (i + animMovement) * 190) - XRow*2 }, 3);
 			}
-			i++;
 		}
 		anim += 0.09;
 		animMovement *= 0.9;
