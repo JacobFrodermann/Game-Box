@@ -53,10 +53,10 @@ public class SpaceDestroyer implements Game {
         Colors = new ArrayList<Color>();
         //reading settings
         try {
-			EnemyHP = Integer.valueOf(Main.INSTANCE.Read.get(13).substring(12));
-			Homing = Boolean.valueOf(Main.INSTANCE.Read.get(14).substring(11));
-			InstantDeath = Boolean.valueOf(Main.INSTANCE.Read.get(15).substring(17));
-		} catch (java.lang.StringIndexOutOfBoundsException | java.lang.NumberFormatException e1) {Main.INSTANCE.reset();}
+			EnemyHP = (int) Main.INSTANCE.Settings.get("EnemyHP");
+			Homing = (Boolean) Main.INSTANCE.Settings.get("Homing");
+			InstantDeath = (Boolean) Main.INSTANCE.Settings.get("InstantDeath");
+		} catch (java.lang.StringIndexOutOfBoundsException | java.lang.NumberFormatException e1) {e1.printStackTrace();}
         if (EnemyHP < 1) {
             EnemyHP = 10;
         }
@@ -393,14 +393,14 @@ public class SpaceDestroyer implements Game {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        // TODO Auto-generated method stub
+         
         
     }
 
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        // TODO Auto-generated method stub
+         
         
     }
 } 

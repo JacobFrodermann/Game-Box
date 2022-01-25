@@ -57,10 +57,10 @@ public class Snake implements Game {
             Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
 		}
         try {
-            help = Boolean.valueOf(Main.INSTANCE.Settings.get("help"));
-            DeadlyLake = Boolean.valueOf(Main.INSTANCE.Settings.get("DeadlyLake"));
-            ticktime  = Integer.valueOf(Main.INSTANCE.Settings.get("ticktime"));
-        } catch (java.lang.NumberFormatException e1) {Main.INSTANCE.reset();}
+            help = (Boolean) Main.INSTANCE.Settings.get("help");
+            DeadlyLake = (Boolean) Main.INSTANCE.Settings.get("DeadlyLake");
+            ticktime  = (int) Main.INSTANCE.Settings.get("ticktime");
+        } catch (java.lang.NumberFormatException e1) {e1.printStackTrace();}
 
         System.out.println("Deadly Lake = " + DeadlyLake);
 
@@ -262,13 +262,13 @@ public class Snake implements Game {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        // TODO Auto-generated method stub
+         
         
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        // TODO Auto-generated method stub
+         
         
     }
 }

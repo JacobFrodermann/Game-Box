@@ -126,13 +126,15 @@ public class GameSelectionScreen implements Game {
 					selected = i*3+j;
 					start();
 				}
+				if (new Rectangle(800,620,50,50).contains(e.getPoint())) {
+					Main.INSTANCE.currentGame = new Settings();
+				}
 			}
 		}
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 	void start(){

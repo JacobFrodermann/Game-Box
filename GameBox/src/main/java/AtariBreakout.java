@@ -24,9 +24,10 @@ public class AtariBreakout implements Game{
     Color[][] Colors = new Color[3][9];
     float LineColor = 1f; 
     BufferedImage Victory;
+    int removed = 0;
     AtariBreakout() {
         Main.INSTANCE.frame.setBounds(0,0,X,Y);
-        try {Victory = ImageIO.read(AtariBreakout.class.getClassLoader().getResourceAsStream("Victory.png"));} catch (IOException e) {}
+        try {Victory = ImageIO.read(AtariBreakout.class.getClassLoader().getResourceAsStream("Victory.png"));} catch (IOException e) {e.printStackTrace();}
         int xF = (int) (X/9.5);
         for (int i = 0;i<3;i++) {
             int x = 0;
@@ -35,7 +36,7 @@ public class AtariBreakout implements Game{
                 Blocks[i][j] = new Rectangle(x,50+i*50,new Random().nextInt(60)+xF,49);
                 x += Blocks[i][j].getMaxX()+1-x;
                 if (Blocks[i][j].x>X) {
-                    Speed += 5;
+                    removed ++;
                     Blocks[i][j].height = 0;
                     print("Removed "+i+" row's" +j+ "Block");
                 }
@@ -55,8 +56,12 @@ public class AtariBreakout implements Game{
 
         if (Ball.getBounds().intersects(Line)) {
             double x = Ball.getCenterX() - Line.getCenterX();
-            xv = x/Line.width*8;
+            xv = (x/Line.width)*8*Speed*2;
             yv = Math.sqrt(Math.pow(Speed,2)-Math.pow(xv,2))*-1;
+            if (Double.isNaN(yv)) {
+                yv = xv;
+            }
+           print(Speed);
         }
 
         for (int i = 0;i<3;i++) {
@@ -103,9 +108,8 @@ public class AtariBreakout implements Game{
         g.setColor(new Color(Color.HSBtoRGB(LineColor, 1, 0.95f)));
         g.fill(Line);
 
-        if (Speed == 32.0) {
-            g.drawImage(Victory, X-100, Y-25, null);
-            print("drew");
+        if (Speed == inc*(32-removed)) {
+            g.drawImage(Victory, X/2-100, Y/2-25, null);
         }
     return result;
     }
@@ -131,8 +135,6 @@ public class AtariBreakout implements Game{
     }
 
     public void mouseClicked(MouseEvent e) {
-        // TODO Auto-generated method stub
-        
     }
 
     public void mouseMoved(MouseEvent e) {
