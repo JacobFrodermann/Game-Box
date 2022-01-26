@@ -56,11 +56,11 @@ public class Snake implements Game {
 			IOUtils.write("0\n3", new FileOutputStream(new File("Data")), StandardCharsets.UTF_8);
             Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
 		}
-        try {
+        /*try {
             help = (Boolean) Main.INSTANCE.Settings.get("help");
             DeadlyLake = (Boolean) Main.INSTANCE.Settings.get("DeadlyLake");
             ticktime  = (int) Main.INSTANCE.Settings.get("ticktime");
-        } catch (java.lang.NumberFormatException e1) {e1.printStackTrace();}
+        } catch (java.lang.NumberFormatException e1) {e1.printStackTrace();}*/
 
         System.out.println("Deadly Lake = " + DeadlyLake);
 
@@ -216,10 +216,7 @@ public class Snake implements Game {
 		}
         } else {
             if (event.getKeyCode() == KeyEvent.VK_ENTER) {
-                try {
-                    Main.INSTANCE.frame.setBounds(new Rectangle(646,219,400,600));
-                    Main.INSTANCE.currentGame = new GameSelectionScreen();
-                } catch (IOException e) {}
+                // TODO switch to selection screen
                 if (Highscore < xkords.size()) {
                     try {
                         try {

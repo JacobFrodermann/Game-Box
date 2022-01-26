@@ -88,10 +88,9 @@ public class AtariBreakout implements Game{
             yv *=-1;
         }
 
-        if(Ball.getY()>Y){
-            try {
-                Main.INSTANCE.currentGame = new GameSelectionScreen();
-            } catch (IOException e) {print("Error" + e.getCause());}}
+        if(Ball.getY()>Y) {
+            // TODO switch to selection screen
+        }
         if (Ball.intersects(Line)) {
             xv = (Line.getCenterX()-Ball.getCenterX())/Line.width*-3*inc;
             yv = -1*Math.sqrt(Math.pow(Speed, 2)-Math.pow(xv,2));
@@ -100,7 +99,9 @@ public class AtariBreakout implements Game{
             xv*=-1;
         }
         
-        if (Ball.getY()>Y){try {Main.INSTANCE.currentGame = new GameSelectionScreen();} catch (IOException e) {}}
+        if (Ball.getY()>Y) {
+            // TODO switch to selection screen
+        }
 
         Ball.setFrame(Ball.getX()+xv,Ball.getY()+yv,X*0.015,X*0.015);
 
@@ -111,7 +112,7 @@ public class AtariBreakout implements Game{
         if (Speed == inc*(32-removed)) {
             g.drawImage(Victory, X/2-100, Y/2-25, null);
         }
-    return result;
+        return result;
     }
     
     void print(Object obj) {
@@ -126,7 +127,7 @@ public class AtariBreakout implements Game{
             Line.x += 8;
         } 
         if (event.getKeyCode() == KeyEvent.VK_SPACE) {
-            Main.INSTANCE.currentGame = new GameSelectionScreen();
+            // TODO switch to selection screen
         }     
     }
 

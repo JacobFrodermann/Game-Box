@@ -34,11 +34,11 @@ public class Pong implements Game {
     public Pong() throws IOException, UnsupportedAudioFileException, LineUnavailableException{
         Main.INSTANCE.frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-207,Toolkit.getDefaultToolkit().getScreenSize().height/2-320,415,640);
         keys = new ArrayList<Integer>();
-        try {
+        /*try {
             Xamp = (int) Main.INSTANCE.Settings.get("Xamp");
             Yamp = (int) Main.INSTANCE.Settings.get("Yamp");
             Linespeed = (int) Main.INSTANCE.Settings.get("Linespeed");
-        } catch (java.lang.NumberFormatException e1) {e1.printStackTrace();}
+        } catch (java.lang.NumberFormatException e1) {e1.printStackTrace();}*/
 
         Logo = ImageIO.read(Pong.class.getClassLoader().getResourceAsStream("pongLogo.png"));
         Plate = ImageIO.read(Pong.class.getClassLoader().getResourceAsStream("Plate.png"));
@@ -113,9 +113,7 @@ public class Pong implements Game {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e1) {}
-            try {
-                Main.INSTANCE.currentGame = new GameSelectionScreen();
-            } catch (IOException e) {}
+            // TODO switch to selection screen
         }
             
         if ( P2Score > 4) {
@@ -123,9 +121,7 @@ public class Pong implements Game {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e1) {}
-            try {
-                new GameSelectionScreen();
-            } catch (IOException e) {}
+            // TODO switch to selection screen
         }
 
 
@@ -163,9 +159,7 @@ public class Pong implements Game {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            try {
-                Main.INSTANCE.currentGame = new GameSelectionScreen();
-            } catch (IOException f) {}
+            // TODO switch to selection screen
         }
     }
     public void keyReleased(KeyEvent e) {

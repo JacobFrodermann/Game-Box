@@ -46,7 +46,7 @@ public class Settings implements Game {
 		g.fill(new Rectangle(new Point(), size));
         int i = 0;
         String types = Main.INSTANCE.Types;
-        Main.INSTANCE.Settings.forEach((x,y) -> {
+        /*Main.INSTANCE.Settings.forEach((x,y) -> {
             g.drawString(x, 50, 50+20*i);
             if (types.charAt(i) == 'd') {
                 g.drawString(String.valueOf((Double)y), 100, 50+20*i);
@@ -58,7 +58,7 @@ public class Settings implements Game {
                 }
                 
             }
-        });
+        });*/
 
         return result;
     }

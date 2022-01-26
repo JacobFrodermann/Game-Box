@@ -10,13 +10,13 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.awt.Toolkit;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class GameSelectionScreen implements Game {
-	BufferedImage[] gameThumbnails = new BufferedImage[5];
-	Class<?>[] gameClasses;
+	JSONArray games;
+	BufferedImage[] preloadedGameThumbnails;
 	int selected = 0;
 	double scroll = 0;
 	double anim = 0;
@@ -29,27 +29,12 @@ public class GameSelectionScreen implements Game {
 	Boolean Homing;
 	Boolean InstantDeath;
 
-	public GameSelectionScreen() throws IOException {
-		int i = 0;
-		String[] GameThumbnails = {"Flappy.png", "Pong.png", "Snake.png","Space Destroyer.png","Atari Breakout.png"};
-		try {
-			Logo = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Logo.png"));
-			
-			for (i = 0; i<GameThumbnails.length;i++) {
-				gameThumbnails[i] = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream(GameThumbnails[i]));
-			}
-			gameClasses = new Class<?>[] { FlappyBird.class , Pong.class, Snake.class, SpaceDestroyer.class,AtariBreakout.class};
-		} catch (IOException | java.lang.IllegalArgumentException e) {
-			System.out.println("Failed Loading "+i);
-			e.printStackTrace();
+	public GameSelectionScreen(JSONObject data) throws IOException {
+		games = data.getJSONArray("data");
+		preloadedGameThumbnails = new BufferedImage[games.length()];
+		for(int i = 0; i < games.length(); i++) {
+			preloadedGameThumbnails[i] = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream(games.getJSONObject(i).getString("thumbnail")));
 		}
-		Main.INSTANCE.frame.setIconImage(Logo);
-		Main.INSTANCE.frame.setBounds(646,219,800,680);
-		if (Toolkit.getDefaultToolkit().getScreenSize().height < 680) {
-            Main.INSTANCE.frame.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width/2-400,0,800,680);
-        } else {
-            Main.INSTANCE.frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-400,(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-340,800,680);
-        }
 	}
 
 	public BufferedImage draw(Dimension size) {
@@ -62,9 +47,9 @@ public class GameSelectionScreen implements Game {
 		g.setColor(sky);
 		g.fill(new Rectangle(new Point(), size));
 
-		for (int i= 0;i<5;i++) {
+		for (int i = 0; i < games.length(); i++) {
 			XRow = ((int) Math.floor((i+1)/4))*300;
-			g.drawImage(gameThumbnails[i], 75 + XRow, 50 + i * 190 - XRow * 2, 250, 140, null);
+			g.drawImage(preloadedGameThumbnails[i], 75 + XRow, 50 + i * 190 - XRow * 2, 250, 140, null);
 			if(i == selected) {
 				g.setColor(selectionColor);
 				int a = (int) Math.round(8 * Math.sin(anim));
@@ -80,27 +65,7 @@ public class GameSelectionScreen implements Game {
 
 	public void keyPressed(KeyEvent event) {
 		if(event.getKeyCode() == KeyEvent.VK_ENTER) {
-			try {
-				if (selected == 0) {
-					Main.INSTANCE.currentGame = new FlappyBird();
-				}
-				if (selected == 1) {
-					Main.INSTANCE.currentGame = new Pong();
-				}
-				if (selected == 2) {
-					Main.INSTANCE.currentGame = new Snake();
-				}
-				if (selected == 3) {
-					Main.INSTANCE.currentGame = new SpaceDestroyer();
-				}
-				if (selected == 4) {
-					Main.INSTANCE.currentGame = new AtariBreakout();
-				}
-				//Main.INSTANCE.currentGame = (Game) gameClasses[selected].getConstructor().newInstance();
-			} catch (IOException | IllegalArgumentException/* | InvocationTargetException | NoSuchMethodException | SecurityException*/ | UnsupportedAudioFileException | LineUnavailableException e) {
-				e.printStackTrace();
-				System.exit(1);
-			}
+			Main.INSTANCE.switchGame(games.getJSONObject(selected));
 		}
 		if(event.getKeyCode() == KeyEvent.VK_UP) {
 			if(selected > 0) {
@@ -109,7 +74,7 @@ public class GameSelectionScreen implements Game {
 			}
 		}
 		if(event.getKeyCode() == KeyEvent.VK_DOWN) {
-			if(selected < gameThumbnails.length - 1) {
+			if(selected < games.length() - 1) {
 				selected++;
 				animMovement -= 1;
 			}
@@ -120,14 +85,14 @@ public class GameSelectionScreen implements Game {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		for (int i = 0; i<Math.floor(gameThumbnails.length*3);i++){
+		for (int i = 0; i<Math.floor(games.length()*3);i++){
 			for (int j = 0;j<3;j++){
 				if (new Rectangle(3+300*i,3+190*j,250,140).contains(e.getPoint())) {
 					selected = i*3+j;
-					start();
+					Main.INSTANCE.switchGame(games.getJSONObject(selected));
 				}
 				if (new Rectangle(800,620,50,50).contains(e.getPoint())) {
-					Main.INSTANCE.currentGame = new Settings();
+					// TODO switch to settings
 				}
 			}
 		}
@@ -136,28 +101,5 @@ public class GameSelectionScreen implements Game {
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		
-	}
-	void start(){
-		try {
-			if (selected == 0) {
-				Main.INSTANCE.currentGame = new FlappyBird();
-			}
-			if (selected == 1) {
-				Main.INSTANCE.currentGame = new Pong();
-			}
-			if (selected == 2) {
-				Main.INSTANCE.currentGame = new Snake();
-			}
-			if (selected == 3) {
-				Main.INSTANCE.currentGame = new SpaceDestroyer();
-			}
-			if (selected == 4) {
-				Main.INSTANCE.currentGame = new AtariBreakout();
-			}
-			//Main.INSTANCE.currentGame = (Game) gameClasses[selected].getConstructor().newInstance();
-		} catch (IOException | IllegalArgumentException/* | InvocationTargetException | NoSuchMethodException | SecurityException*/ | UnsupportedAudioFileException | LineUnavailableException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
 	}
 }

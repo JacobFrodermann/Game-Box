@@ -52,11 +52,11 @@ public class SpaceDestroyer implements Game {
         Boom.open(audioInputStream);
         Colors = new ArrayList<Color>();
         //reading settings
-        try {
+        /*try {
 			EnemyHP = (int) Main.INSTANCE.Settings.get("EnemyHP");
 			Homing = (Boolean) Main.INSTANCE.Settings.get("Homing");
 			InstantDeath = (Boolean) Main.INSTANCE.Settings.get("InstantDeath");
-		} catch (java.lang.StringIndexOutOfBoundsException | java.lang.NumberFormatException e1) {e1.printStackTrace();}
+		} catch (java.lang.StringIndexOutOfBoundsException | java.lang.NumberFormatException e1) {e1.printStackTrace();}*/
         if (EnemyHP < 1) {
             EnemyHP = 10;
         }
@@ -275,9 +275,7 @@ public class SpaceDestroyer implements Game {
             }   
         }
         if (ShipCol.getY()<-30 && Opponents.size() == 0){
-            try {
-                Main.INSTANCE.currentGame = new GameSelectionScreen();
-            } catch (IOException f) {}
+            // TODO switch to selection screen
         }
         ScreenColison();
         //g.setColor(Color.red);
@@ -299,9 +297,7 @@ public class SpaceDestroyer implements Game {
             }
         } else {
             if (e.getKeyCode() == KeyEvent.VK_ENTER || ShipCol.getCenterY()<-30) {
-                try {
-                    Main.INSTANCE.currentGame = new GameSelectionScreen();
-                } catch (IOException f) {}
+                // TODO switch to selection screen
             }
             if (e.getKeyCode() == KeyEvent.VK_SPACE || ShipCol.getCenterY()<-30) {
                 try {

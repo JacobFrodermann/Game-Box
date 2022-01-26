@@ -57,11 +57,11 @@ public class FlappyBird implements Game {
 
 	public FlappyBird() throws IOException, UnsupportedAudioFileException, LineUnavailableException  {
 		Main.INSTANCE.frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-200,Toolkit.getDefaultToolkit().getScreenSize().height/2-300,400,600);
-		try {
+		/*try {
 			Gravity = (Double) Main.INSTANCE.Settings.get("Gravity");
 			RotationFaktor = (Double) Main.INSTANCE.Settings.get("RotationFaktor");
 			JumpHeight = (Double) Main.INSTANCE.Settings.get("JumpHeight");
-		} catch (java.lang.StringIndexOutOfBoundsException | java.lang.NumberFormatException e) {e.printStackTrace();}
+		} catch (java.lang.StringIndexOutOfBoundsException | java.lang.NumberFormatException e) {e.printStackTrace();}*/
 
 		if (new File("Data").exists()) {
 			Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
@@ -167,7 +167,7 @@ public class FlappyBird implements Game {
 
 	public void keyPressed(KeyEvent event) throws IOException {
 		if (event.getKeyCode() == KeyEvent.VK_ENTER && ((BirdY > 600 || BirdY < -20) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper))) {
-			Main.INSTANCE.currentGame = new GameSelectionScreen();
+			// TODO switch to selection screen
 		}
 		if (event.getKeyCode() == KeyEvent.VK_SPACE) {
 			if (!Jumped) {

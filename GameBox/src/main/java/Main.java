@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -13,14 +12,21 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
 
 class Main {
+	private static final File DATA_FILE = new File("Data.dat");
+	
 	public static Main INSTANCE;
 
 	public JFrame frame;
@@ -28,7 +34,8 @@ class Main {
 	public Game currentGame;
 
 	public String Types;
-	public Map<String,Object> Settings = new LinkedHashMap<String,Object>();
+	public JSONObject data;
+
 	public static void main(String[] args) throws IOException, InterruptedException {
 		INSTANCE = new Main();
 		INSTANCE.init();
@@ -43,18 +50,14 @@ class Main {
 	}
 
 	public void init() throws IOException {
-		ReadSettings ReadSet = new ReadSettings();
-		ReadSet.start();
+		readData();
 		frame = new JFrame();
 		frame.setTitle("GameBox");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setBackground(Color.WHITE);
-		frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-200,Toolkit.getDefaultToolkit().getScreenSize().height/2-300,400,600);
 		canvas = new Canvas();
 		frame.add(canvas);
-		canvas.setPreferredSize(new Dimension(400, 600));
-		frame.pack();
 		canvas.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) {}
 			public void keyPressed(KeyEvent e) {
@@ -71,47 +74,22 @@ class Main {
 			public void mouseMoved(MouseEvent e) {
 				currentGame.mouseMoved(e);
 			}
-
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				
-			}
+			public void mouseDragged(MouseEvent e) {}
 		});
 		canvas.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				currentGame.mouseClicked(e);
 			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				 
-				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				 
-				
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				 
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				 
-				
-			}
+			public void mousePressed(MouseEvent e) {}
+			public void mouseReleased(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {}
 		});
-		currentGame = new GameSelectionScreen();
+		switchGame(data.getJSONObject("selectionScreen"));
 		frame.setVisible(true);
 		canvas.createBufferStrategy(2);
 		canvas.requestFocus();
-
 	}
 
 	public BufferedImage draw(Dimension size) {
@@ -132,5 +110,30 @@ class Main {
 		g.drawImage(img, 0, 0, img.getWidth(), img.getHeight(), null);
 		g.dispose();
 		bs.show();
+	}
+
+	public void load() {
+		try {
+			readData();
+		} catch (Exception e) {
+			e.printStackTrace();
+			//resetData();
+		}
+	}
+	public void readData() throws IOException {
+		data = new JSONObject(IOUtils.toString(new FileInputStream(DATA_FILE), StandardCharsets.UTF_8));
+	}
+
+	@SuppressWarnings("unchecked")
+	public void switchGame(JSONObject gameInfo) {
+		try {
+			String gameClassName = gameInfo.getString("class");
+			Class<? extends Game> game = (Class<? extends Game>) Class.forName(gameClassName);
+			// TODO set window settings
+			currentGame = game.getConstructor(JSONObject.class).newInstance(gameInfo.getJSONObject("data"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(frame, "error");
+		}
 	}
 }
