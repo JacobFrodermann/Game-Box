@@ -8,23 +8,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Random;
+
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import java.awt.Toolkit;
 
-import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
 
 public class FlappyBird implements Game {
 	BufferedImage bird;
@@ -44,33 +38,17 @@ public class FlappyBird implements Game {
 	int pipe1X;
 	int pipe2X;
 	int VelX = 10;
-	int Highscore = 0;
 	double CloudX=-1000;
-	List<String> Read;
 	Clip Pling;
 	AffineTransform t;
 	boolean Jumped;
-
-	Double Gravity, RotationFaktor, JumpHeight;
+	JSONObject data;
 
 	Rectangle CollisionPipeUpper,CollisionPipeLower,CollisionBird;
 
-	public FlappyBird() throws IOException, UnsupportedAudioFileException, LineUnavailableException  {
-		Main.INSTANCE.frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-200,Toolkit.getDefaultToolkit().getScreenSize().height/2-300,400,600);
-		/*try {
-			Gravity = (Double) Main.INSTANCE.Settings.get("Gravity");
-			RotationFaktor = (Double) Main.INSTANCE.Settings.get("RotationFaktor");
-			JumpHeight = (Double) Main.INSTANCE.Settings.get("JumpHeight");
-		} catch (java.lang.StringIndexOutOfBoundsException | java.lang.NumberFormatException e) {e.printStackTrace();}*/
+	public FlappyBird(JSONObject data) throws IOException, UnsupportedAudioFileException, LineUnavailableException  {
+		this.data = data;
 
-		if (new File("Data").exists()) {
-			Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
-		}else {
-			IOUtils.write("0\n3", new FileOutputStream(new File("Data")), StandardCharsets.UTF_8);
-			Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
-		}
-		Highscore = Integer.valueOf(Read.get(0));
-		System.out.println("Highscore: "+Highscore);
 		deadbird = ImageIO.read(FlappyBird.class.getClassLoader().getResourceAsStream("The Bird Dead.png"));
 		bird = ImageIO.read(FlappyBird.class.getClassLoader().getResourceAsStream("The Bird.png"));
 		dead = ImageIO.read(FlappyBird.class.getClassLoader().getResourceAsStream("Dead.png"));
@@ -84,7 +62,7 @@ public class FlappyBird implements Game {
 		CollisionBird = new Rectangle(24, BirdY-8,34,24);
 		CollisionPipeLower = new Rectangle(pipe1X, pipe1Y+100,40,600);
 		CollisionPipeUpper = new Rectangle(pipe1X, pipe1Y-600,40,600);
-		Main.INSTANCE.frame.setIconImage(bird);
+
 		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Main.baInputStream(FlappyBird.class.getClassLoader().getResourceAsStream("Pling.wav")));
 		Pling = AudioSystem.getClip();
 		Pling.open(audioInputStream);
@@ -125,23 +103,19 @@ public class FlappyBird implements Game {
 		if ((BirdY > 600 || BirdY < -60) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper)) {
 			g.drawImage(deadbird,20, BirdY,40,40,null);
 			g.drawImage(dead, 50, 250, null);
-			if (VelX - 10 > Highscore) {
-				Highscore = VelX - 10;
-				try {
-					try {
-						IOUtils.write(String.valueOf(Highscore) +"\n" + Read.get(1), new FileOutputStream(new File("Data")), StandardCharsets.UTF_8);
-				} catch (FileNotFoundException e){}
-				} catch(IOException e1) {}
-				}
+			if (VelX - 10 > data.getInt("highscore")) {
+				data.put("highscore", VelX - 10);
+				Main.INSTANCE.saveAll();
+			}
 		} else {
 			t = g.getTransform();
-			t.rotate(Math.toRadians(VelY*10*RotationFaktor), CollisionBird.getCenterX(), CollisionBird.getCenterY());
+			t.rotate(Math.toRadians(VelY*10*data.getInt("rotationFactor")), CollisionBird.getCenterX(), CollisionBird.getCenterY());
 			g.setTransform(t);
 			g.drawImage(bird, 20, BirdY, 40, 40, null);
 			g.setTransform(new AffineTransform());
 			
 			BirdY += VelY;
-			VelY += Gravity;
+			VelY += data.getDouble("gravity");
 			Score += VelX/10 + 0.5;
 		}
 		if ((150-Score/2)+i < -80 ){
@@ -158,7 +132,7 @@ public class FlappyBird implements Game {
 		}
 		g.setColor(Color.black);
 		g.drawString(String.valueOf(VelX - 10), 350, 20);
-		g.drawString("Highscore: " + String.valueOf(Highscore), 15, 20);
+		g.drawString("Highscore: " + String.valueOf(data.getInt("highscore")), 15, 20);
 
 		return result;
 
@@ -167,18 +141,16 @@ public class FlappyBird implements Game {
 
 	public void keyPressed(KeyEvent event) throws IOException {
 		if (event.getKeyCode() == KeyEvent.VK_ENTER && ((BirdY > 600 || BirdY < -20) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper))) {
-			// TODO switch to selection screen
+            Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
 		}
 		if (event.getKeyCode() == KeyEvent.VK_SPACE) {
 			if (!Jumped) {
-				VelY -= JumpHeight;
+				VelY -= data.getDouble("jumpHeight");
 				Jumped = true;
 			}
 		}
 		if (event.getKeyCode() == KeyEvent.VK_SPACE && ((BirdY > 600 || BirdY < -20) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper))) {
-			try {
-				Main.INSTANCE.currentGame = new FlappyBird();
-			} catch (UnsupportedAudioFileException | LineUnavailableException e) {}
+			// TODO reset
 		}
 	}
 	public void keyReleased(KeyEvent event) {
@@ -189,7 +161,7 @@ public class FlappyBird implements Game {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		VelY -= JumpHeight;
+		VelY -= data.getDouble("jumpHeight");
 		Jumped = true;
 	}
 

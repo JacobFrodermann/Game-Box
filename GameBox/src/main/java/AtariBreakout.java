@@ -1,17 +1,19 @@
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
-import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+
+import org.json.JSONObject;
 
 
 public class AtariBreakout implements Game{
@@ -25,8 +27,7 @@ public class AtariBreakout implements Game{
     float LineColor = 1f; 
     BufferedImage Victory;
     int removed = 0;
-    AtariBreakout() {
-        Main.INSTANCE.frame.setBounds(0,0,X,Y);
+    public AtariBreakout(JSONObject data) {
         try {Victory = ImageIO.read(AtariBreakout.class.getClassLoader().getResourceAsStream("Victory.png"));} catch (IOException e) {e.printStackTrace();}
         int xF = (int) (X/9.5);
         for (int i = 0;i<3;i++) {
@@ -89,7 +90,7 @@ public class AtariBreakout implements Game{
         }
 
         if(Ball.getY()>Y) {
-            // TODO switch to selection screen
+            Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
         }
         if (Ball.intersects(Line)) {
             xv = (Line.getCenterX()-Ball.getCenterX())/Line.width*-3*inc;
@@ -100,7 +101,7 @@ public class AtariBreakout implements Game{
         }
         
         if (Ball.getY()>Y) {
-            // TODO switch to selection screen
+            Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
         }
 
         Ball.setFrame(Ball.getX()+xv,Ball.getY()+yv,X*0.015,X*0.015);
@@ -127,8 +128,8 @@ public class AtariBreakout implements Game{
             Line.x += 8;
         } 
         if (event.getKeyCode() == KeyEvent.VK_SPACE) {
-            // TODO switch to selection screen
-        }     
+            Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
+        }
     }
 
     public void keyReleased(KeyEvent event) {

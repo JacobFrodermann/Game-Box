@@ -18,7 +18,8 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import java.awt.Toolkit;
+
+import org.json.JSONObject;
 
 public class Pong implements Game {
     Ellipse2D Ball;
@@ -28,22 +29,16 @@ public class Pong implements Game {
     Double BallX = 190.0, BallY = 290.0;
     int P1Score = 0 , P2Score = 0;
     Clip Ping, Pong;
-    int Xamp, Yamp, Linespeed;
     List<Integer> keys;
+    JSONObject data;
 
-    public Pong() throws IOException, UnsupportedAudioFileException, LineUnavailableException{
-        Main.INSTANCE.frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-207,Toolkit.getDefaultToolkit().getScreenSize().height/2-320,415,640);
+    public Pong(JSONObject data) throws IOException, UnsupportedAudioFileException, LineUnavailableException{
+        this.data = data;
+
         keys = new ArrayList<Integer>();
-        /*try {
-            Xamp = (int) Main.INSTANCE.Settings.get("Xamp");
-            Yamp = (int) Main.INSTANCE.Settings.get("Yamp");
-            Linespeed = (int) Main.INSTANCE.Settings.get("Linespeed");
-        } catch (java.lang.NumberFormatException e1) {e1.printStackTrace();}*/
 
         Logo = ImageIO.read(Pong.class.getClassLoader().getResourceAsStream("pongLogo.png"));
         Plate = ImageIO.read(Pong.class.getClassLoader().getResourceAsStream("Plate.png"));
-
-        Main.INSTANCE.frame.setIconImage(Logo);
 
         Ball = new Ellipse2D.Double(0,0,20,20);
         Line1 = new Rectangle(180,20,40,5);
@@ -103,7 +98,7 @@ public class Pong implements Game {
             BallX = 190.0;
             BallY = 290.0;
             GenVelX();
-            VelY = -2.0*Yamp;
+            VelY = -2.0*data.getDouble("yAmp");
             P1Score += 1;
             System.out.println(P1Score+"/" + P2Score);
         }
@@ -113,7 +108,7 @@ public class Pong implements Game {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e1) {}
-            // TODO switch to selection screen
+            Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
         }
             
         if ( P2Score > 4) {
@@ -121,7 +116,7 @@ public class Pong implements Game {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e1) {}
-            // TODO switch to selection screen
+            Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
         }
 
 
@@ -159,7 +154,7 @@ public class Pong implements Game {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            // TODO switch to selection screen
+            Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
         }
     }
     public void keyReleased(KeyEvent e) {

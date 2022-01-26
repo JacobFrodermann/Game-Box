@@ -25,12 +25,13 @@ public class GameSelectionScreen implements Game {
 	Color selectionColor = new Color(255, 60, 0);
 	BufferedImage Logo;
 	int i = 0, XRow = 0;
-	int EnemyHP;
-	Boolean Homing;
-	Boolean InstantDeath;
+	boolean settings = false;
+	BufferedImage Switch, SwitchOff;
 
 	public GameSelectionScreen(JSONObject data) throws IOException {
-		games = data.getJSONArray("data");
+		games = data.getJSONArray("games");
+		Switch = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Switch.png"));
+		SwitchOff = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("SwitchOff.png"));
 		preloadedGameThumbnails = new BufferedImage[games.length()];
 		for(int i = 0; i < games.length(); i++) {
 			preloadedGameThumbnails[i] = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream(games.getJSONObject(i).getString("thumbnail")));
@@ -47,36 +48,56 @@ public class GameSelectionScreen implements Game {
 		g.setColor(sky);
 		g.fill(new Rectangle(new Point(), size));
 
-		for (int i = 0; i < games.length(); i++) {
-			XRow = ((int) Math.floor((i+1)/4))*300;
-			g.drawImage(preloadedGameThumbnails[i], 75 + XRow, 50 + i * 190 - XRow * 2, 250, 140, null);
-			if(i == selected) {
-				g.setColor(selectionColor);
-				int a = (int) Math.round(8 * Math.sin(anim));
-				g.fillPolygon(new int[] { 35 + a + XRow, 35 + a + XRow , 55 + a + XRow }, new int[] { (int) (105 + (i + animMovement) * 190) - XRow*2, (int) (135 + (i + animMovement) * 190) - XRow*2, (int) (120 + (i + animMovement) * 190 - XRow*2) }, 3);
-				g.fillPolygon(new int[] { 400 - 35 - a + XRow, 400 - 35 - a + XRow, 400 - 55 - a + XRow}, new int[] { (int) (105 + (i + animMovement) * 190) - XRow*2, (int) (135 + (i + animMovement) * 190) - XRow*2, (int) (120 + (i + animMovement) * 190) - XRow*2 }, 3);
+		if(!settings) {
+			for (int i = 0; i < games.length(); i++) {
+				XRow = ((int) Math.floor((i+1)/4))*300;
+				g.drawImage(preloadedGameThumbnails[i], 75 + XRow, 50 + i * 190 - XRow * 2, 250, 140, null);
+				if(i == selected) {
+					g.setColor(selectionColor);
+					int a = (int) Math.round(8 * Math.sin(anim));
+					g.fillPolygon(new int[] { 35 + a + XRow, 35 + a + XRow , 55 + a + XRow }, new int[] { (int) (105 + (i + animMovement) * 190) - XRow*2, (int) (135 + (i + animMovement) * 190) - XRow*2, (int) (120 + (i + animMovement) * 190 - XRow*2) }, 3);
+					g.fillPolygon(new int[] { 400 - 35 - a + XRow, 400 - 35 - a + XRow, 400 - 55 - a + XRow}, new int[] { (int) (105 + (i + animMovement) * 190) - XRow*2, (int) (135 + (i + animMovement) * 190) - XRow*2, (int) (120 + (i + animMovement) * 190) - XRow*2 }, 3);
+				}
 			}
+			anim += 0.09;
+			animMovement *= 0.9;
+		} else {
+			// TODO render settings
+			/*int i = 0;
+			Main.INSTANCE.Settings.forEach((x,y) -> {
+				g.drawString(x, 50, 50+20*i);
+				if (types.charAt(i) == 'd') {
+					g.drawString(String.valueOf((Double)y), 100, 50+20*i);
+				} else {
+					if ((Boolean)y) {
+						g.drawImage(Switch, 100, 50+20*i, null);
+					} else {
+						g.drawImage(SwitchOff, 100, 50+20*i, null);
+					}
+					
+				}
+			});*/
 		}
-		anim += 0.09;
-		animMovement *= 0.9;
 
 		return result;
 	}
 
 	public void keyPressed(KeyEvent event) {
-		if(event.getKeyCode() == KeyEvent.VK_ENTER) {
-			Main.INSTANCE.switchGame(games.getJSONObject(selected));
-		}
-		if(event.getKeyCode() == KeyEvent.VK_UP) {
-			if(selected > 0) {
-				selected--;
-				animMovement += 1;
+		if(!settings) {
+			if(event.getKeyCode() == KeyEvent.VK_ENTER) {
+				Main.INSTANCE.switchGame(games.getJSONObject(selected));
 			}
-		}
-		if(event.getKeyCode() == KeyEvent.VK_DOWN) {
-			if(selected < games.length() - 1) {
-				selected++;
-				animMovement -= 1;
+			if(event.getKeyCode() == KeyEvent.VK_UP) {
+				if(selected > 0) {
+					selected--;
+					animMovement += 1;
+				}
+			}
+			if(event.getKeyCode() == KeyEvent.VK_DOWN) {
+				if(selected < games.length() - 1) {
+					selected++;
+					animMovement -= 1;
+				}
 			}
 		}
 	}
@@ -85,14 +106,16 @@ public class GameSelectionScreen implements Game {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		for (int i = 0; i<Math.floor(games.length()*3);i++){
-			for (int j = 0;j<3;j++){
-				if (new Rectangle(3+300*i,3+190*j,250,140).contains(e.getPoint())) {
-					selected = i*3+j;
-					Main.INSTANCE.switchGame(games.getJSONObject(selected));
-				}
-				if (new Rectangle(800,620,50,50).contains(e.getPoint())) {
-					// TODO switch to settings
+		if (new Rectangle(800,620,50,50).contains(e.getPoint())) {
+			settings = !settings;
+		}
+		if(!settings) {
+			for (int i = 0; i<Math.floor(games.length()*3);i++){
+				for (int j = 0;j<3;j++){
+					if (new Rectangle(3+300*i,3+190*j,250,140).contains(e.getPoint())) {
+						selected = i*3+j;
+						Main.INSTANCE.switchGame(games.getJSONObject(selected));
+					}
 				}
 			}
 		}

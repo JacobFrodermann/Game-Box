@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -14,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -29,11 +31,10 @@ class Main {
 	
 	public static Main INSTANCE;
 
-	public JFrame frame;
-	public Canvas canvas;
-	public Game currentGame;
+	private JFrame frame;
+	private Canvas canvas;
+	private Game currentGame;
 
-	public String Types;
 	public JSONObject data;
 
 	public static void main(String[] args) throws IOException, InterruptedException {
@@ -52,9 +53,7 @@ class Main {
 	public void init() throws IOException {
 		readData();
 		frame = new JFrame();
-		frame.setTitle("GameBox");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(false);
 		frame.setBackground(Color.WHITE);
 		canvas = new Canvas();
 		frame.add(canvas);
@@ -117,11 +116,22 @@ class Main {
 			readData();
 		} catch (Exception e) {
 			e.printStackTrace();
-			//resetData();
+			resetData();
+			saveAll();
 		}
 	}
 	public void readData() throws IOException {
 		data = new JSONObject(IOUtils.toString(new FileInputStream(DATA_FILE), StandardCharsets.UTF_8));
+	}
+	public void resetData() {
+		// TODO load from resource folder
+	}
+	public void saveAll() {
+		try {
+			IOUtils.write(data.toString(), new FileOutputStream(DATA_FILE), StandardCharsets.UTF_8);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -129,11 +139,19 @@ class Main {
 		try {
 			String gameClassName = gameInfo.getString("class");
 			Class<? extends Game> game = (Class<? extends Game>) Class.forName(gameClassName);
-			// TODO set window settings
+			canvas.setPreferredSize(new Dimension(gameInfo.getInt("baseScreenSizeW"), gameInfo.getInt("baseScreenSizeH")));
+			frame.pack();
+			frame.setLocation(
+				Toolkit.getDefaultToolkit().getScreenSize().width / 2 - frame.getWidth() / 2,
+				Toolkit.getDefaultToolkit().getScreenSize().height / 2 - frame.getHeight() / 2
+			);
+			frame.setTitle("GameBox" + (gameInfo.has("name") ? " - " + gameInfo.getString("name") : ""));
+			// TODO set favicon
+			frame.setResizable(gameInfo.has("resizable") && gameInfo.getBoolean("resizable"));
 			currentGame = game.getConstructor(JSONObject.class).newInstance(gameInfo.getJSONObject("data"));
 		} catch (Exception e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(frame, "error");
+			JOptionPane.showMessageDialog(frame, "Error");
 		}
 	}
 }

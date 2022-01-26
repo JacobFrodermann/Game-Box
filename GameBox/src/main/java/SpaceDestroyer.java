@@ -3,7 +3,6 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
@@ -12,12 +11,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+
+import org.json.JSONObject;
 
 public class SpaceDestroyer implements Game {
     //Deklaration
@@ -31,12 +33,10 @@ public class SpaceDestroyer implements Game {
     Clip Boom;
     List<Rectangle> Particles;
     List<Color> Colors;
-    int EnemyHP;
-	Boolean Homing;
-	Boolean InstantDeath;
+    JSONObject data;
 
-    SpaceDestroyer() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
-        Main.INSTANCE.frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-200,Toolkit.getDefaultToolkit().getScreenSize().height/2-300,400,600);
+    public SpaceDestroyer(JSONObject data) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+        this.data = data;
         keys = new ArrayList<Integer>();
         Projektiles = new ArrayList<double[]>();
         Opponents = new ArrayList<double[]>();       
@@ -51,19 +51,10 @@ public class SpaceDestroyer implements Game {
         Boom = AudioSystem.getClip();
         Boom.open(audioInputStream);
         Colors = new ArrayList<Color>();
-        //reading settings
-        /*try {
-			EnemyHP = (int) Main.INSTANCE.Settings.get("EnemyHP");
-			Homing = (Boolean) Main.INSTANCE.Settings.get("Homing");
-			InstantDeath = (Boolean) Main.INSTANCE.Settings.get("InstantDeath");
-		} catch (java.lang.StringIndexOutOfBoundsException | java.lang.NumberFormatException e1) {e1.printStackTrace();}*/
-        if (EnemyHP < 1) {
-            EnemyHP = 10;
-        }
         //opponent creating
         for (int i = 0; i<3; i++) {
             for (int l = 0; l<6; l++) {
-                Opponents.add(new double[] {5+70*l,10+60*i,EnemyHP});
+                Opponents.add(new double[] {5+70*l,10+60*i,data.getInt("enemyHealth")});
             }
         }
     }
@@ -125,9 +116,9 @@ public class SpaceDestroyer implements Game {
         g.setColor(Color.red);
         for (int i = 0; i < Opponents.size(); i++) {
             g.drawImage(opponent,(int) Opponents.get(i)[0],(int) Opponents.get(i)[1],40,38,null);
-            if (Opponents.get(i)[2] != EnemyHP){
+            if (Opponents.get(i)[2] != data.getInt("enemyHealth")){
                 g.drawRect((int) Opponents.get(i)[0],(int) Opponents.get(i)[1]-12, 38, 8);
-                g.fillRect((int) Opponents.get(i)[0],(int) Opponents.get(i)[1]-12, 38-(int) ((38/EnemyHP)*(EnemyHP-Opponents.get(i)[2])), 8);
+                g.fillRect((int) Opponents.get(i)[0],(int) Opponents.get(i)[1]-12, 38-(int) ((38/data.getInt("enemyHealth"))*(data.getInt("enemyHealth")-Opponents.get(i)[2])), 8);
             }
         }
 
@@ -149,7 +140,7 @@ public class SpaceDestroyer implements Game {
                             }//Colision
                             break;
                     case 0: if (ShipCol.intersects(new Rectangle((int) x[0],(int) x[1],10,10))) {
-                                if(InstantDeath) {
+                                if(data.getBoolean("instantDeath")) {
                                     Dead = true;
                                 } else {
                                     PowerState --;
@@ -224,7 +215,7 @@ public class SpaceDestroyer implements Game {
             if (new Random().nextInt(360) == 0 && !Dead) {
                 double x;
                 double y;
-                if (Homing) {
+                if (data.getBoolean("homing")) {
                     x = ShipCol.getCenterX()-5 - Opponents.get(i)[0];
                     y = ShipCol.getCenterY() - Opponents.get(i)[1];
                     double Distance = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
@@ -275,7 +266,7 @@ public class SpaceDestroyer implements Game {
             }   
         }
         if (ShipCol.getY()<-30 && Opponents.size() == 0){
-            // TODO switch to selection screen
+            Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
         }
         ScreenColison();
         //g.setColor(Color.red);
@@ -297,12 +288,10 @@ public class SpaceDestroyer implements Game {
             }
         } else {
             if (e.getKeyCode() == KeyEvent.VK_ENTER || ShipCol.getCenterY()<-30) {
-                // TODO switch to selection screen
+                Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
             }
             if (e.getKeyCode() == KeyEvent.VK_SPACE || ShipCol.getCenterY()<-30) {
-                try {
-                    Main.INSTANCE.currentGame = new SpaceDestroyer();
-                } catch (IOException | UnsupportedAudioFileException | LineUnavailableException f) {}
+                // TODO reset
             }
         }
     }

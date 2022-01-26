@@ -3,17 +3,11 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -25,12 +19,11 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
 
 public class Snake implements Game {
     Clip eat;
     List<String> Read;
-    int Highscore;
     Color snake;
     BufferedImage DeadImage, Grass, Apple, SnakeHead,TreeGround, Tree1,Grass1, Tree2, Tree3, Lake;
     int i=0;
@@ -39,36 +32,21 @@ public class Snake implements Game {
     Boolean Dead = false;
     List<Integer> xkords = new ArrayList<Integer>(){{add(9);add(9);add(9);}};
     List<Integer> ykords = new ArrayList<Integer>(){{add(14);add(13);add(12);}};
-    int xmov=0,ymov=1, ticktime, helptime;
+    int xmov=0,ymov=1, helptime;
     int AppleX, AppleY;
     Rectangle part = new Rectangle(0,0,20,20), TreeGroundKol = new Rectangle(320,200,120,20);
     Rectangle Tree1Kol = new Rectangle(700,700,20,20),Tree2kol = new Rectangle(500,500,20,20);
     Rectangle LakeKol = new Rectangle(80,600,280,360), Tree3kol = new Rectangle(80,140,20,20);
     boolean ToAdd;
+    JSONObject data;
 
-    Boolean help, DeadlyLake;
+    public Snake(JSONObject data) throws IOException, LineUnavailableException, UnsupportedAudioFileException{
+        this.data = data;
 
-    public Snake() throws IOException, LineUnavailableException, UnsupportedAudioFileException{
-        if (new File("Data").exists()) {
-			Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
-		}else {
-
-			IOUtils.write("0\n3", new FileOutputStream(new File("Data")), StandardCharsets.UTF_8);
-            Read = IOUtils.readLines(new FileInputStream(new File("Data")), StandardCharsets.UTF_8);
-		}
-        /*try {
-            help = (Boolean) Main.INSTANCE.Settings.get("help");
-            DeadlyLake = (Boolean) Main.INSTANCE.Settings.get("DeadlyLake");
-            ticktime  = (int) Main.INSTANCE.Settings.get("ticktime");
-        } catch (java.lang.NumberFormatException e1) {e1.printStackTrace();}*/
-
-        System.out.println("Deadly Lake = " + DeadlyLake);
-
-        if (!DeadlyLake) {
+        if (!data.getBoolean("deadlyLake")) {
             LakeKol.setLocation(10000, 0);
         }
 
-        Highscore = Integer.valueOf(Read.get(1));
         DeadImage = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Dead.png"));
         Grass = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Grass.png"));
         Apple = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Apple.png"));
@@ -78,15 +56,9 @@ public class Snake implements Game {
         Tree2 = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Tree2.png"));
         Tree3 = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Tree3.png"));
         Lake = ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Lake.png"));
-        Main.INSTANCE.frame.setIconImage(ImageIO.read(Snake.class.getClassLoader().getResourceAsStream("Snake Logo.png")));
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Main.baInputStream(Snake.class.getClassLoader().getResourceAsStream("Eat.wav")));
         eat = AudioSystem.getClip();
         eat.open(audioInputStream);
-        if (Toolkit.getDefaultToolkit().getScreenSize().height < 1000) {
-            Main.INSTANCE.frame.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width/2-450,0,996,999);
-        } else {
-            Main.INSTANCE.frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-450,(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-450,996,999);
-        }
         GenApplePos();
     }
 
@@ -102,7 +74,7 @@ public class Snake implements Game {
         g.drawImage(Grass, 400, 600, null);
         g.drawImage(Grass, 800, 600, null);
         g.setColor(Color.BLACK);
-        g.drawString("Highscore: " + String.valueOf(Highscore), 10, 20);
+        g.drawString("Highscore: " + String.valueOf(data.getInt("highscore")), 10, 20);
         g.drawString(String.valueOf(xkords.size()), 100,20);
         g.drawImage(Lake, 80,600, null);
         g.drawImage(Apple, AppleX*20-20, AppleY*20-20, null);
@@ -146,7 +118,7 @@ public class Snake implements Game {
         g.drawImage(Tree3, 45, 28, null);
         
 
-        if (helptime > 0 && help) {
+        if (helptime > 0 && data.getBoolean("help")) {
             helptime --;
             part.setBounds(AppleX*20-20,AppleY*20-20, 20, 20);
             g.setColor(Color.RED);
@@ -159,7 +131,7 @@ public class Snake implements Game {
         }
 
         try {
-            Thread.sleep(ticktime);
+            Thread.sleep(data.getInt("ticktime"));
         } catch (InterruptedException e) {}
         if (!Dead) {
             xkords.add(xkords.get(xkords.size()-1)+xmov);
@@ -216,14 +188,11 @@ public class Snake implements Game {
 		}
         } else {
             if (event.getKeyCode() == KeyEvent.VK_ENTER) {
-                // TODO switch to selection screen
-                if (Highscore < xkords.size()) {
-                    try {
-                        try {
-                            IOUtils.write(String.valueOf(Read.get(0) + "\n" + xkords.size()), new FileOutputStream(new File("Data")), StandardCharsets.UTF_8);
-                        } catch (FileNotFoundException e){}
-                    } catch(IOException e1) {}
+                if (data.getInt("highscore") < xkords.size()) {
+                    data.put("highscore", xkords.size());
+                    Main.INSTANCE.saveAll();
                 }
+                Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
             }
         }
     }
