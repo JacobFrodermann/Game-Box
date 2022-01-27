@@ -31,7 +31,7 @@ public class GameSelectionScreen implements Game {
 	JSONObject data;
 
 	public GameSelectionScreen(JSONObject data) throws IOException {
-		data = this.data;
+		this.data = data;
 		games = data.getJSONArray("games");
 		Switch = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Switch.png"));
 		SwitchOff = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("SwitchOff.png"));
