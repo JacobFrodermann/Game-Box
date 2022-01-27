@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 
@@ -27,8 +28,10 @@ public class GameSelectionScreen implements Game {
 	int i = 0, XRow = 0;
 	boolean settings = false;
 	BufferedImage Switch, SwitchOff;
+	JSONObject data;
 
 	public GameSelectionScreen(JSONObject data) throws IOException {
+		data = this.data;
 		games = data.getJSONArray("games");
 		Switch = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Switch.png"));
 		SwitchOff = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("SwitchOff.png"));
@@ -61,10 +64,11 @@ public class GameSelectionScreen implements Game {
 			}
 			anim += 0.09;
 			animMovement *= 0.9;
-		} else {
-			// TODO render settings
-			/*int i = 0;
-			Main.INSTANCE.Settings.forEach((x,y) -> {
+		} else {print(data.keys());
+			//for(String x:data.keys()) {
+				
+			//}
+			/*((x,y) -> {
 				g.drawString(x, 50, 50+20*i);
 				if (types.charAt(i) == 'd') {
 					g.drawString(String.valueOf((Double)y), 100, 50+20*i);
@@ -80,6 +84,10 @@ public class GameSelectionScreen implements Game {
 		}
 
 		return result;
+	}
+
+	private void print(Object obj) {
+		System.out.println(obj);
 	}
 
 	public void keyPressed(KeyEvent event) {

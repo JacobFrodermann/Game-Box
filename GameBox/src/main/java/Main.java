@@ -20,8 +20,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import com.google.common.base.Charsets;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
@@ -124,7 +127,11 @@ class Main {
 		data = new JSONObject(IOUtils.toString(new FileInputStream(DATA_FILE), StandardCharsets.UTF_8));
 	}
 	public void resetData() {
-		// TODO load from resource folder
+		try {
+			IOUtils.write(Main.class.getClassLoader().getResources("Default.dat").toString(), new FileOutputStream("Data.dat"), Charsets.UTF_8);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	public void saveAll() {
 		try {
@@ -146,7 +153,7 @@ class Main {
 				Toolkit.getDefaultToolkit().getScreenSize().height / 2 - frame.getHeight() / 2
 			);
 			frame.setTitle("GameBox" + (gameInfo.has("name") ? " - " + gameInfo.getString("name") : ""));
-			// TODO set favicon
+			frame.setIconImage(ImageIO.read(Main.class.getResourceAsStream(gameInfo.getString("icon"))));
 			frame.setResizable(gameInfo.has("resizable") && gameInfo.getBoolean("resizable"));
 			currentGame = game.getConstructor(JSONObject.class).newInstance(gameInfo.getJSONObject("data"));
 		} catch (Exception e) {

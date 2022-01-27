@@ -291,7 +291,7 @@ public class SpaceDestroyer implements Game {
                 Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
             }
             if (e.getKeyCode() == KeyEvent.VK_SPACE || ShipCol.getCenterY()<-30) {
-                // TODO reset
+                Main.INSTANCE.resetData();
             }
         }
     }

@@ -27,7 +27,16 @@ public class AtariBreakout implements Game{
     float LineColor = 1f; 
     BufferedImage Victory;
     int removed = 0;
+    JSONObject data;
+    Boolean simple;
+	Boolean rgb;
+
     public AtariBreakout(JSONObject data) {
+        data = this.data;
+
+        rgb = data.getBoolean("rgb");
+        simple = data.getString("mode").equals("simple"); 
+
         try {Victory = ImageIO.read(AtariBreakout.class.getClassLoader().getResourceAsStream("Victory.png"));} catch (IOException e) {e.printStackTrace();}
         int xF = (int) (X/9.5);
         for (int i = 0;i<3;i++) {
@@ -56,13 +65,14 @@ public class AtariBreakout implements Game{
         g.setColor(new Color(14,200,181));
 
         if (Ball.getBounds().intersects(Line)) {
-            double x = Ball.getCenterX() - Line.getCenterX();
-            xv = (x/Line.width)*8*Speed*2;
-            yv = Math.sqrt(Math.pow(Speed,2)-Math.pow(xv,2))*-1;
-            if (Double.isNaN(yv)) {
-                yv = xv;
+            if (simple){yv*=-1;}else{
+                double x = Ball.getCenterX() - Line.getCenterX();
+                xv = (x/Line.width)*8*Speed*2;
+                yv = Math.sqrt(Math.pow(Speed,2)-Math.pow(xv,2))*-1;
+                if (Double.isNaN(yv)) {
+                    yv = xv;
+                }
             }
-           print(Speed);
         }
 
         for (int i = 0;i<3;i++) {
@@ -106,7 +116,7 @@ public class AtariBreakout implements Game{
 
         Ball.setFrame(Ball.getX()+xv,Ball.getY()+yv,X*0.015,X*0.015);
 
-        LineColor += 0.001;
+        if (rgb){LineColor += 0.001;}
         g.setColor(new Color(Color.HSBtoRGB(LineColor, 1, 0.95f)));
         g.fill(Line);
 

@@ -150,7 +150,9 @@ public class FlappyBird implements Game {
 			}
 		}
 		if (event.getKeyCode() == KeyEvent.VK_SPACE && ((BirdY > 600 || BirdY < -20) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper))) {
-			// TODO reset
+			Score = 0;
+			BirdY =300;
+			VelY = 0;
 		}
 	}
 	public void keyReleased(KeyEvent event) {
