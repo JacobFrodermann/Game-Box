@@ -34,7 +34,7 @@ class Main {
 	
 	public static Main INSTANCE;
 
-	private JFrame frame;
+	public JFrame frame;
 	private Canvas canvas;
 	private Game currentGame;
 
@@ -124,9 +124,14 @@ class Main {
 		}
 	}
 	public void readData() throws IOException {
-		data = new JSONObject(IOUtils.toString(new FileInputStream(DATA_FILE), StandardCharsets.UTF_8));
-	}
-	public void resetData() {
+		try {
+			data = new JSONObject(IOUtils.toString(new FileInputStream(DATA_FILE), StandardCharsets.UTF_8));
+		} catch (IOException e) {
+			e.printStackTrace();
+			resetData();
+		}
+		}
+	public void resetData(){
 		try {
 			IOUtils.write(Main.class.getClassLoader().getResources("Default.dat").toString(), new FileOutputStream("Data.dat"), Charsets.UTF_8);
 		} catch (IOException e) {

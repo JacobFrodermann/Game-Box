@@ -32,10 +32,11 @@ public class AtariBreakout implements Game{
 	Boolean rgb;
 
     public AtariBreakout(JSONObject data) {
-        data = this.data;
-
+        this.data = data;
+        Main.INSTANCE.frame.setBounds(0,0, X,Y);
+        Main.INSTANCE.frame.setAlwaysOnTop(true);
         rgb = data.getBoolean("rgb");
-        simple = data.getString("mode").equals("simple"); 
+        simple = data.getString("mode").equals("simple");
 
         try {Victory = ImageIO.read(AtariBreakout.class.getClassLoader().getResourceAsStream("Victory.png"));} catch (IOException e) {e.printStackTrace();}
         int xF = (int) (X/9.5);
@@ -100,6 +101,7 @@ public class AtariBreakout implements Game{
         }
 
         if(Ball.getY()>Y) {
+            Main.INSTANCE.frame.setAlwaysOnTop(false);
             Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
         }
         if (Ball.intersects(Line)) {
@@ -111,6 +113,7 @@ public class AtariBreakout implements Game{
         }
         
         if (Ball.getY()>Y) {
+            Main.INSTANCE.frame.setAlwaysOnTop(false);
             Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
         }
 
@@ -138,6 +141,7 @@ public class AtariBreakout implements Game{
             Line.x += 8;
         } 
         if (event.getKeyCode() == KeyEvent.VK_SPACE) {
+            Main.INSTANCE.frame.setAlwaysOnTop(false);
             Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
         }
     }

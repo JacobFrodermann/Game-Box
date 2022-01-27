@@ -8,7 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Iterator;
+
 
 import javax.imageio.ImageIO;
 
@@ -29,9 +29,11 @@ public class GameSelectionScreen implements Game {
 	boolean settings = false;
 	BufferedImage Switch, SwitchOff;
 	JSONObject data;
+	BufferedImage gear;
 
 	public GameSelectionScreen(JSONObject data) throws IOException {
 		this.data = data;
+		gear = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Gear.png"));
 		games = data.getJSONArray("games");
 		Switch = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Switch.png"));
 		SwitchOff = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("SwitchOff.png"));
@@ -50,6 +52,7 @@ public class GameSelectionScreen implements Game {
 		// Rendering
 		g.setColor(sky);
 		g.fill(new Rectangle(new Point(), size));
+		g.drawImage(gear, 710,20, 50,50 ,null);
 
 		if(!settings) {
 			for (int i = 0; i < games.length(); i++) {
@@ -64,7 +67,10 @@ public class GameSelectionScreen implements Game {
 			}
 			anim += 0.09;
 			animMovement *= 0.9;
-		} else {print(data.keys());
+		} else {
+			String[] arr = data.toMap().entrySet().toArray()[0].toString().substring(7).split("}, {");
+			print(arr[0]);
+
 			//for(String x:data.keys()) {
 				
 			//}
@@ -114,7 +120,7 @@ public class GameSelectionScreen implements Game {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (new Rectangle(800,620,50,50).contains(e.getPoint())) {
+		if (new Rectangle(710,20,50,50).contains(e.getPoint())) {
 			settings = !settings;
 		}
 		if(!settings) {
