@@ -6,7 +6,7 @@
           "thumbnail": "Flappy.png",
           "data": {
             "jumpHeight": 4,
-            "highscore": 0,2
+            "highscore": 2,
             "gravity": 0.125,
             "rotationFactor": 1
           },
@@ -24,6 +24,8 @@
           "name": "Pong",
           "icon": "pongLogo.png",
           "class": "Pong"
+          "baseScreenSizeW": 400,
+          "baseScreenSizeH": 600
         },
         {
           "thumbnail": "Snake.png",

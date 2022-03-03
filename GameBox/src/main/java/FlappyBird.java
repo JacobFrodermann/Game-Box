@@ -77,7 +77,7 @@ public class FlappyBird implements Game {
 		// Rendering
 		g.setColor(sky);
 		g.fill(new Rectangle(new Point(), size));
-		g.drawImage(Clouds, (int) CloudX, 510, null);
+		g.drawImage(Clouds, (int) CloudX, 560, null);
 		CloudX += 0.25;
 		if (CloudX==100) {CloudX=-1000;}
 		pipe1X = (200-Score/2)+i;
