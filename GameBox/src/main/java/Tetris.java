@@ -18,9 +18,16 @@ import java.awt.Graphics2D;
 public class Tetris implements Game{
 
 
-    TetrisBlock[][] blocks = new TetrisBlock[10][22];
-    Color gray = new Color(0x32333b),gray2 = new Color(0x212124), gray3 = new Color(0x39393d);
-    public Tetris(JSONObject data){System.out.println("h");}
+    Color[][] blocks = new Color[10][22], moving = new Color[4][4];
+    Color gray = new Color(0x32333b),gray2 = new Color(0x212124);
+
+    public Tetris(JSONObject data){
+        for (int x = 0;x < blocks.length;x++) {
+            for (int y = 0;y < blocks[0].length;y++) {
+                blocks[x][y] = gray2;
+            }
+        }
+    }
 
     public BufferedImage draw(Dimension size) {
         BufferedImage result = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
@@ -32,15 +39,14 @@ public class Tetris implements Game{
         g.fillRect(0, 0, 25, 660);
         g.fillRect(325, 0, 25, 660);
         int i = 0;
-        for (TetrisBlock[] x:blocks) {
+        for (Color[] x:blocks) {
             int j = 0;
-            for (TetrisBlock y:x) {
-                if (y == null) {
-                    g.setColor(gray2);
-                    g.fillRect(25+30*i, 30*j, 30, 30);
-                    g.setColor(gray3);
-                    g.fillRect(30+30*i, 5+30*j, 20, 20);
-                }
+            for (Color y:x) {
+                g.setColor(y);
+                g.fillRect(25+30*i, 30*j, 30, 30);
+                g.setColor(y.darker());
+                g.fillRect(30+30*i, 5+30*j, 20, 20);
+                j++;
             }
             i++;
         }
