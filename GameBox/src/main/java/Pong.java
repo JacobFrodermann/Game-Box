@@ -21,6 +21,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.json.JSONObject;
 
+
 public class Pong implements Game {
     Ellipse2D Ball;
     Rectangle Line1, Line2;
@@ -168,12 +169,10 @@ public class Pong implements Game {
     }
     @Override
     public void mouseClicked(MouseEvent e) {
-         
         
     }
     @Override
     public void mouseMoved(MouseEvent e) {
-         
         
     }
 }

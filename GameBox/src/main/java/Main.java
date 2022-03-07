@@ -24,8 +24,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import com.google.common.base.Charsets;
-
+import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 
@@ -133,7 +132,7 @@ class Main {
 		}
 	public void resetData(){
 		try {
-			IOUtils.write(Main.class.getClassLoader().getResources("Default.dat").toString(), new FileOutputStream("Data.dat"), Charsets.UTF_8);
+			IOUtils.write(Main.class.getClassLoader().getResources("Default.dat").toString(), new FileOutputStream("Data.dat"), StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

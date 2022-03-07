@@ -24,8 +24,6 @@
           "name": "Pong",
           "icon": "pongLogo.png",
           "class": "Pong"
-          "baseScreenSizeW": 400,
-          "baseScreenSizeH": 600
         },
         {
           "thumbnail": "Snake.png",
@@ -66,7 +64,16 @@
           "baseScreenSizeH": 600,
           "icon": "AtariIcon.png",
           "resizable": true
-        }
+        },
+        {
+          "thumbnail": "Flappy.png",
+          "data": {"h":true},
+          "name": "Tetris",
+          "class": "Tetris",
+          "baseScreenSizeW": 350,
+          "icon": "The Bird.png",
+          "baseScreenSizeH": 660
+        },
       ]
     },
     "class": "GameSelectionScreen",

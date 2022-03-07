@@ -65,6 +65,15 @@
           "icon": "AtariIcon.png",
           "resizable": true
         }
+        {
+          "thumbnail": "Flappy.png",
+          "data": {},
+          "name": "Tetris",
+          "class": "Tetris",
+          "baseScreenSizeW": 350,
+          "icon": "The Bird.png",
+          "baseScreenSizeH": 660
+        },
       ]
     },
     "class": "GameSelectionScreen",
