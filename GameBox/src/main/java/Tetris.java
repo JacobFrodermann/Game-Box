@@ -14,9 +14,9 @@ import org.json.JSONObject;
 public class Tetris implements Game{
 
 
-	Color[][] blocks = new Color[10][22], moving = new Color[4][4];
+	Color[][] blocks = new Color[10][23], moving = new Color[4][4];
 	Color gray = new Color(0x32333b),gray2 = new Color(0x212124);
-	int x=2, y=2;
+	int x=2, y=0;
 
 	public Tetris(JSONObject data){
 		newPart();
@@ -24,6 +24,9 @@ public class Tetris implements Game{
 			for (int y = 0;y < blocks[0].length;y++) {
 				blocks[x][y] = gray2;
 			}
+		}
+		for (int x = 0;x < blocks.length;x++) {
+			blocks[x][22]=Color.CYAN;
 		}
 	}
 
@@ -52,23 +55,30 @@ public class Tetris implements Game{
 		for (Color[] X:moving) {
 			int j = 0;
 			for (Color Y:X) {
-				if(Y==null){Y=gray2;}
-				g.setColor(Y);
-				g.fillRect(25+30*i+x, 30*j, 30, 30);
-				g.setColor(Y.darker());
-				g.fillRect(30+30*i+x, 5+30*j, 20, 20);
+				if(Y!=null){
+					g.setColor(Y);
+					g.fillRect(25+30*(i+x), 30*(j+y), 30, 30);
+					g.setColor(Y.darker());
+					g.fillRect(30+30*(i+x), 5+30*(j+y), 20, 20);
+				}
+				
 				j++;
 			}
 			i++;
 		}
-
+		y++;
+		if(checkPlace()){
+			place();
+		}        
+		try {Thread.sleep(160l);} catch (InterruptedException e) {e.printStackTrace();}
 		return result;
 	}
 
 	
 	public void keyPressed(KeyEvent event) throws IOException {
-		
-		
+		if(event.getKeyCode() == KeyEvent.VK_SPACE){rotate();}
+		if(event.getKeyCode() == KeyEvent.VK_D){x++;}
+		if(event.getKeyCode() == KeyEvent.VK_A){x--;}
 	}
 
 	
@@ -90,8 +100,9 @@ public class Tetris implements Game{
 	}
 	void newPart(){
 		Color c =Color.red;
-		switch(new Random().nextInt(4)){
-			case 1://umgedretes T
+		moving = new Color[4][4];
+		switch(new Random().nextInt(3)){
+			case 0://umgedretes T
 				moving[2][0]=c;
 				moving[2][1]=c;
 				moving[2][2]=c;
@@ -99,19 +110,19 @@ public class Tetris implements Game{
 				moving[2][3]=c;
 				moving[3][3]=c;
 				break;
-			case 2://|
+			case 1://|
 				moving[1][0]=c;
 				moving[1][1]=c;
 				moving[1][2]=c;
 				moving[1][3]=c;
 				break;
-			case 3://block
+			case 2://block
 				moving[1][1]=c;
 				moving[2][1]=c;
 				moving[1][2]=c;
 				moving[2][2]=c;
 				break;
-			case 4://+
+			case 3://+
 				moving[1][0]=c;
 				moving[0][1]=c;
 				moving[1][1]=c;
@@ -122,15 +133,45 @@ public class Tetris implements Game{
 	}
 	void rotate(){
 		for(int i=0; i<moving.length; i++) {  
-			for(int j=i; j<moving[i].length; j++)  {  
-			//checks if i is not equal to j because in transpose moving diagonal elements will not swap  
-			if(i!=j)  {  
+			for(int j=i; j<moving[i].length; j++)  {   
 				//swapping elements  
 				Color temp = moving[i][j];  
 				moving[i][j]=moving[j][i];  
 				moving[j][i]=temp;  
-				}  
+				
 			}  
 		}  
+	}
+	boolean checkPlace() {try{
+		int i = 0;
+		for(Color[]x:moving){
+			int j = 0;
+			for(Color y:x){
+				if((y == null)&&(blocks[i+this.x][j+this.y]!=gray2)) {
+					return true;
+				}
+				j++;
+			}
+			i++;
+		}} catch(IndexOutOfBoundsException e){place();}
+		return false;
+	}
+	void place(){
+		int i = 0;
+		for(Color[]x:moving){
+			int j = 0;
+			for(Color y:x){
+				if(y!=null){
+					blocks[i+this.x-1][this.y+j] = y;
+				}
+				j++;
+			}
+			i++;
+		}
+		moving = null;
+		newPart();
+		x = 1;
+		y = 0;
+		
 	}
 }
