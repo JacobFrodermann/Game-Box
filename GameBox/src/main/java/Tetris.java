@@ -1,4 +1,3 @@
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -66,7 +65,11 @@ public class Tetris implements Game{
 			}
 			i++;
 		}
-		y++;
+		if (!checkPlace()){
+			y++;
+		} else {
+			place();
+		}
 		if(checkPlace()){
 			place();
 		}        
@@ -132,28 +135,45 @@ public class Tetris implements Game{
 		}
 	}
 	void rotate(){
-		for(int i=0; i<moving.length; i++) {  
-			for(int j=i; j<moving[i].length; j++)  {   
-				//swapping elements  
-				Color temp = moving[i][j];  
-				moving[i][j]=moving[j][i];  
-				moving[j][i]=temp;  
-				
-			}  
-		}  
+	Color[][] temp = new Color[4][4], h = new Color[4][4];
+	temp[0][0] = moving[0][3];
+    temp[1][0]= moving[0][2];
+    temp[2][0]= moving[0][1];
+    temp[3][0]= moving[0][0];
+
+    temp[3][1]= moving[1][0];
+    temp[3][2]= moving[2][0];
+    temp[3][3]= moving[3][0];
+
+    temp[2][3]= moving[3][1];
+    temp[1][3]= moving[3][2];
+    temp[0][3]= moving[3][3];
+
+    temp[1][1]= moving[1][2];
+    temp[2][1]= moving[1][1];
+    temp[1][2] = moving[2][2];
+    temp[2][2] = moving[2][1];
+
+    temp[0][1]=moving[1][3];
+    temp[0][2]=moving[2][3];
+	h = moving;
+	moving = temp;
+	if(checkPlace()){
+		moving = h;
 	}
-	boolean checkPlace() {try{
+	}
+	boolean checkPlace() {
 		int i = 0;
 		for(Color[]x:moving){
 			int j = 0;
 			for(Color y:x){
-				if((y == null)&&(blocks[i+this.x][j+this.y]!=gray2)) {
+				try{if((y == null)&&(blocks[i+this.x][j+this.y]!=gray2)) {//for jedes bewegende wenn bewegende feld = 0 und block an der Stelle != 0
 					return true;
-				}
+				}} catch(IndexOutOfBoundsException e){}
 				j++;
 			}
 			i++;
-		}} catch(IndexOutOfBoundsException e){place();}
+		}
 		return false;
 	}
 	void place(){
@@ -162,7 +182,7 @@ public class Tetris implements Game{
 			int j = 0;
 			for(Color y:x){
 				if(y!=null){
-					blocks[i+this.x-1][this.y+j] = y;
+					blocks[i+this.x][this.y+j] = y;
 				}
 				j++;
 			}
