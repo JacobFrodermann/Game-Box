@@ -13,8 +13,9 @@ import org.json.JSONObject;
 public class Tetris implements Game{
 
 
-	Color[][] blocks = new Color[10][23], moving = new Color[4][4];
-	Color gray = new Color(0x32333b),gray2 = new Color(0x212124);
+	Color[][] blocks = new Color[10][23];
+	Boolean[][] moving = new Boolean[4][4];
+	Color gray = new Color(0x32333b),gray2 = new Color(0x212124), mc;
 	int x=2, y=0;
 
 	public Tetris(JSONObject data){
@@ -51,13 +52,13 @@ public class Tetris implements Game{
 			i++;
 		}
 		i=0;
-		for (Color[] X:moving) {
+		for (Boolean[] X:moving) {
 			int j = 0;
-			for (Color Y:X) {
-				if(Y!=null){
-					g.setColor(Y);
+			for (Boolean Y:X) {
+				if(Y != null){
+					g.setColor(mc);
 					g.fillRect(25+30*(i+x), 30*(j+y), 30, 30);
-					g.setColor(Y.darker());
+					g.setColor(mc.darker());
 					g.fillRect(30+30*(i+x), 5+30*(j+y), 20, 20);
 				}
 				
@@ -102,40 +103,40 @@ public class Tetris implements Game{
 		
 	}
 	void newPart(){
-		Color c =Color.red;
-		moving = new Color[4][4];
+		mc = Color.getHSBColor(new Random().nextInt(360), 100, 100);
+		moving = new Boolean[4][4];
 		switch(new Random().nextInt(3)){
 			case 0://umgedretes T
-				moving[2][0]=c;
-				moving[2][1]=c;
-				moving[2][2]=c;
-				moving[1][3]=c;
-				moving[2][3]=c;
-				moving[3][3]=c;
+				moving[2][0]=true;
+				moving[2][1]=true;
+				moving[2][2]=true;
+				moving[1][3]=true;
+				moving[2][3]=true;
+				moving[3][3]=true;
 				break;
 			case 1://|
-				moving[1][0]=c;
-				moving[1][1]=c;
-				moving[1][2]=c;
-				moving[1][3]=c;
+				moving[1][0]=true;
+				moving[1][1]=true;
+				moving[1][2]=true;
+				moving[1][3]=true;
 				break;
-			case 2://block
-				moving[1][1]=c;
-				moving[2][1]=c;
-				moving[1][2]=c;
-				moving[2][2]=c;
+			case 2://blotruek
+				moving[1][1]=true;
+				moving[2][1]=true;
+				moving[1][2]=true;
+				moving[2][2]=true;
 				break;
 			case 3://+
-				moving[1][0]=c;
-				moving[0][1]=c;
-				moving[1][1]=c;
-				moving[2][1]=c;
-				moving[1][2]=c;
+				moving[1][0]=true;
+				moving[0][1]=true;
+				moving[1][1]=true;
+				moving[2][1]=true;
+				moving[1][2]=true;
 				break;
 		}
 	}
 	void rotate(){
-	Color[][] temp = new Color[4][4], h = new Color[4][4];
+	Boolean[][] temp = new Boolean[4][4], h = new Boolean[4][4];
 	temp[0][0] = moving[0][3];
     temp[1][0]= moving[0][2];
     temp[2][0]= moving[0][1];
@@ -164,10 +165,10 @@ public class Tetris implements Game{
 	}
 	boolean checkPlace() {
 		int i = 0;
-		for(Color[]x:moving){
+		for(Boolean[]x:moving){
 			int j = 0;
-			for(Color y:x){
-				try{if((y == null)&&(blocks[i+this.x][j+this.y]!=gray2)) {//for jedes bewegende wenn bewegende feld = 0 und block an der Stelle != 0
+			for(Boolean y:x){
+				try{if((y == null)&&check(this.x+i, this.y+j)) {//for jedes bewegende wenn bewegende feld = 0 und block an der Stelle != 0
 					return true;
 				}} catch(IndexOutOfBoundsException e){}
 				j++;
@@ -178,11 +179,11 @@ public class Tetris implements Game{
 	}
 	void place(){
 		int i = 0;
-		for(Color[]x:moving){
+		for(Boolean[]row:moving){
 			int j = 0;
-			for(Color y:x){
-				if(y!=null){
-					blocks[i+this.x][this.y+j] = y;
+			for(Boolean el:row){
+				if(el!=null){
+					blocks[i+this.x][this.y+j] = mc;
 				}
 				j++;
 			}
@@ -193,5 +194,12 @@ public class Tetris implements Game{
 		x = 1;
 		y = 0;
 		
+	}
+	boolean check(int x, int y){
+		if(blocks[x][y] == gray2) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 }
