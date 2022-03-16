@@ -89,8 +89,11 @@ public class Tetris implements Game{
 
 	
 	public void mouseClicked(MouseEvent e) {
-		
-		
+		y++;
+		if(checkPlace()){
+			y--;
+			place();
+		}
 	}
 
 	
