@@ -1,1 +1,0 @@
-import java.awt.Color;public class TetrisBlock {int x,y;Color c,dc;TetrisBlock(int x, int y,Color c) {this.c = c;dc = c.darker();this.x = x;this.y = y;}}
