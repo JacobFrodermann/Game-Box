@@ -17,6 +17,7 @@ public class Tetris implements Game{
 	Boolean[][] moving = new Boolean[4][4];
 	Color gray = new Color(0x32333b),gray2 = new Color(0x212124), mc;
 	int x=2, y=0;
+	Boolean gameOver;
 
 	public Tetris(JSONObject data){
 		newPart();
@@ -66,6 +67,13 @@ public class Tetris implements Game{
 			}
 			i++;
 		}
+		for (Color[]x:blocks) {
+			if(x[0] != gray2) {
+				gameOver = true;
+			}
+		}
+
+
 		if (!checkPlace()){
 			y++;
 		} else {
@@ -139,32 +147,32 @@ public class Tetris implements Game{
 		}
 	}
 	void rotate(){
-	Boolean[][] temp = new Boolean[4][4], h = new Boolean[4][4];
-	temp[0][0] = moving[0][3];
-    temp[1][0]= moving[0][2];
-    temp[2][0]= moving[0][1];
-    temp[3][0]= moving[0][0];
+		Boolean[][] temp = new Boolean[4][4], h = new Boolean[4][4];
+		temp[0][0] = moving[0][3];
+		temp[1][0]= moving[0][2];
+		temp[2][0]= moving[0][1];
+		temp[3][0]= moving[0][0];
 
-    temp[3][1]= moving[1][0];
-    temp[3][2]= moving[2][0];
-    temp[3][3]= moving[3][0];
+		temp[3][1]= moving[1][0];
+		temp[3][2]= moving[2][0];
+		temp[3][3]= moving[3][0];
 
-    temp[2][3]= moving[3][1];
-    temp[1][3]= moving[3][2];
-    temp[0][3]= moving[3][3];
+		temp[2][3]= moving[3][1];
+		temp[1][3]= moving[3][2];
+		temp[0][3]= moving[3][3];
 
-    temp[1][1]= moving[1][2];
-    temp[2][1]= moving[1][1];
-    temp[1][2] = moving[2][2];
-    temp[2][2] = moving[2][1];
+		temp[1][1]= moving[1][2];
+		temp[2][1]= moving[1][1];
+		temp[1][2] = moving[2][2];
+		temp[2][2] = moving[2][1];
 
-    temp[0][1]=moving[1][3];
-    temp[0][2]=moving[2][3];
-	h = moving;
-	moving = temp;
-	if(checkPlace()){
-		moving = h;
-	}
+		temp[0][1]=moving[1][3];
+		temp[0][2]=moving[2][3];
+		h = moving;
+		moving = temp;
+		if(checkPlace()){
+			moving = h;
+		}
 	}
 	boolean checkPlace() {
 		int i = 0;
