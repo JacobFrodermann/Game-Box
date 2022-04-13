@@ -20,30 +20,44 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 class Main {
 	private static final File DATA_FILE = new File("Data.dat");
 	
 	public static Main INSTANCE;
 
+	Logger log;
+
 	public JFrame frame;
 	private Canvas canvas;
 	private Game currentGame;
+	private String[] gameNames = new String[]{
+		"GameSelectionScreen",
+		"FlappyBird",
+		"Pong",
+		"Snake",
+		"SpaceDestroyer",
+		"Tetris"
+	};
 
 	public JSONObject data;
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		INSTANCE = new Main();
 		INSTANCE.init();
-		while(true) {
-			render(INSTANCE.canvas, INSTANCE.draw(INSTANCE.canvas.getSize()));
-			Thread.sleep(1000 / 60);
+		if (INSTANCE.currentGame != null) {
+			while(true) {
+				render(INSTANCE.canvas, INSTANCE.draw(INSTANCE.canvas.getSize()));
+				Thread.sleep(1000 / 60);
+			}
 		}
 	}
 
@@ -52,6 +66,9 @@ class Main {
 	}
 
 	public void init() throws IOException {
+		log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+		log.setLevel(Level.ALL);
+		log.severe(" Test");
 		readData();
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -86,7 +103,7 @@ class Main {
 			public void mouseEntered(MouseEvent e) {}
 			public void mouseExited(MouseEvent e) {}
 		});
-		switchGame(data.getJSONObject("selectionScreen"));
+		switchGame(0);
 		frame.setVisible(true);
 		canvas.createBufferStrategy(2);
 		canvas.requestFocus();
@@ -128,7 +145,7 @@ class Main {
 			e.printStackTrace();
 			resetData();
 		}
-		}
+	}
 	public void resetData(){
 		try {
 			IOUtils.write(Main.class.getClassLoader().getResources("Default.dat").toString(), new FileOutputStream("Data.dat"), StandardCharsets.UTF_8);
@@ -145,22 +162,23 @@ class Main {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void switchGame(JSONObject gameInfo) {
+	public void switchGame(int which) {
 		try {
-			String gameClassName = gameInfo.getString("class");
-			Class<? extends Game> game = (Class<? extends Game>) Class.forName(gameClassName);
-			canvas.setPreferredSize(new Dimension(gameInfo.getInt("baseScreenSizeW"), gameInfo.getInt("baseScreenSizeH")));
+			Class<? extends Game> game = (Class<? extends Game>) Class.forName(gameNames[which]);
 			frame.pack();
 			frame.setLocation(
 				Toolkit.getDefaultToolkit().getScreenSize().width / 2 - frame.getWidth() / 2,
 				Toolkit.getDefaultToolkit().getScreenSize().height / 2 - frame.getHeight() / 2
 			);
-			frame.setTitle("GameBox" + (gameInfo.has("name") ? " - " + gameInfo.getString("name") : ""));
-			frame.setIconImage(ImageIO.read(Main.class.getResourceAsStream(gameInfo.getString("icon"))));
-			frame.setResizable(gameInfo.has("resizable") && gameInfo.getBoolean("resizable"));
-			currentGame = game.getConstructor(JSONObject.class).newInstance(gameInfo.getJSONObject("data"));
+			try {
+				currentGame = game.getConstructor(JSONObject.class).newInstance(log);
+			}catch (NoSuchMethodException e) {
+				log.fine("Faliure of default launch of Game Selection Screen");
+				currentGame = new GameSelectionScreen(gameNames,log);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
+
 			JOptionPane.showMessageDialog(frame, "Error");
 		}
 	}

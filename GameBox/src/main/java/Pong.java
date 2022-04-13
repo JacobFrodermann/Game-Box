@@ -109,7 +109,7 @@ public class Pong implements Game {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e1) {}
-            Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
+            Main.INSTANCE.switchGame(0);
         }
             
         if ( P2Score > 4) {
@@ -117,7 +117,7 @@ public class Pong implements Game {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e1) {}
-            Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
+            Main.INSTANCE.switchGame(0);
         }
 
 
@@ -155,7 +155,7 @@ public class Pong implements Game {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
+            Main.INSTANCE.switchGame(0);
         }
     }
     public void keyReleased(KeyEvent e) {

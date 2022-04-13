@@ -64,7 +64,7 @@
           "baseScreenSizeH": 600,
           "icon": "AtariIcon.png",
           "resizable": true
-        }
+        },
         {
           "thumbnail": "Flappy.png",
           "data": {},
@@ -73,7 +73,7 @@
           "baseScreenSizeW": 350,
           "icon": "The Bird.png",
           "baseScreenSizeH": 660
-        },
+        }
       ]
     },
     "class": "GameSelectionScreen",

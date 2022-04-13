@@ -266,7 +266,7 @@ public class SpaceDestroyer implements Game {
             }   
         }
         if (ShipCol.getY()<-30 && Opponents.size() == 0){
-            Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
+            Main.INSTANCE.switchGame(0);
         }
         ScreenColison();
         //g.setColor(Color.red);
@@ -288,7 +288,7 @@ public class SpaceDestroyer implements Game {
             }
         } else {
             if (e.getKeyCode() == KeyEvent.VK_ENTER || ShipCol.getCenterY()<-30) {
-                Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
+                Main.INSTANCE.switchGame(0);
             }
             if (e.getKeyCode() == KeyEvent.VK_SPACE || ShipCol.getCenterY()<-30) {
                 Main.INSTANCE.resetData();

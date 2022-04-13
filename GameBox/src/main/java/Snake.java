@@ -192,7 +192,7 @@ public class Snake implements Game {
                     data.put("highscore", xkords.size());
                     Main.INSTANCE.saveAll();
                 }
-                Main.INSTANCE.switchGame(Main.INSTANCE.data.getJSONObject("selectionScreen"));
+                Main.INSTANCE.switchGame(0);
             }
         }
     }

@@ -8,7 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
@@ -30,16 +30,23 @@ public class GameSelectionScreen implements Game {
 	BufferedImage Switch, SwitchOff;
 	JSONObject data;
 	BufferedImage gear;
+	Logger log;
+	String[] classes;
 
-	public GameSelectionScreen(JSONObject data) throws IOException {
-		this.data = data;
+	public GameSelectionScreen(String[]gameNames, Logger logging) throws IOException {
+		log = logging;
 		gear = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Gear.png"));
-		games = data.getJSONArray("games");
+		String[] games = new String[gameNames.length -1]; 
+		for (int i = 0; i<games.length; i++) {games[i] = gameNames[i+1];}
+		for (String h : games) {System.out.println(h);}
+		classes = gameNames;
+		int i = 0;
 		Switch = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Switch.png"));
 		SwitchOff = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("SwitchOff.png"));
-		preloadedGameThumbnails = new BufferedImage[games.length()];
-		for(int i = 0; i < games.length(); i++) {
-			preloadedGameThumbnails[i] = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream(games.getJSONObject(i).getString("thumbnail")));
+		preloadedGameThumbnails = new BufferedImage[gameNames.length-1];
+		for(String x : games) {
+			System.out.println(x+"-thumbnail.png");
+			preloadedGameThumbnails[i] = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream(x+"-thumbnail.png"));
 		}
 	}
 
@@ -55,7 +62,7 @@ public class GameSelectionScreen implements Game {
 		g.drawImage(gear, 710,20, 50,50 ,null);
 
 		if(!settings) {
-			for (int i = 0; i < games.length(); i++) {
+			for (int i = 0; i < preloadedGameThumbnails.length; i++) {
 				XRow = ((int) Math.floor((i+1)/4))*300;
 				g.drawImage(preloadedGameThumbnails[i], 75 + XRow, 50 + i * 190 - XRow * 2, 250, 140, null);
 				if(i == selected) {
@@ -99,7 +106,7 @@ public class GameSelectionScreen implements Game {
 	public void keyPressed(KeyEvent event) {
 		if(!settings) {
 			if(event.getKeyCode() == KeyEvent.VK_ENTER) {
-				Main.INSTANCE.switchGame(games.getJSONObject(selected));
+				Main.INSTANCE.switchGame(selected);
 			}
 			if(event.getKeyCode() == KeyEvent.VK_UP) {
 				if(selected > 0) {
@@ -128,7 +135,7 @@ public class GameSelectionScreen implements Game {
 				for (int j = 0;j<3;j++){
 					if (new Rectangle(3+300*i,3+190*j,250,140).contains(e.getPoint())) {
 						selected = i*3+j;
-						Main.INSTANCE.switchGame(games.getJSONObject(selected));
+						Main.INSTANCE.switchGame(selected);
 					}
 				}
 			}
