@@ -26,15 +26,15 @@ import javax.swing.JOptionPane;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 
-import java.util.logging.Logger;
-import java.util.logging.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class Main {
 	private static final File DATA_FILE = new File("Data.dat");
 	
 	public static Main INSTANCE;
 
-	Logger log;
+	static final Logger log = LoggerFactory.getLogger(Main.class);
 
 	public JFrame frame;
 	private Canvas canvas;
@@ -66,9 +66,7 @@ class Main {
 	}
 
 	public void init() throws IOException {
-		log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-		log.setLevel(Level.ALL);
-		log.severe(" Test");
+		log.info("Test");
 		readData();
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -107,6 +105,7 @@ class Main {
 		frame.setVisible(true);
 		canvas.createBufferStrategy(2);
 		canvas.requestFocus();
+		log.debug("switched Game");
 	}
 
 	public BufferedImage draw(Dimension size) {
@@ -163,19 +162,27 @@ class Main {
 
 	@SuppressWarnings("unchecked")
 	public void switchGame(int which) {
+		System.out.println(which);
 		try {
 			Class<? extends Game> game = (Class<? extends Game>) Class.forName(gameNames[which]);
 			frame.pack();
-			frame.setLocation(
-				Toolkit.getDefaultToolkit().getScreenSize().width / 2 - frame.getWidth() / 2,
-				Toolkit.getDefaultToolkit().getScreenSize().height / 2 - frame.getHeight() / 2
-			);
+			System.out.println(game.getConstructor(Class.forName(gameNames[which])));
 			try {
-				currentGame = game.getConstructor(JSONObject.class).newInstance(log);
+				if(which != 0){
+					currentGame = game.getConstructor(Class.forName(gameNames[which])).newInstance(data);
+				} else {
+					currentGame = new GameSelectionScreen(gameNames);
+				}
+				
 			}catch (NoSuchMethodException e) {
-				log.fine("Faliure of default launch of Game Selection Screen");
-				currentGame = new GameSelectionScreen(gameNames,log);
+				e.printStackTrace();
+				log.info("Faliure of default launch, starting Game Selection Screen");
+				//currentGame = new GameSelectionScreen(gameNames,log);
 			}
+			//center frame after resizeing from  the currentGame
+			double w = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+			double h = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+			frame.setLocation((int)(w/2-frame.getWidth()/2),(int)(h/2-frame.getHeight()/2));
 		} catch (Exception e) {
 			e.printStackTrace();
 

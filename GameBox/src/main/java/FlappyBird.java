@@ -10,7 +10,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
@@ -44,13 +43,12 @@ public class FlappyBird implements Game {
 	AffineTransform t;
 	boolean Jumped;
 	JSONObject data;
-	Logger log;
 
 	Rectangle CollisionPipeUpper,CollisionPipeLower,CollisionBird;
 
-	public FlappyBird(JSONObject data, Logger logger) throws IOException, UnsupportedAudioFileException, LineUnavailableException  {
+	public FlappyBird(JSONObject data) throws IOException, UnsupportedAudioFileException, LineUnavailableException  {
+		System.out.println("tried");
 		this.data = data;
-		log = logger;
 
 		deadbird = ImageIO.read(FlappyBird.class.getClassLoader().getResourceAsStream("The Bird Dead.png"));
 		bird = ImageIO.read(FlappyBird.class.getClassLoader().getResourceAsStream("The Bird.png"));

@@ -8,10 +8,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -30,32 +31,38 @@ public class GameSelectionScreen implements Game {
 	BufferedImage Switch, SwitchOff;
 	JSONObject data;
 	BufferedImage gear;
-	Logger log;
+	static final Logger log = LoggerFactory.getLogger(Main.class);
 	String[] classes;
+	int urzr = 0;
 
-	public GameSelectionScreen(String[]gameNames, Logger logging) throws IOException {
-		log = logging;
+	public GameSelectionScreen(String[]gameNames) throws IOException {
+		Main.INSTANCE.frame.setBounds(0, 0, 800, 600);
 		gear = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Gear.png"));
 		String[] games = new String[gameNames.length -1]; 
 		for (int i = 0; i<games.length; i++) {games[i] = gameNames[i+1];}
-		for (String h : games) {System.out.println(h);}
+		//log.debug("Games in Selection Screen");
+		//for (String h : games) {System.out.println(h);}
 		classes = gameNames;
 		int i = 0;
 		Switch = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("Switch.png"));
 		SwitchOff = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream("SwitchOff.png"));
 		preloadedGameThumbnails = new BufferedImage[gameNames.length-1];
 		for(String x : games) {
-			System.out.println(x+"-thumbnail.png");
+			//System.out.println(x+"-thumbnail.png");
 			preloadedGameThumbnails[i] = ImageIO.read(GameSelectionScreen.class.getClassLoader().getResourceAsStream(x+"-thumbnail.png"));
 		}
 	}
 
 	public BufferedImage draw(Dimension size) {
+		
 		BufferedImage result = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = (Graphics2D) result.getGraphics();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		
+		if (urzr ==0 ) {
+			System.out.println(g);
+			urzr =1;
+		}
 		// Rendering
 		g.setColor(sky);
 		g.fill(new Rectangle(new Point(), size));
@@ -75,13 +82,13 @@ public class GameSelectionScreen implements Game {
 			anim += 0.09;
 			animMovement *= 0.9;
 		} else {
-			String[] arr = data.toMap().entrySet().toArray()[0].toString().substring(7).split("}, {");
-			print(arr[0]);
+			/*String[] arr = data.toMap().entrySet().toArray()[0].toString().substring(7).split("}, {");
+			//print(arr[0]);
 
 			//for(String x:data.keys()) {
 				
 			//}
-			/*((x,y) -> {
+			//((x,y) -> {
 				g.drawString(x, 50, 50+20*i);
 				if (types.charAt(i) == 'd') {
 					g.drawString(String.valueOf((Double)y), 100, 50+20*i);
@@ -106,7 +113,7 @@ public class GameSelectionScreen implements Game {
 	public void keyPressed(KeyEvent event) {
 		if(!settings) {
 			if(event.getKeyCode() == KeyEvent.VK_ENTER) {
-				Main.INSTANCE.switchGame(selected);
+				Main.INSTANCE.switchGame(selected+1);
 			}
 			if(event.getKeyCode() == KeyEvent.VK_UP) {
 				if(selected > 0) {
@@ -115,11 +122,12 @@ public class GameSelectionScreen implements Game {
 				}
 			}
 			if(event.getKeyCode() == KeyEvent.VK_DOWN) {
-				if(selected < games.length() - 1) {
+				if(selected < classes.length - 1) {
 					selected++;
 					animMovement -= 1;
 				}
 			}
+			//System.out.println(selected);
 		}
 	}
 
