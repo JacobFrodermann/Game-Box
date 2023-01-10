@@ -3,7 +3,7 @@
 		"data": {
 			"games": [
 				{
-					"thumbnail": "Flappy.png",
+					"thumbnail": "FlappyBird-thumbnail",
 					"data": {
 						"jumpHeight": 4,
 						"highscore": 2,
@@ -12,12 +12,12 @@
 					},
 					"name": "FlappyBird",
 					"class": "FlappyBird",
-					"baseScreenSizeW": 400,
 					"icon": "The Bird.png",
+					"baseScreenSizeW": 400,
 					"baseScreenSizeH": 600
 				},
 				{
-					"thumbnail": "Pong.png",
+					"thumbnail": "Pong-thumbnail",
 					"data": {
 						"yAmp": 1
 					},
@@ -26,7 +26,7 @@
 					"class": "Pong"
 				},
 				{
-					"thumbnail": "Snake.png",
+					"thumbnail": "Snake-thumbnail",
 					"data": {
 						"help": false,
 						"highscore": 7,
@@ -40,7 +40,7 @@
 					"baseScreenSizeH": 1000
 				},
 				{
-					"thumbnail": "Space Destroyer.png",
+					"thumbnail": "SpaceDestroyer-thumbnail",
 					"data": {
 						"enemyHealth": 10,
 						"instantDeath": false,
@@ -53,7 +53,7 @@
 					"baseScreenSizeH": 600
 				},
 				{
-					"thumbnail": "Atari Breakout.png",
+					"thumbnail": "AtariBreakout-thumbnail",
 					"data": {
 						"rgb": true,
 						"mode": "default"
@@ -66,7 +66,7 @@
 					"resizable": true
 				},
 				{
-					"thumbnail": "Flappy.png",
+					"thumbnail": "Tetris-thumbnail",
 					"data": {},
 					"name": "Tetris",
 					"class": "Tetris",
@@ -80,13 +80,5 @@
 		"icon": "JoyStick.png",
 		"baseScreenSizeW": 800,
 		"baseScreenSizeH": 680
-	},
-	"thumbnails":[
-		"Flappy.png",
-		"Pong.png",
-		"Snake.png",
-		"Space Destroyer.png",
-		"Atari Breakout.png",
-		"Flappy.png"	
-	]
+	}
 }

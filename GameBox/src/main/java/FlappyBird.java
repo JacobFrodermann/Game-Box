@@ -106,7 +106,7 @@ public class FlappyBird implements Game {
 			g.drawImage(dead, 50, 250, null);
 			if (VelX - 10 > data.getInt("highscore")) {
 				data.put("highscore", VelX - 10);
-				Main.INSTANCE.saveAll();
+				Main.INSTANCE.saveData();
 			}
 		} else {
 			t = g.getTransform();
@@ -142,7 +142,7 @@ public class FlappyBird implements Game {
 
 	public void keyPressed(KeyEvent event) throws IOException {
 		if (event.getKeyCode() == KeyEvent.VK_ENTER && ((BirdY > 600 || BirdY < -20) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper))) {
-            Main.INSTANCE.switchGame(0);
+            Main.INSTANCE.reset();
 		}
 		if (event.getKeyCode() == KeyEvent.VK_SPACE) {
 			if (!Jumped) {

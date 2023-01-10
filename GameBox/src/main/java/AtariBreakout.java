@@ -102,7 +102,7 @@ public class AtariBreakout implements Game{
 
         if(Ball.getY()>Y) {
             Main.INSTANCE.frame.setAlwaysOnTop(false);
-            Main.INSTANCE.switchGame(0);
+            Main.INSTANCE.reset();
         }
         if (Ball.intersects(Line)) {
             xv = (Line.getCenterX()-Ball.getCenterX())/Line.width*-3*inc;
@@ -114,7 +114,7 @@ public class AtariBreakout implements Game{
         
         if (Ball.getY()>Y) {
             Main.INSTANCE.frame.setAlwaysOnTop(false);
-            Main.INSTANCE.switchGame(0);
+            Main.INSTANCE.reset();
         }
 
         Ball.setFrame(Ball.getX()+xv,Ball.getY()+yv,X*0.015,X*0.015);
@@ -142,7 +142,7 @@ public class AtariBreakout implements Game{
         } 
         if (event.getKeyCode() == KeyEvent.VK_SPACE) {
             Main.INSTANCE.frame.setAlwaysOnTop(false);
-            Main.INSTANCE.switchGame(0);
+            Main.INSTANCE.reset();
         }
     }
 

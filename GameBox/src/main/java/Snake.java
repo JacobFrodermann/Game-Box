@@ -190,9 +190,9 @@ public class Snake implements Game {
             if (event.getKeyCode() == KeyEvent.VK_ENTER) {
                 if (data.getInt("highscore") < xkords.size()) {
                     data.put("highscore", xkords.size());
-                    Main.INSTANCE.saveAll();
+                    Main.INSTANCE.saveData();
                 }
-                Main.INSTANCE.switchGame(0);
+                Main.INSTANCE.reset();
             }
         }
     }
