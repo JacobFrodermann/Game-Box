@@ -11,6 +11,7 @@ public class AssetCache {
         .build(new CacheLoader<String, BufferedImage>() {
             public BufferedImage load(String name) throws Exception {
                 if(name == null) return null;
+                System.out.println("Loading " + name);
                 return ImageIO.read(ClassLoader.getSystemResourceAsStream(name + ".png"));
             }
         });

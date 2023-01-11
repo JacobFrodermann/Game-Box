@@ -1,84 +1,109 @@
 {
-	"selectionScreen": {
-		"data": {
-			"games": [
-				{
-					"thumbnail": "FlappyBird-thumbnail",
-					"data": {
-						"jumpHeight": 4,
-						"highscore": 2,
-						"gravity": 0.125,
-						"rotationFactor": 1
-					},
-					"name": "FlappyBird",
-					"class": "FlappyBird",
-					"icon": "The Bird.png",
-					"baseScreenSizeW": 400,
-					"baseScreenSizeH": 600
-				},
-				{
-					"thumbnail": "Pong-thumbnail",
-					"data": {
-						"yAmp": 1
-					},
-					"name": "Pong",
-					"icon": "pongLogo.png",
-					"class": "Pong"
-				},
-				{
-					"thumbnail": "Snake-thumbnail",
-					"data": {
-						"help": false,
-						"highscore": 7,
-						"deadlyLake": true,
-						"ticktime": 60
-					},
-					"name": "Snake",
-					"class": "Snake",
-					"icon": "Snake Logo.png",
-					"baseScreenSizeW": 1000,
-					"baseScreenSizeH": 1000
-				},
-				{
-					"thumbnail": "SpaceDestroyer-thumbnail",
-					"data": {
-						"enemyHealth": 10,
-						"instantDeath": false,
-						"homing": true
-					},
-					"name": "Space Destroyer",
-					"class": "SpaceDestroyer",
-					"baseScreenSizeW": 400,
-					"icon": "Ship1.png",
-					"baseScreenSizeH": 600
-				},
-				{
-					"thumbnail": "AtariBreakout-thumbnail",
-					"data": {
-						"rgb": true,
-						"mode": "default"
-					},
-					"name": "Atari Breakout",
-					"class": "AtariBreakout",
-					"baseScreenSizeW": 800,
-					"baseScreenSizeH": 600,
-					"icon": "AtariIcon.png",
-					"resizable": true
-				},
-				{
-					"thumbnail": "Tetris-thumbnail",
-					"data": {},
-					"name": "Tetris",
-					"class": "Tetris",
-					"baseScreenSizeW": 350,
-					"icon": "The Bird.png",
-					"baseScreenSizeH": 660
-				}
-			]
-		},
-		"class": "GameSelectionScreen",
-		"icon": "JoyStick.png",
-		"baseScreenSizeW": 800,
-		"baseScreenSizeH": 680
-	}
+  "selectionScreen": {
+    "data": {
+      "games": [
+        {
+          "thumbnail": "FlappyBird-thumbnail",
+          "data": {
+            "jumpHeight": 4,
+            "highscore": 2,
+            "gravity": 0.125,
+            "rotationFactor": 1
+          },
+          "settings": {
+            "jumpHeight": 4 ,
+            "gravity": 0.125,
+            "rotationFactor": 1
+          },
+          "name": "FlappyBird",
+          "class": "FlappyBird",
+          "baseScreenSizeW": 400,
+          "icon": "The Bird",
+          "baseScreenSizeH": 600
+        },
+        {
+          "thumbnail": "Pong-thumbnail",
+          "data": {
+            "yAmp": 1
+          },
+          "settings" : {
+            "yAmp" : 1,
+            "xSpeed" : 1
+          },
+          "name": "Pong",
+          "icon": "pongLogo",
+          "class": "Pong"
+        },
+        {
+          "thumbnail": "Snake-thumbnail",
+          "data": {
+            "help": false,
+            "highscore": 7,
+            "deadlyLake": true,
+            "ticktime": 60
+          },
+          "settings" : {
+            "help": false,
+            "highscore": 7,
+            "deadlyLake": true,
+            "ticktime": 60
+          },
+          "name": "Snake",
+          "class": "Snake",
+          "icon": "Snake Logo",
+          "baseScreenSizeW": 1000,
+          "baseScreenSizeH": 1000
+        },
+        {
+          "thumbnail": "SpaceDestroyer-thumbnail",
+          "data": {
+            "enemyHealth": 10,
+            "instantDeath": false,
+            "homing": true
+          },
+          "settings" : {
+            "enemyHealth": 10,
+            "instantDeath": false,
+            "homing": true
+          },
+          "name": "Space Destroyer",
+          "class": "SpaceDestroyer",
+          "baseScreenSizeW": 400,
+          "icon": "Ship1",
+          "baseScreenSizeH": 600
+        },
+        {
+          "thumbnail": "AtariBreakout-thumbnail",
+          "data": {
+            "rgb": true,
+            "mode": "default"
+          },
+          "settings" : {
+            "rgb": true,
+            "mode": "default"
+          },
+          "name": "Atari Breakout",
+          "class": "AtariBreakout",
+          "baseScreenSizeW": 800,
+          "baseScreenSizeH": 600,
+          "icon": "AtariIcon",
+          "resizable": true
+        },
+        {
+          "thumbnail": "FlappyBird-thumbnail",
+          "data": {},
+          "name": "Tetris",
+          "class": "Tetris",
+          "baseScreenSizeW": 350,
+          "icon": "The Bird",
+          "baseScreenSizeH": 660,
+          "settings":{ }
+        }
+      ]
+    },
+    "class": "GameSelectionScreen",
+    "icon": "JoyStick",
+    "baseScreenSizeW": 800,
+    "baseScreenSizeH": 680
+  }
 }

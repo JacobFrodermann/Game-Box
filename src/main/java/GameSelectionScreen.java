@@ -8,8 +8,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -22,9 +23,29 @@ public class GameSelectionScreen implements Game {
 	private double animMovement = 0;
 	private int XRow = 0;
 	private boolean settings = false;
-
+	JSONObject data;
+	private Map<Integer,Character> options = new HashMap<Integer, Character>();
 	public GameSelectionScreen(JSONObject data) throws IOException {
 		games = data.getJSONArray("games");
+
+		try {
+		int yOff = 20;
+		for(int i = 0; i<games.length();i++) {
+			JSONObject game = games.getJSONObject(i);
+			yOff += 30;
+			JSONObject x = game.getJSONObject("settings");
+			for(int j = 0; j<x.length(); j++){
+				Object val = x.toMap().values().toArray()[j];
+				if (val.getClass() == Integer.class || val.getClass() == java.math.BigDecimal.class) {
+					options.put(yOff, 'i');
+				} else if (val.getClass() == Boolean.class){
+					options.put(yOff, 'b');
+				} else if (val.getClass() == String.class) {
+					options.put(yOff, 's');
+				}
+				yOff +=20;
+			}
+		} } catch (Throwable t) {Main.INSTANCE.handleError(t);}
 	}
 
 	public BufferedImage draw(Dimension size) throws ExecutionException {
@@ -52,27 +73,33 @@ public class GameSelectionScreen implements Game {
 			anim += 0.09;
 			animMovement *= 0.9;
 		} else {
-			/*String[] arr = data.toMap().entrySet().toArray()[0].toString().substring(7).split("}, {");
-			//print(arr[0]);
-
-			//for(String x:data.keys()) {
-				
-			//}
-			//((x,y) -> {
-				g.drawString(x, 50, 50+20*i);
-				if (types.charAt(i) == 'd') {
-					g.drawString(String.valueOf((Double)y), 100, 50+20*i);
-				} else {
-					if ((Boolean)y) {
-						g.drawImage(Switch, 100, 50+20*i, null);
-					} else {
-						g.drawImage(SwitchOff, 100, 50+20*i, null);
+			g.setColor(Color.BLACK);
+			int yOff = 20;
+			try {
+			for(int i = 0; i<games.length();i++) {
+				JSONObject game = games.getJSONObject(i);
+				g.drawString(game.getString("name"), 50,yOff);
+				yOff += 30;
+				JSONObject x = game.getJSONObject("settings");
+				for(int j = 0; j<x.length(); j++){
+					Object val = x.toMap().values().toArray()[j];
+					String key = (String)x.toMap().keySet().toArray()[j];
+					if (val.getClass() == Integer.class || val.getClass() == java.math.BigDecimal.class) {
+						g.drawString(String.valueOf(val), 500, yOff);
+					} else if (val.getClass() == Boolean.class){
+						if ((Boolean)val) {
+							g.drawImage(AssetCache.IMAGES.get("Switch"), 500, yOff-8, null);
+						} else {
+							g.drawImage(AssetCache.IMAGES.get("SwitchOff"), 500, yOff-8, null);
+						}
+					} else if (val.getClass() == String.class) {
+						g.drawString((String) val, 500, yOff);	
 					}
-					
+					g.drawString(key, 300, yOff);	
+					yOff +=20;
 				}
-			});*/
+			} } catch (Throwable t) {Main.INSTANCE.handleError(t);}
 		}
-
 		return result;
 	}
 
@@ -111,6 +138,22 @@ public class GameSelectionScreen implements Game {
 						Main.INSTANCE.switchGame(games.getJSONObject(selected));
 					}
 				}
+			}
+		} else {
+			int x = e.getPoint().x;
+			int clickY = e.getPoint().y;
+			if (x > 500 && x < 540) {
+				System.out.println(x + " , " + clickY);
+				options.forEach((Integer y,Character t) -> {
+					//System.out.println(y);
+					if (y-10<clickY && y+10>clickY) {
+						System.out.println(t);
+						switch (t) {
+							case 'b':
+								
+						}
+					}
+				});
 			}
 		}
 	}
