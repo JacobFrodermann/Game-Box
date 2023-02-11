@@ -32,7 +32,9 @@
           },
           "name": "Pong",
           "icon": "pongLogo",
-          "class": "Pong"
+          "class": "Pong",
+          "baseScreenSizeW": 400,
+          "baseScreenSizeH": 600
         },
         {
           "thumbnail": "Snake-thumbnail",

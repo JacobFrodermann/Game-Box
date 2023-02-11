@@ -44,7 +44,7 @@ public class FlappyBird implements Game {
 	boolean Jumped;
 	JSONObject data;
 
-	Rectangle CollisionPipeUpper,CollisionPipeLower,CollisionBird;
+	Rectangle upperPipeCollision,lowerPipeCollision,BirdCollision;
 
 	public FlappyBird(JSONObject data) throws IOException, UnsupportedAudioFileException, LineUnavailableException  {
 		System.out.println("tried");
@@ -60,9 +60,9 @@ public class FlappyBird implements Game {
 		pipe1X = 100;
 		pipe2Y = new Random().nextInt(400);
 		pipe2X = 100;
-		CollisionBird = new Rectangle(24, BirdY-8,34,24);
-		CollisionPipeLower = new Rectangle(pipe1X, pipe1Y+100,40,600);
-		CollisionPipeUpper = new Rectangle(pipe1X, pipe1Y-600,40,600);
+		BirdCollision = new Rectangle(24, BirdY-8,34,24);
+		lowerPipeCollision = new Rectangle(pipe1X, pipe1Y+100,40,600);
+		upperPipeCollision = new Rectangle(pipe1X, pipe1Y-600,40,600);
 
 		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Main.baInputStream(FlappyBird.class.getClassLoader().getResourceAsStream("Pling.wav")));
 		Pling = AudioSystem.getClip();
@@ -87,21 +87,21 @@ public class FlappyBird implements Game {
 		g.drawImage(Pipe, pipe1X, -600 + pipe1Y, 40,1300,null);
 		g.drawImage(Pipe, pipe2X, -600 + pipe2Y, 40,1300,null);
 
-		CollisionBird.setLocation(24,BirdY+8);
+		BirdCollision.setLocation(24,BirdY+8);
 
-		if (Pling.getFramePosition() == 5211) {
+		if (Pling.getFramePosition() == 5211) {//restart Audio
 			Pling.setFramePosition(0);
 			Pling.stop();
 		}
 
 		if (pipe1X < pipe2X) {
-			CollisionPipeLower.setLocation(pipe1X,pipe1Y+100);
-			CollisionPipeUpper.setLocation(pipe1X,pipe1Y-600);
+			lowerPipeCollision.setLocation(pipe1X,pipe1Y+100);
+			upperPipeCollision.setLocation(pipe1X,pipe1Y-600);
 		} else {
-			CollisionPipeLower.setLocation(pipe2X,pipe2Y+100);
-			CollisionPipeUpper.setLocation(pipe2X,pipe2Y-600);
+			lowerPipeCollision.setLocation(pipe2X,pipe2Y+100);
+			upperPipeCollision.setLocation(pipe2X,pipe2Y-600);
 		}
-		if ((BirdY > 600 || BirdY < -60) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper)) {
+		if ((BirdY > 600 || BirdY < -60) || BirdCollision.intersects(lowerPipeCollision) || BirdCollision.intersects(upperPipeCollision)) {
 			g.drawImage(deadbird,20, BirdY,40,40,null);
 			g.drawImage(dead, 50, 250, null);
 			if (VelX - 10 > data.getInt("highscore")) {
@@ -110,7 +110,7 @@ public class FlappyBird implements Game {
 			}
 		} else {
 			t = g.getTransform();
-			t.rotate(Math.toRadians(VelY*10*data.getInt("rotationFactor")), CollisionBird.getCenterX(), CollisionBird.getCenterY());
+			t.rotate(Math.toRadians(VelY*10*data.getInt("rotationFactor")), BirdCollision.getCenterX(), BirdCollision.getCenterY());
 			g.setTransform(t);
 			g.drawImage(bird, 20, BirdY, 40, 40, null);
 			g.setTransform(new AffineTransform());
@@ -141,7 +141,7 @@ public class FlappyBird implements Game {
 	}
 
 	public void keyPressed(KeyEvent event) throws IOException {
-		if (event.getKeyCode() == KeyEvent.VK_ENTER && ((BirdY > 600 || BirdY < -20) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper))) {
+		if (event.getKeyCode() == KeyEvent.VK_ENTER && ((BirdY > 600 || BirdY < -20) || BirdCollision.intersects(lowerPipeCollision) || BirdCollision.intersects(upperPipeCollision))) {
             Main.INSTANCE.reset();
 		}
 		if (event.getKeyCode() == KeyEvent.VK_SPACE) {
@@ -150,7 +150,7 @@ public class FlappyBird implements Game {
 				Jumped = true;
 			}
 		}
-		if (event.getKeyCode() == KeyEvent.VK_SPACE && ((BirdY > 600 || BirdY < -20) || CollisionBird.intersects(CollisionPipeLower) || CollisionBird.intersects(CollisionPipeUpper))) {
+		if (event.getKeyCode() == KeyEvent.VK_SPACE && ((BirdY > 600 || BirdY < -20) || BirdCollision.intersects(lowerPipeCollision) || BirdCollision.intersects(upperPipeCollision))) {
 			Score = 0;
 			BirdY =300;
 			VelY = 0;
