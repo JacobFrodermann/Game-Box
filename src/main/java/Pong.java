@@ -91,6 +91,7 @@ public class Pong implements Game {
 			BallX = 190.0;
 			BallY = 290.0;
 			dir = new Random().nextDouble(Math.PI/2)-Math.PI/4 + Math.PI;
+			speed /= 1.5;
 			genVelocity();
 			P2Score += 1;
 			System.out.println(P1Score+"/" + P2Score);
@@ -99,6 +100,7 @@ public class Pong implements Game {
 			BallX = 190.0;
 			BallY = 290.0;
 			dir = new Random().nextDouble(Math.PI/2)-Math.PI/4;
+			speed /= 1.5;
 			genVelocity();
 			P1Score += 1;
 			System.out.println(P1Score+"/" + P2Score);
@@ -144,16 +146,20 @@ public class Pong implements Game {
 	}
 
 	if (keys.contains(KeyEvent.VK_A)) {
-		Line1.x-=4;
+		Line1.x -= 4;
+		if(speed > 4) Line1.x --;
 	}
 	if (keys.contains(KeyEvent.VK_D)) {
-		Line1.x+=4;
+		Line1.x += 4;
+		if(speed > 4) Line1.x ++;
 	}
 	if (keys.contains(KeyEvent.VK_LEFT)) {
-		Line2.x=-4;
+		Line2.x -= 4;
+		if(speed > 4) Line2.x --;
 	}
 	if (keys.contains(KeyEvent.VK_RIGHT)) {
-		Line2.x=+4;
+		Line2.x += 4;
+		if(speed > 4) Line2.x ++;
 	}
 
 		return result;
